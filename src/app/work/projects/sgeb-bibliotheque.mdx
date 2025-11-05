@@ -1,0 +1,100 @@
+---
+title: "SGEB — Système de Gestion d’Emprunts de Bibliothèque"
+description: "Application Java modulaire (Hexagonal + MVVM JavaFX) : gestion des documents, adhérents, emprunts/retours, pénalités, dashboard et export PDF."
+publishedAt: "2025-03-20"
+summary: "Projet M1 MIAGE 2025–2026 : un SGEB robuste et réactif, conçu en Hexagonal + MVVM (JavaFX) sur SQLite, avec règles métier d’emprunt, pénalités, tableaux de bord et export PDF."
+tags: ["JavaFX","SQLite","Hexagonal","MVVM","PDFBox","OpenLibrary API"]
+images:
+  - "/images/projects/sgeb/Cover1.jpg"
+link: "/work/sgeb"
+---
+
+# SGEB — Système de Gestion d’Emprunts de Bibliothèque
+
+<Text align="justify">
+L’objectif de ce projet universitaire est d'informatiser la gestion des
+<strong>documents / adhérents / emprunts–retours</strong> d’une bibliothèque (ajout, recherche, modification,
+suppression conditionnelle, pénalités, alertes retards) avec <strong>stockage persistant SQLite</strong> et une
+<strong>IHM JavaFX</strong>. Mon implémentation met l’accent sur <strong>robustesse métier</strong>, <strong>performance</strong> et
+<strong>expérience utilisateur</strong>.
+</Text>
+
+## Intérêt du projet
+
+<Text align="justify">
+Le SGEB illustre une architecture <strong>maintenable</strong> et <strong>évolutive</strong> : le domaine est décorrélé de la base
+de données et des APIs, l’interface reste fluide (aucun blocage), et les règles d’emprunt sont
+<strong>claires et testables</strong>. Une migration vers MySQL/Cloud est possible sans toucher à la logique métier
+ni à l’IHM.
+</Text>
+
+## Architecture & choix structurants
+
+<Text align="justify">
+<strong>Architecture hexagonale (Ports & Adapters)</strong> : le domaine expose des interfaces (ex. EmpruntRepository,
+CatalogueService, BookInfoProvider). Les adapters techniques (ex. SqliteEmpruntRepository, OpenLibraryProvider)
+sont interchangeables sans impact sur le cœur métier.
+</Text>
+
+<Text align="justify">
+<strong>MVVM JavaFX</strong> : Vues FXML “bêtes”, contrôleurs fins, <strong>ViewModels asynchrones</strong> pour ne jamais bloquer l’UI
+(indicateurs de chargement et tâches en arrière-plan).
+</Text>
+
+<Text align="justify">
+<strong>Injection de dépendances</strong> centralisée (Main / FxNavigator) pour assembler services et adapters
+et simplifier les tests.
+</Text>
+
+## Fonctionnalités principales
+
+<Text align="justify">
+<strong>Catalogue</strong> : ajout (pré-remplissage via OpenLibrary par ISBN), recherche multi-champs (Titre, Auteur, ISBN/ID),
+modification, <strong>suppression interdite si document emprunté</strong>.
+</Text>
+
+<Text align="justify">
+<strong>Adhérents</strong> : CRUD, historique des emprunts (LEFT JOIN optimisé pour éviter le N+1), statut pénalités calculé
+en deux requêtes agrégées.
+</Text>
+
+<Text align="justify">
+<strong>Emprunts & retours</strong> : vérification disponibilité, plafond par adhérent, statut pénalités, calcul des dates (semaines).
+Au retour : calcul du retard et création automatique de pénalités.
+</Text>
+
+<Text align="justify">
+<strong>Pénalités</strong> : écran Maître–Détail (total dû + liste), actions “Tout régler” / “Régler” avec mise à jour et déblocage
+automatique de l’adhérent.
+</Text>
+
+<Text align="justify">
+<strong>Dashboard</strong> : KPIs temps réel, carrousel des 5 derniers emprunts (couvertures réelles), <strong>export PDF</strong> par snapshot (PDFBox).
+</Text>
+
+## Parcours utilisateur (IHM)
+
+<Text align="justify">
+<strong>Consulter le catalogue</strong> : navigation rapide, recherche instantanée, fiches détails (métadonnées, disponibilité, couverture).
+</Text>
+
+<Text align="justify">
+<strong>Emprunter un document</strong> : sélection d’un document disponible → choix de l’adhérent → application des règles métier → confirmation.
+</Text>
+
+<Text align="justify">
+<strong>Suivre ses prêts</strong> : liste des prêts actifs et de l’historique par adhérent, dates prévues / retours réels, retards et pénalités associées.
+</Text>
+
+## Stack & intégrations
+
+<Text>
+Java (OpenJDK) · JavaFX (FXML/MVVM) · SQLite (JDBC) · PDFBox · OpenLibrary (ISBN)
+</Text>
+
+## À venir
+
+<Feedback>
+  Pour plus de détails (commandes, code source et schémas), consultez le 
+  <SmartLink href="https://github.com/ton-depot/chat-multi-clients-c#readme" suffixIcon="chevronRight">  README complet du projet.  </SmartLink>
+</Feedback>

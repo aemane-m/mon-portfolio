@@ -1,0 +1,133 @@
+---
+title: "Messagerie multiclients en C — projet universitaire"
+description: "Application de messagerie temps réel en C, avec sockets TCP, threads POSIX, interface Ncurses et export JSON. Réalisée dans le cadre d’un projet universitaire."
+publishedAt: "2024-11-30"
+summary: "Développement d’une application client–serveur en C illustrant la gestion de la concurrence, la communication réseau et la conception modulaire d’un système distribué."
+tags: ["C", "Sockets", "pthread", "ncurses", "Concurrency", "JSON"]
+images:
+  - "/images/projects/chat-c/chat.jpeg"
+  - "/images/projects/chat-c/chat2.jpeg"
+link: "https://once-ui.com/"
+---
+
+# Messagerie multiclients en C
+
+<Row gap="12">
+  <Text onBackground="neutral-strong">Projet universitaire</Text>
+  <Text>·</Text>
+  <Text>C (C99)</Text>
+  <Text>·</Text>
+  <Text>TCP/IP</Text>
+  <Text>·</Text>
+  <Text>pthread</Text>
+  <Text>·</Text>
+  <Text>ncurses</Text>
+</Row>
+
+## Objectif du projet
+
+<Text align="justify">
+Ce projet universitaire visait à développer une application de messagerie temps réel en ligne de commande, permettant à plusieurs clients de communiquer via un serveur TCP.  
+L’enjeu principal était d’illustrer la gestion concurrente en C à l’aide de pthread, tout en assurant une interface utilisateur fluide grâce à ncurses.
+</Text>
+
+---
+
+## Principales fonctionnalités
+
+<Table
+  data={{
+    headers: [
+      { content: "Fonctionnalité", key: "feature", sortable: true },
+      { content: "Description", key: "description" }
+    ],
+    rows: [
+      ["Connexion multiclients", "Chaque client communique avec le serveur via un socket TCP dédié."],
+      ["Interface Ncurses", "Affichage clair et coloré, avec zones distinctes pour les messages et la saisie."],
+      ["Pause clavier Ctrl+C", "Les messages entrants sont temporairement stockés pendant la saisie."],
+      ["Thread pool serveur", "Les tâches longues (ex. sauvegarde JSON) sont déléguées en arrière-plan."],
+      ["Export JSON automatique", "Historique sauvegardé toutes les 5 à 20 entrées dans un fichier JSON."],
+      ["Commandes intégrées", "/help, /quit et pause clavier pour un usage fluide en terminal."]
+    ]
+  }}
+/>
+
+---
+
+## Architecture technique
+
+<Table
+  data={{
+    headers: [
+      { content: "Composant", key: "component" },
+      { content: "Rôle", key: "role" },
+      { content: "Technologie", key: "tech" }
+    ],
+    rows: [
+      ["Serveur", "Gère les connexions, les messages et le thread pool", "C + pthread"],
+      ["Client", "Interface Ncurses, réception et saisie utilisateur", "C + ncurses"],
+      ["Protocole", "Définition du format d’échange et des structures", "TCP/IP"],
+      ["Archivage", "Export périodique de l’historique au format JSON", "C + stdio.h"],
+      ["Buffer circulaire", "Stockage temporaire des messages en pause", "Structure optimisée en mémoire"]
+    ]
+  }}
+/>
+
+<Text align="justify">
+Le projet repose sur un modèle thread-par-client pour gérer la communication en temps réel, complété par un thread pool côté serveur pour les opérations asynchrones.  
+L’interface Ncurses offre une gestion fine du terminal (curseur, couleurs, rafraîchissement de zones) et rend l’expérience fluide malgré la nature textuelle de l’application.
+</Text>
+
+---
+
+## Conception et décisions clés
+
+### Threads POSIX pour la concurrence
+<Text align="justify">
+Chaque client connecté dispose d’un thread dédié, assurant un traitement parallèle des messages.  
+Ce choix garantit la réactivité de la communication, même en présence de plusieurs utilisateurs actifs.
+</Text>
+
+### Thread pool pour les tâches asynchrones
+<Text align="justify">
+Le serveur utilise un pool fixe pour exécuter les tâches longues comme la sauvegarde JSON.  
+Cela limite la création et la destruction répétée de threads, améliorant la stabilité sous charge.
+</Text>
+
+### Mode pause avec Ctrl+C
+<Text align="justify">
+Lorsqu’un utilisateur rédige un message, un signal SIGINT déclenche un mode pause.  
+Les messages reçus sont stockés dans un buffer circulaire et affichés après l’envoi, évitant les interruptions visuelles.
+</Text>
+
+### Interface Ncurses
+<Text align="justify">
+Ncurses a été utilisée pour contrôler le rendu terminal : affichage multifenêtre, curseur visible, gestion des couleurs et de la barre d’état (heure, pseudo, statut).
+</Text>
+
+---
+
+## Résultats obtenus
+
+<Text align="justify">
+Le projet a permis d’obtenir une application robuste et agréable à utiliser en mode terminal.  
+L’approche modulaire (client, serveur, common) facilite l’évolution du code et l’ajout de futures fonctionnalités comme l’authentification ou le chiffrement.  
+Le mode pause et la sauvegarde asynchrone illustrent la combinaison entre ergonomie et performance dans un environnement purement C.
+</Text>
+
+---
+
+## Enseignements tirés
+
+- <Text align="justify">Compréhension approfondie des threads POSIX et des risques de concurrence (verrous, race conditions).</Text>
+- <Text align="justify">Découverte des avantages d’un thread pool en termes de performance et de gestion mémoire.</Text>
+- <Text align="justify">Apprentissage de Ncurses pour structurer une interface réactive dans un terminal.</Text>
+- <Text align="justify">Vision d’ensemble d’un projet réseau complet (serveur, client, protocole, persistance).</Text>
+
+---
+
+<Feedback>
+  Pour plus de détails (commandes, code source et schémas), consultez le 
+  <SmartLink href="https://github.com/ton-depot/chat-multi-clients-c#readme" suffixIcon="chevronRight">  README complet du projet. </SmartLink>
+</Feedback>
+

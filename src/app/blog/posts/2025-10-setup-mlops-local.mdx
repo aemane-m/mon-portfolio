@@ -1,0 +1,39 @@
+---
+title: "Bootstraper un MLOps local en 20 minutes — Docker, MLflow, Airflow"
+publishedAt: "2025-10-01"
+summary: "Un mini-pipeline reproductible en local avec tracking MLflow, orchestration Airflow et artefacts versionnés."
+tags: ["mlops", "mlflow", "airflow", "docker"]
+image: "/images/projects/chat-c/chat.jpeg"
+---
+
+<Text align="justify">
+Cet article propose une base <em>pratique</em> pour prototyper rapidement un pipeline MLOps en local. Au menu : tracking d’expériences avec <InlineCode>MLflow</InlineCode>, orchestration de tâches avec <InlineCode>Airflow</InlineCode>, et containers via <InlineCode>Docker Compose</InlineCode>.
+</Text>
+
+## Objectifs
+
+- Suivre hyperparamètres, métriques et modèles avec **MLflow**  
+- Planifier un job quotidien simple avec **Airflow**  
+- Conserver une structure **lisible** et **reproductible**
+
+<Feedback
+  icon
+  variant="success"
+  title="TL;DR"
+  description="Clone, lance Docker, ouvre MLflow & Airflow : tu suis, tu orchestres, c’est prêt pour itérer."
+/>
+
+## Arborescence minimale
+
+```text
+mlops-local/
+├─ airflow/
+│  ├─ dags/
+│  │  └─ train_daily.py
+│  └─ docker-compose.override.yml
+├─ mlflow/
+│  └─ artifacts/
+├─ src/
+│  └─ train.py
+└─ docker-compose.yml
+```
