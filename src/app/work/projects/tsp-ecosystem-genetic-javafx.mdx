@@ -1,0 +1,129 @@
+---
+title: "TSP académique — Algorithme génétique, JavaFX et PostgreSQL"
+description: "Modélisation d’un écosystème académique et résolution du TSP par algorithme génétique : Java (génériques), JavaFX pour l’UI, PostgreSQL via JDBC, et tests JUnit5."
+publishedAt: "2024-12-15"
+summary: "Projet universitaire de L3 : moteur d’algorithmes génétiques, interface JavaFX pour paramétrer et visualiser les simulations, persistance PostgreSQL, et tests unitaires."
+tags:
+  - "Java"
+  - "Algorithmes génétiques"
+  - "JavaFX"
+  - "PostgreSQL"
+  - "JUnit5"
+  - "OpenJDK 21"
+images:
+  - "/images/projects/tsp-ecosystem/tsp2.jpeg"
+link: "/work/tsp-academique"
+---
+
+# TSP académique — Algorithme génétique, JavaFX et PostgreSQL
+
+<Row gap="8" wrap>
+  <Text onBackground="neutral-strong">Projet universitaire</Text>
+  <Text>·</Text>
+  <Text>Optimisation combinatoire</Text>
+  <Text>·</Text>
+  <Text>POO Java</Text>
+</Row>
+
+## Contexte et objectif
+
+<Text align="justify">
+Le projet part d’un énoncé classique — le voyageur de commerce (TSP) — appliqué à un <strong>écosystème académique</strong> (personnes, disciplines, villes, régions). L’objectif : modéliser cet écosystème, <strong>charger les villes</strong> et leurs attributs, puis <strong>optimiser une tournée</strong> (cycle hamiltonien) à l’aide d’un <strong>algorithme génétique</strong> (sélection proportionnelle à la fitness, crossover, mutation, élitisme).
+</Text>
+
+## Ce que j’ai fait
+
+<Table
+  data={{
+    headers: [
+      { content: "Axe", key: "axe", sortable: true },
+      { content: "Contribution", key: "contrib" }
+    ],
+    rows: [
+      ["Modélisation domaine", "Hiérarchie objet (Personne, Titulaire, Chercheur, MCF, Étudiant), Ville, énumération Region (chef-lieu, superficie, population, départements)."],
+      ["Persistance JDBC", "Chargement des villes/régions et de l’écosystème depuis PostgreSQL (JDBC), configuration du driver et des connexions."],
+      ["Moteur GA générique", "Interfaces/classes génériques pour Population, Fitness, Selection, Crossover, Mutation, Elite ; paramètres ajustables."],
+      ["Opérateurs TSP", "Cycle comme permutation ; crossover « cycle-based », mutation par swap ; fitness = distance totale."],
+      ["UI JavaFX", "Écran de critères (filtres), panneau de paramètres GA, exécution de la simulation, affichage des résultats, export."],
+      ["Qualité & tests", "JUnit5 sur 5 méthodes cibles (fitness, crossover, mutation, sélection, construction de permutation) + Javadoc."]
+    ]
+  }}
+/>
+
+## Fonctionnalités principales
+
+<ul>
+  <li>Paramétrage GA : taille de population, probabilité de mutation, élitisme, itérations.</li>
+  <li>Critères écosystème : sélection de personnes par discipline/rôle, mappage vers les villes.</li>
+  <li>Simulation TSP : génération → sélection → crossover → mutation → élitisme → convergence.</li>
+  <li>Interface JavaFX : critères, paramètres, lancement, meilleurs itinéraires, export.</li>
+  <li>Règles de saisie : villes en <strong>MAJUSCULES</strong> dans l’UI (cohérence avec les données).</li>
+</ul>
+
+## Architecture et design
+
+<Table
+  data={{
+    headers: [
+      { content: "Composant", key: "comp" },
+      { content: "Rôle", key: "role" },
+      { content: "Technos", key: "tech" }
+    ],
+    rows: [
+      ["Domaine", "Écosystème académique : personnes, disciplines, villes, régions", "Java (POO, génériques)"],
+      ["Persistance", "Accès via JDBC ; chargement villes/régions et relations", "PostgreSQL + JDBC"],
+      ["Moteur GA", "Population, fitness, sélection pondérée, crossover TSP, mutation swap, élitisme", "Java (interfaces + impl)"],
+      ["Interface", "Paramétrage, exécution, visualisation des résultats", "JavaFX (scènes, contrôleurs)"],
+      ["Tests & doc", "Tests ciblés et Javadoc", "JUnit5, Javadoc"]
+    ]
+  }}
+/>
+
+<Text align="justify">
+Le moteur d’algorithme génétique est <strong>réutilisable</strong> : les opérateurs (crossover/mutation) sont interchangeables et le cœur peut servir à d’autres problèmes d’optimisation sans impacter l’UI ni la persistance.
+</Text>
+
+## Points techniques notables
+
+<ul>
+  <li><strong>Sélection proportionnelle</strong> : tirage pondéré, favorisant les cycles courts.</li>
+  <li><strong>Crossover TSP</strong> (cycle) : combine deux parents tout en préservant la validité de la permutation.</li>
+  <li><strong>Mutation swap</strong> : permutation aléatoire de deux villes pour maintenir la diversité.</li>
+  <li><strong>Élitisme</strong> : conservation d’un pourcentage des meilleurs individus.</li>
+</ul>
+
+## Résultats et apprentissages
+
+<ul>
+  <li>Amélioration par rapport aux heuristiques simples (ex. nearest neighbor) sur jeux de test.</li>
+  <li>Convergence reproductible via seed + élitisme ; compromis qualité/temps via paramètres.</li>
+  <li>Renforcement pratique : <strong>POO Java</strong> (génériques), <strong>JavaFX</strong> (UI), <strong>JDBC</strong> (accès données), <strong>JUnit5</strong> (tests).</li>
+</ul>
+
+## Prérequis et exécution (résumé)
+
+<Table
+  data={{
+    headers: [
+      { content: "Étape", key: "step", sortable: true },
+      { content: "Détail", key: "detail" }
+    ],
+    rows: [
+      ["Dépendances", "OpenJDK 21, JavaFX, PostgreSQL + driver JDBC"],
+      ["JavaFX (VM args)", "--module-path <chemin>/javafx/lib --add-modules javafx.controls,javafx.fxml"],
+      ["Base de données", "Créer la base, restaurer le script SQL, vérifier le driver et les identifiants"],
+      ["Lancement", "Démarrer l’app JavaFX, charger l’écosystème, régler GA, lancer, exporter"]
+    ]
+  }}
+/>
+
+<Text align="justify">
+Pour la procédure détaillée (installation JavaFX, configuration PostgreSQL, VM arguments IDE, et étapes pas-à-pas), voir le README du projet.
+</Text>
+
+---
+
+<Feedback>
+  <strong>Référence :</strong> la documentation complète d’installation et d’utilisation est disponible dans le 
+  <SmartLink href="https://github.com/ton-depot/chat-multi-clients-c#readme" suffixIcon="chevronRight">  README du projet. </SmartLink>
+</Feedback>

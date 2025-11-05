@@ -1,0 +1,107 @@
+---
+title: "AI-DrugDiscovery — De la protéine aux ligands optimisés"
+description: "Plateforme IA de découverte de médicaments en cours de développement : AlphaFold, poches (P2Rank), docking (GNINA), optimisation bayésienne et visualisation 3D."
+summary: "Projet en développement : pipeline (AlphaFold → Poches → Docking → BO) avec interface 3D et API cloud-native."
+publishedAt: "2025-11-02"
+tags:
+  - "Bioinformatique"
+  - "AlphaFold"
+  - "GNINA"
+  - "P2Rank"
+  - "Optimisation Bayésienne"
+  - "FastAPI"
+  - "React"
+  - "Docker"
+  - "AWS EC2"
+images:
+  - "/images/projects/drug/adn.jpeg"
+  - "/images/projects/drug/adn1.jpeg"
+  - "/images/projects/drug/adn2.jpeg"
+---
+
+# AI-DrugDiscovery — De la protéine aux ligands optimisés
+
+<Text align="justify">
+<strong>Projet en cours de développement.</strong><br />
+AI-DrugDiscovery combine la prédiction 3D des protéines (<strong>AlphaFold</strong>), la détection de poches (<strong>P2Rank</strong>),
+le docking (<strong>GNINA</strong>) et l’optimisation bayésienne pour accélérer l’exploration de ligands candidats. Objectif :
+une <strong>plateforme modulaire</strong>, pédagogique et démontrable (du calcul au déploiement).
+</Text>
+
+## Pourquoi c’est utile (Intérêt & cas d’usage)
+
+<Table
+  data={{
+    headers: [
+      { content: "Périmètre", key: "scope" },
+      { content: "Bénéfice", key: "benefit" }
+    ],
+    rows: [
+      ["Recherche", "Accélère le criblage in silico avant l’expérimentation humide (priorisation de candidats)."],
+      ["Enseignement", "Chaîne de bout en bout pour illustrer bioinfo, ML, optimisation et visualisation 3D."],
+      ["Ingénierie", "Conception microservices, jobs asynchrones, observabilité, déploiement reproductible."],
+      ["MLOps", "Traçabilité, orchestration, reproductibilité des runs et packaging portable (Docker)."]
+    ]
+  }}
+/>
+
+## Architecture technique
+
+<Table
+  data={{
+    headers: [
+      { content: "Composant", key: "comp" },
+      { content: "Technologies", key: "tech" },
+      { content: "Rôle", key: "role" }
+    ],
+    rows: [
+      ["Prédiction 3D", "AlphaFold (API EBI)", "Structures protéiques initiales"],
+      ["Analyse de poches", "P2Rank", "Sites de liaison potentiels"],
+      ["Docking", "GNINA", "Poses & scoring DL"],
+      ["Optimisation", "scikit-optimize", "Exploration guidée (BO)"],
+      ["Interface", "React + 3Dmol.js", "Visualisation 3D interactive"],
+      ["Backend", "Python FastAPI", "Orchestration & gestion de jobs"],
+      ["Déploiement", "Docker / AWS EC2", "Isolation GPU/CPU, scaling par service"]
+    ]
+  }}
+/>
+
+## État du pipeline
+
+<Card radius="l-4" padding="12">
+  <Column gap="6">
+    <Text variant="label-strong-m">Pipeline complet et évolutif — <em>en développement</em></Text>
+    <Text align="justify" onBackground="neutral-medium">
+      Intégration progressive : AlphaFold → Poches → Docking → Optimisation bayésienne → UI 3D,
+      orchestrée par FastAPI et déployée sous Docker. Priorités actuelles : stabilisation GNINA,
+      itérations de l’optimisation bayésienne et instrumentation (metrics/logs).
+    </Text>
+  </Column>
+</Card>
+
+## Difficultés et apprentissages
+
+<Text align="justify">
+Chaînage d’outils hétérogènes et <strong>gestion GPU</strong> (files de jobs, reprise sur échec), conception d’<strong>APIs robustes</strong>
+(idempotence, retries, quotas, monitoring) et <strong>visualisation 3D</strong> scientifique côté web.
+</Text>
+
+## Prochaines étapes
+
+<Table
+  data={{
+    headers: [
+       { content: "Étape", key: "step" },
+       { content: "Détail", key: "detail" }
+    ],
+    rows: [
+      ["Finaliser docking & BO", "Stabiliser GNINA et l’exploration bayésienne (scikit-optimize)."],
+      ["Orchestration cloud", "Déployer sur AWS EC2, file de jobs, autoscaling, observabilité."],
+      ["Doc & démos", "Scénarios reproductibles, échantillons de structures et tutoriels UI."]
+    ]
+  }}
+/>
+
+<Text align="justify" marginTop="12">
+🔗 <strong>Statut :</strong> développement continu. Premières démonstrations locales prévues en fin de semestre.
+</Text>

@@ -1,0 +1,159 @@
+---
+title: "Quant-MLOps — Plateforme d’Analyse Quantitative & Orchestration ML"
+description: "Pipeline complet pour la finance quantitative : ingestion, feature store, backtests, registry MLflow, API FastAPI et observabilité Prometheus/Grafana."
+summary: "Automatisation et reproductibilité du cycle ML appliqué à la finance quantitative — du traitement des données au déploiement des modèles, avec suivi en production."
+publishedAt: "2025-04-15"
+tags:
+  - "MLOps"
+  - "Finance Quantitative"
+  - "Airflow"
+  - "Feast"
+  - "MLflow"
+  - "FastAPI"
+  - "Docker"
+  - "Prometheus"
+  - "Grafana"
+  - "DuckDB"
+  - "Parquet"
+images:
+  - "/images/projects/quant-mlops/cover.jpeg"
+---
+
+# Quant-MLOps — Plateforme d’Analyse Quantitative & Orchestration ML
+
+<Text align="justify">
+Le projet <strong>Quant-MLOps</strong> a pour ambition de rendre le développement de modèles de finance quantitative
+<strong>automatisé, traçable et reproductible</strong>. Il s’inspire des bonnes pratiques du MLOps pour orchestrer
+tout le cycle de vie des modèles — de la donnée brute au modèle déployé et monitoré.
+</Text>
+
+## Contexte & Motivation
+
+<Table
+  data={{
+    headers: [
+      { content: "Problème", key: "pb" },
+      { content: "Constat", key: "ctx" }
+    ],
+    rows: [
+      ["Manque d’intégration", "Les environnements de recherche en finance quantitative restent fragmentés (scripts isolés, runs non traçables)."],
+      ["Reproductibilité limitée", "Les backtests ne sont pas systématiquement versionnés ni comparables."],
+      ["Difficulté de passage en prod", "Les modèles performants en recherche ne sont pas industrialisés."],
+      ["Absence d’observabilité", "Peu de visibilité sur les métriques métier et les dérives de données."]
+    ]
+  }}
+/>
+
+<Text align="justify">
+Pour y répondre, <strong>Quant-MLOps</strong> propose un écosystème complet pour <em>collecter, transformer, entraîner, évaluer, déployer et monitorer</em> des modèles quantitatifs à grande échelle.
+</Text>
+
+## Architecture technique
+
+<Table
+  data={{
+    headers: [
+      { content: "Composant", key: "comp" },
+      { content: "Technologie", key: "tech" },
+      { content: "Rôle", key: "role" }
+    ],
+    rows: [
+      ["Ingestion & orchestration", "Airflow + Kafka/Redpanda", "Planification et automatisation des DAGs d’ingestion et d’entraînement"],
+      ["Stockage", "TimescaleDB / Parquet / Arrow", "Stockage optimisé des séries temporelles financières"],
+      ["Feature Store", "Feast (offline/online)", "Versioning, réutilisation et cohérence des features"],
+      ["Modélisation & backtests", "scikit-learn, PyPortfolioOpt, statsmodels", "Backtests Markowitz, Black-Litterman, Risk Parity"],
+      ["Registry & tracking", "MLflow", "Suivi des runs, métriques, artefacts, promotion staging → production"],
+      ["API & UI", "FastAPI + HTMX/Plotly", "Endpoints /score, /optimize, /metrics, tableaux interactifs"],
+      ["Observabilité", "Prometheus, Grafana, Alertmanager", "Surveillance des performances et dérives"],
+      ["CI/CD & sécurité", "GitHub Actions, Docker", "Tests, scans, intégration continue et déploiement automatisé"]
+    ]
+  }}
+/>
+
+## Flux opérationnel
+
+<Table
+  data={{
+    headers: [
+      { content: "Étape", key: "step" },
+      { content: "Description", key: "desc" }
+    ],
+    rows: [
+      ["1. Ingestion", "Airflow collecte les données (Yahoo, CoinGecko...) et déclenche les pipelines."],
+      ["2. Préparation", "Les données sont nettoyées et stockées dans TimescaleDB (formats Parquet)."],
+      ["3. Feature Store", "Feast matérialise les features pour entraînement et inférence."],
+      ["4. Entraînement & backtests", "Scripts MLflow enregistrant Sharpe, max drawdown, turnover, etc."],
+      ["5. Promotion", "Le modèle validé passe en production via FastAPI."],
+      ["6. Monitoring", "Prometheus et Grafana suivent latence, drift et performances en ligne."]
+    ]
+  }}
+/>
+
+## Intérêt et Valeur ajoutée
+
+<Table
+  data={{
+    headers: [
+      { content: "Axe", key: "axis" },
+      { content: "Valeur", key: "value" }
+    ],
+    rows: [
+      ["Reproductibilité", "Tous les runs et backtests sont traçables et comparables."],
+      ["Automatisation", "Airflow + MLflow garantissent un flux end-to-end sans intervention manuelle."],
+      ["Observabilité", "Suivi technique et métier (Sharpe, drift, latence API) en temps réel."],
+      ["Interopérabilité", "Intégration aisée de nouveaux modèles, sources de données ou algos."],
+      ["Expertise", "Démonstration complète de maîtrise MLOps appliquée à la finance."]
+    ]
+  }}
+/>
+
+## Difficultés & Apprentissages
+
+<Text align="justify">
+Le projet a nécessité une coordination fine entre les services (<strong>Airflow, MLflow, Feast</strong>), la
+gestion des dépendances Docker, et la garantie de cohérence entre données offline/online.
+La mise en place d’un monitoring fiable (Prometheus + Grafana) et d’une CI/CD sécurisée
+a renforcé la compréhension des <strong>patterns MLOps</strong> et des architectures distribuées.
+</Text>
+
+## État d’avancement
+
+<Card radius="l-4" padding="12">
+  <Column gap="6">
+    <Text variant="label-strong-m">Statut — <em>développement actif (focus pipelines)</em></Text>
+    <Text align="justify" onBackground="neutral-medium">
+      • Conception des DAGs d’ingestion <strong>en cours</strong> (Airflow) et schéma <strong>TimescaleDB</strong> en définition.<br/>
+      • Normalisation des données et calculs de premières features : <strong>en intégration</strong>.<br/>
+      • Intégration <strong>MLflow</strong> (tracking/artefacts) : <strong>à câbler</strong> après stabilisation des pipelines.<br/>
+      • <strong>Feast</strong> (Feature Store) : <strong>à configurer</strong> une fois l’ingestion stabilisée.<br/>
+      • API <strong>FastAPI</strong> (/score, /optimize) et dashboards <strong>Grafana</strong> : <strong>non déployés</strong> pour l’instant.
+    </Text>
+    <Text align="justify" onBackground="neutral-weak">
+      Prochaines étapes : stabiliser l’ingestion quotidienne, matérialiser les FeatureViews (Feast),
+      lancer les premiers backtests, brancher MLflow pour la promotion des modèles, puis exposer les endpoints FastAPI et
+      instrumenter l’observabilité (Prometheus/Grafana).
+    </Text>
+  </Column>
+</Card>
+
+## Perspectives
+
+<Table
+  data={{
+    headers: [
+      { content: "Axe", key: "axis" },
+      { content: "Évolution prévue", key: "evo" }
+    ],
+    rows: [
+      ["Cloud", "Déploiement Kubernetes (Helm, Secrets, RBAC)"],
+      ["ML", "Ajout de stratégies RL et détection de drift automatique"],
+      ["UI", "Tableau de bord enrichi avec Panel/Plotly Dash"],
+      ["SaaS", "Accès utilisateur externe et exécution paramétrable"],
+      ["Documentation", "Rédaction d’un guide complet et cas d’usage reproductibles"]
+    ]
+  }}
+/>
+
+<Text align="justify" marginTop="12">
+🔗 <strong>Statut :</strong> projet en développement continu, démonstrations reproductibles prévues fin 2025.
+</Text>
