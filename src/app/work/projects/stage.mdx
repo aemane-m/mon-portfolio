@@ -1,0 +1,148 @@
+---
+title: "Automatiser le support Moodle avec l’IA : stage au CIP PSL"
+publishedAt: "2025-09-01"
+summary: "Développement d’un pipeline Python et d’un prototype de chatbot IA pour améliorer le support Moodle au Centre d’Innovation Pédagogique de PSL."
+tag: "Magic Portfolio"
+images:
+  - "/images/projects/stage/stage.jpg"
+team:
+  - name: "Aemane Mouteirou"
+    role: "Étudiant MIAGE, Université Paris Dauphine – PSL"
+    avatar: "/images/avatar.jpg"
+link: "https://www.psl.eu/formation/centre-innovation-pedagogique"
+lang: "fr"
+draft: false
+seo:
+  title: "Automatiser le support Moodle avec l’IA — Stage au CIP PSL"
+  description: "Conception d’un pipeline Python et d’un chatbot IA pour automatiser le support Moodle au Centre d’Innovation Pédagogique de PSL."
+  canonical: "/work/automatiser-support-moodle-ia"
+  ogImage: "/images/projects/stage/stage.jpg"
+---
+
+Après trois années passées au **Centre d’Innovation Pédagogique (CIP)** de l’Université **PSL** en tant qu’étudiant moniteur, j’ai poursuivi cette expérience avec un **stage de fin de Licence MIAGE**, toujours au sein du **pôle Usages & Outils**.  
+Ce stage a été l’occasion de mener un projet plus abouti autour d’un sujet que je connaissais bien : **le support Moodle**.
+
+Chaque année, ce service reçoit plusieurs milliers de tickets provenant de différents établissements de PSL (*Dauphine, ENS, MINES Paris, ESPCI*, etc.).  
+Avec le temps, la quantité d’échanges rendait difficile le classement et la réutilisation des réponses.  
+
+L’idée était donc simple : **voir comment l’intelligence artificielle pouvait aider à structurer ces données** et **automatiser une partie du traitement**, sans retirer la dimension humaine du support.
+
+<Callout tone="brand">
+Le projet combinait automatisation des flux et traitement du langage pour mieux exploiter l’historique des tickets Moodle.
+</Callout>
+
+---
+
+## Objectifs
+
+Le travail s’est articulé autour de deux volets principaux :
+
+<Table
+  data={{
+    headers: [
+      { content: "Volet", key: "task" },
+      { content: "Description", key: "desc" }
+    ],
+    rows: [
+      ["Structuration des données", "Catégoriser automatiquement les tickets et créer une base de données exploitable"],
+      ["Automatisation du support", "Expérimenter des approches de réponse automatisée basées sur les modèles de langage"]
+    ]
+  }}
+/>
+
+Cette mission m’a permis d’explorer concrètement les **applications de l’IA dans un contexte universitaire**, entre **analyse de données**, **traitement automatique du langage** et **optimisation de processus internes**.
+
+---
+
+## Approche technique
+
+Le projet s’appuie sur deux environnements complémentaires :  
+**n8n** pour prototyper les workflows, puis un **pipeline Python** pour industrialiser le traitement.
+
+<CodeBlock
+  codes={[
+    {
+      code: "python main.py --threads 8 --source crisp_api.json --output anonymized_tickets.json",
+      language: "bash",
+      label: "Exécution du pipeline Python"
+    }
+  ]}
+/>
+
+Principaux outils utilisés :
+- **Python** (Pandas, Regex, SpaCy, multi-threading)
+- **Ollama** pour exécuter localement des modèles de langage (*Mistral, LLaMA, Granite*)
+- **n8n** pour l’automatisation des tâches
+- **Docker** pour garantir la reproductibilité
+
+<Callout tone="neutral">
+Le pipeline a permis de traiter environ 9 000 tickets, d’en extraire 1 900 questions récurrentes et de constituer une base de connaissances anonymisée.
+</Callout>
+
+---
+
+## Résultats
+
+- ~9 000 tickets traités et anonymisés  
+- +1 900 questions récurrentes identifiées automatiquement  
+- Base de connaissances interne sur le support Moodle  
+- Prototype de chatbot Crisp relié aux tutoriels pédagogiques  
+
+<Media
+  src="/images/projects/stage/chatbot.png"
+  alt="Prototype de chatbot Crisp relié aux tutoriels Moodle"
+  aspectRatio="16/9"
+  radius="l"
+/>
+
+---
+
+## Compétences mobilisées
+
+<Table
+  data={{
+    headers: [
+      { content: "Catégorie", key: "domain" },
+      { content: "Compétences", key: "skills" }
+    ],
+    rows: [
+      ["Développement", "Python, JavaScript"],
+      ["Data / IA", "Pandas, SpaCy, Regex, NLP, LLM locaux (Ollama)"],
+      ["Automatisation", "n8n, Docker, traitement multi-thread"],
+      ["Méthodologie", "Documentation, tests, structuration de projet"],
+      ["Travail d’équipe", "Collaboration inter-pôles, support technique"]
+    ]
+  }}
+/>
+
+---
+
+## Bilan
+
+Ce projet m’a permis de lier mes connaissances en **développement**, **données** et **intelligence artificielle** à un cas d’usage concret au sein de l’université.  
+Il m’a aussi donné une meilleure compréhension des contraintes d’un service de support pédagogique et des enjeux liés à la confidentialité des données.
+
+<Callout tone="neutral">
+Un projet technique, mais surtout une expérience très formatrice sur la mise en place de solutions réelles dans un environnement institutionnel.
+</Callout>
+
+---
+
+<Button
+  variant="primary"
+  label="📎 Télécharger le rapport de stage complet"
+  href="https://drive.google.com/your-report-link"
+/>
+
+---
+
+## Remerciements
+
+Je remercie chaleureusement :
+
+- **Marion SALES-CHARPENTIER**, ingénieure pédagogique, pour son accompagnement et ses conseils.  
+- **Willy MORSCHEIDT**, responsable du pôle Usages & Outils, pour sa confiance et son expertise.  
+- **Élisabeth LACAZE**, **Estelle GOUZE** et **Soazig CALLAC**, pour leurs retours constructifs.  
+- **Lola TURGIS-MOY**, pour m’avoir ouvert les portes du CIP il y a quatre ans.  
+
+Et plus globalement, **l’Université PSL** et **Dauphine – PSL** pour leur cadre stimulant et innovant.
