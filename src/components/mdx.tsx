@@ -170,6 +170,65 @@ function createHR() {
   );
 }
 
+//-----
+
+// 🔽 AJOUTE ceci quelque part au-dessus de `const components = { ... }`
+
+type CalloutTone = "brand" | "neutral" | "critical";
+
+function Callout({
+  tone = "neutral",
+  title,
+  children,
+}: {
+  tone?: CalloutTone;
+  title?: ReactNode;
+  children: ReactNode;
+}) {
+  // On s’appuie uniquement sur des tokens déjà vus dans ton fichier
+  // (surface / neutral-alpha-medium) pour éviter les valeurs inconnues.
+  // L’iconographie varie selon le tone, ce qui donne un feedback visuel clair.
+  const iconName: Record<CalloutTone, React.ComponentProps<typeof Icon>["name"]> = {
+    brand: "info",
+    neutral: "info",
+    critical: "warning",
+  };
+
+  // Couleur de l’icône via onBackground : valeurs déjà utilisées dans tes exemples
+  const iconTone: Record<CalloutTone, React.ComponentProps<typeof Icon>["onBackground"]> = {
+    brand: "info-medium",
+    neutral: "neutral-medium",
+    critical: "warning-medium",
+  };
+
+  return (
+    <Row
+      fillWidth
+      padding="12"
+      radius="m"
+      gap="12"
+      background="surface"
+      border="neutral-alpha-medium"
+      marginTop="8"
+      marginBottom="16"
+    >
+      <Icon name={iconName[tone]} onBackground={iconTone[tone]} size="m" />
+      <Column gap="4">
+        {title ? (
+          <Text variant="body-strong-m" onBackground="neutral-strong">
+            {title}
+          </Text>
+        ) : null}
+        <Text variant="body-default-m" onBackground="neutral-medium" style={{ lineHeight: "175%" }}>
+          {children}
+        </Text>
+      </Column>
+    </Row>
+  );
+}
+// 🔼 FIN ajout Callout
+
+
 const components = {
   p: createParagraph as any,
   h1: createHeading("h1") as any,
@@ -202,6 +261,7 @@ const components = {
   Icon,
   Media,
   SmartLink,
+  Callout: Callout as any,
 };
 
 type CustomMDXProps = MDXRemoteProps & {
