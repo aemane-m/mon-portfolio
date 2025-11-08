@@ -7,7 +7,7 @@ const person: Person = {
   name: `Aemane MOUTEIROU`,
   role: "Étudiant en M1 MIAGE (Dauphine – PSL) • MLOps & Data Science",
   avatar: "/images/avatar.jpg",
-  email: "example@gmail.com", // à remplacer
+  email: "aemane.mouteirou@dauphine.eu",
   location: "Europe/Paris",
   languages: ["Français", "Anglais"],
 };
@@ -170,7 +170,7 @@ studies: {
         <>
           {/* Intro mieux formulée + respiration */}
           <Text variant="label-strong-m">Parcours universitaire (L1 → M1)</Text><br />
-          <Text align="justify" marginTop="6" marginBottom="16">
+          <Text align="justify" marginTop="8" marginBottom="16">
             Parcours progressif en mathématiques, informatique et systèmes d’information. 
             Aujourd’hui en <strong>M1 MIAGE</strong>, je consolide mes bases logicielles et décisionnelles 
             tout en approfondissant le <strong>Machine Learning</strong> et le <strong>MLOps</strong> via le projet 
