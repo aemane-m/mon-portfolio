@@ -31,7 +31,7 @@ const social: Social = [
 
 const home: Home = {
   path: "/",
-  image: "/images/og/home.jpg",
+  image: "/images/avatar.jpg",
   label: "Accueil",
   title: `Portfolio de ${person.name}`,
   description: `Travaux et apprentissages en ${person.role}`,
