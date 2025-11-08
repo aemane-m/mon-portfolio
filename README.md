@@ -1,91 +1,88 @@
-# Magic Portfolio
 
-Magic Portfolio is a simple, clean, beginner-friendly portfolio template. It supports an MDX-based content system for projects and blog posts, an about / CV page and a gallery.
+# Mon Portfolio — Next.js x Once UI
 
-View the demo [here](https://demo.magic-portfolio.com).
+Ce dépôt contient le code source de mon **portfolio personnel**, conçu avec [Next.js](https://nextjs.org) et [Once UI](https://once-ui.com).  
+Le site présente mes **projets techniques**, mes **articles** et mon **parcours académique et professionnel**.
 
-![Magic Portfolio](public/images/og/home.jpg)
+---
 
-## Getting started
+## Aperçu
 
-**1. Clone the repository**
-```
-git clone https://github.com/once-ui-system/magic-portfolio.git
-```
+- **Nom de domaine** : [dpmaine.fr](https://www.aemanemouteirou.com/)  
+- **Technologies principales** : Next.js · React · MDX · Once UI  
+- **Déploiement continu** : Cloudflare Pages + GitHub Actions  
 
-**2. Install dependencies**
-```
+![Aperçu du site](public/images/blog/Mon_Portfolio.jpeg)
+
+---
+
+## Installation locale
+
+### 1. Cloner le dépôt
+```bash
+git clone https://github.com/aemane-m/mon-portfolio.git
+cd mon-portfolio
+````
+
+### 2. Installer les dépendances
+
+```bash
 npm install
 ```
 
-**3. Run dev server**
-```
+### 3. Lancer le serveur de développement
+
+```bash
 npm run dev
 ```
 
-**4. Edit config**
-```
-src/resources/once-ui.config.js
-```
+Le site sera accessible sur [http://localhost:3000](http://localhost:3000)
 
-**5. Edit content**
-```
-src/resources/content.js
-```
+---
 
-**6. Create blog posts / projects**
-```
-Add a new .mdx file to src/app/blog/posts or src/app/work/projects
-```
+## 🧩 Structure du projet
 
-Magic Portfolio was built with [Once UI](https://once-ui.com) for [Next.js](https://nextjs.org). It requires Node.js v18.17+.
+### Contenu et configuration
 
-## Documentation
+* **Configuration principale** : `src/resources/once-ui.config.js`
+* **Contenus** (texte, liens, réseaux, pages actives) : `src/resources/content.js`
 
-Docs available at: [docs.once-ui.com](https://docs.once-ui.com/docs/magic-portfolio/quick-start)
+### Articles et projets
 
-## Features
+* **Articles de blog** : `src/app/blog/posts/*.mdx`
+* **Projets** : `src/app/work/projects/*.mdx`
 
-### Once UI
-- All tokens, components & features of [Once UI](https://once-ui.com)
+Chaque page est écrite en **MDX**, ce qui permet de mélanger du markdown et des composants React.
 
-### SEO
-- Automatic open-graph and X image generation with next/og
-- Automatic schema and metadata generation based on the content file
+---
 
-### Design
-- Responsive layout optimized for all screen sizes
-- Timeless design without heavy animations and motion
-- Endless customization options through [data attributes](https://once-ui.com/docs/theming)
+## Déploiement
 
-### Content
-- Render sections conditionally based on the content file
-- Enable or disable pages for blog, work, gallery and about / CV
-- Generate and display social links automatically
-- Set up password protection for URLs
+Le portfolio est déployé automatiquement via **Cloudflare Pages**.
+Chaque *push* sur la branche `main` déclenche un **workflow GitHub Actions** qui :
 
-### Localization
-- A localized, earlier version of Magic Portfolio is available with the next-intl library
-- To use localization, switch to the 'i18n' branch
+1. reconstruit l’application en mode production
+2. déploie la nouvelle version sur le domaine `aemanemouteirou.com`
 
-## Creators
+---
 
-Lorant One: [Threads](https://www.threads.net/@lorant.one) / [LinkedIn](https://www.linkedin.com/in/lorant-one/)
+## Sécurité et confidentialité
 
-## Get involved
+Ce portfolio est **privé** et hébergé sur un domaine personnel.
+Certaines sections (ex. projets internes ou documents professionnels) peuvent être protégées ou rendues inaccessibles au public.
 
-- Join the Design Engineers Club on [Discord](https://discord.com/invite/5EyAQ4eNdS) and share your project with us!
-- Deployed your docs? Share it on the [Once UI Hub](https://once-ui.com/hub) too! We feature our favorite apps on our landing page.
+---
 
-## License
+## Auteur
 
-Distributed under the CC BY-NC 4.0 License.
-- Attribution is required.
-- Commercial usage is not allowed.
-- You can extend the license to [Dopler CC](https://dopler.app/license) by purchasing a [Once UI Pro](https://once-ui.com/pricing) license.
+Développé par **Aemane MOUTEIROU**
 
-See `LICENSE.txt` for more information.
+* [LinkedIn](https://www.linkedin.com/in/aemane)
+* [GitHub](https://github.com/aemane-m)
 
-## Deploy with Vercel
+---
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fonce-ui-system%2Fmagic-portfolio&project-name=portfolio&repository-name=portfolio&redirect-url=https%3A%2F%2Fgithub.com%2Fonce-ui-system%2Fmagic-portfolio&demo-title=Magic%20Portfolio&demo-description=Showcase%20your%20designers%20or%20developer%20portfolio&demo-url=https%3A%2F%2Fdemo.magic-portfolio.com&demo-image=%2F%2Fraw.githubusercontent.com%2Fonce-ui-system%2Fmagic-portfolio%2Fmain%2Fpublic%2Fimages%2Fog%2Fhome.jpg)
+## 📜 Licence
+
+Ce projet est basé sur le template [Magic Portfolio](https://github.com/once-ui-system/magic-portfolio),
+distribué sous licence **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)**.
