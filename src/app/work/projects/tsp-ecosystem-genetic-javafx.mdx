@@ -1,129 +1,90 @@
 ---
-title: "TSP académique — Algorithme génétique, JavaFX et PostgreSQL"
-description: "Modélisation d’un écosystème académique et résolution du TSP par algorithme génétique : Java (génériques), JavaFX pour l’UI, PostgreSQL via JDBC, et tests JUnit5."
-publishedAt: "2024-12-15"
-summary: "Projet universitaire de L3 : moteur d’algorithmes génétiques, interface JavaFX pour paramétrer et visualiser les simulations, persistance PostgreSQL, et tests unitaires."
-tags:
-  - "Java"
-  - "Algorithmes génétiques"
-  - "JavaFX"
-  - "PostgreSQL"
-  - "JUnit5"
-  - "OpenJDK 21"
+title: "Architecture et défis du projet Java — TSP académique et algorithme génétique"
+publishedAt: "2025-01-15"
+summary: "Retour d’expérience sur la conception, la structure et les défis d’un projet universitaire combinant JavaFX, PostgreSQL et un moteur d’algorithme génétique."
+tag: "Magic Portfolio"
 images:
   - "/images/projects/tsp-ecosystem/tsp2.jpeg"
-link: "/work/tsp-academique"
+team:
+  - name: "Aemane Mouteirou"
+    avatar: "/images/avatar.jpg"
+  - name: "Clara Brehon"
+  - name: "Sara Lopez De Varo"
+
+link: "https://github.com/aemane-m/Projet_Algo_Genetic_Java"
+lang: "fr"
+draft: false
+seo:
+  title: "Retour d’expérience — TSP académique en Java"
+  description: "Comment nous avons conçu un projet Java modulaire combinant UI JavaFX, algorithme génétique et base PostgreSQL."
+  canonical: "/blog/architecture-projet-tsp"
+  ogImage: "/images/projects/tsp-ecosystem/tsp2.jpeg"
 ---
 
-# TSP académique — Algorithme génétique, JavaFX et PostgreSQL
-
-<Row gap="8" wrap>
-  <Text onBackground="neutral-strong">Projet universitaire</Text>
-  <Text>·</Text>
-  <Text>Optimisation combinatoire</Text>
-  <Text>·</Text>
-  <Text>POO Java</Text>
-</Row>
-
-## Contexte et objectif
+## De l’idée au projet
 
 <Text align="justify">
-Le projet part d’un énoncé classique — le voyageur de commerce (TSP) — appliqué à un <strong>écosystème académique</strong> (personnes, disciplines, villes, régions). L’objectif : modéliser cet écosystème, <strong>charger les villes</strong> et leurs attributs, puis <strong>optimiser une tournée</strong> (cycle hamiltonien) à l’aide d’un <strong>algorithme génétique</strong> (sélection proportionnelle à la fitness, crossover, mutation, élitisme).
+L’objectif de ce projet universitaire était de concevoir une application Java complète : une interface graphique pour gérer un écosystème académique, une base de données relationnelle pour la persistance, et un moteur d’algorithme génétique pour résoudre le problème du voyageur de commerce (TSP). Ce travail nous a confrontés à la complexité d’un vrai projet logiciel, de la structure du code jusqu’à la gestion des données et des tests unitaires.
 </Text>
 
-## Ce que j’ai fait
-
-<Table
-  data={{
-    headers: [
-      { content: "Axe", key: "axe", sortable: true },
-      { content: "Contribution", key: "contrib" }
-    ],
-    rows: [
-      ["Modélisation domaine", "Hiérarchie objet (Personne, Titulaire, Chercheur, MCF, Étudiant), Ville, énumération Region (chef-lieu, superficie, population, départements)."],
-      ["Persistance JDBC", "Chargement des villes/régions et de l’écosystème depuis PostgreSQL (JDBC), configuration du driver et des connexions."],
-      ["Moteur GA générique", "Interfaces/classes génériques pour Population, Fitness, Selection, Crossover, Mutation, Elite ; paramètres ajustables."],
-      ["Opérateurs TSP", "Cycle comme permutation ; crossover « cycle-based », mutation par swap ; fitness = distance totale."],
-      ["UI JavaFX", "Écran de critères (filtres), panneau de paramètres GA, exécution de la simulation, affichage des résultats, export."],
-      ["Qualité & tests", "JUnit5 sur 5 méthodes cibles (fitness, crossover, mutation, sélection, construction de permutation) + Javadoc."]
-    ]
-  }}
-/>
-
-## Fonctionnalités principales
-
-<ul>
-  <li>Paramétrage GA : taille de population, probabilité de mutation, élitisme, itérations.</li>
-  <li>Critères écosystème : sélection de personnes par discipline/rôle, mappage vers les villes.</li>
-  <li>Simulation TSP : génération → sélection → crossover → mutation → élitisme → convergence.</li>
-  <li>Interface JavaFX : critères, paramètres, lancement, meilleurs itinéraires, export.</li>
-  <li>Règles de saisie : villes en <strong>MAJUSCULES</strong> dans l’UI (cohérence avec les données).</li>
-</ul>
-
-## Architecture et design
-
-<Table
-  data={{
-    headers: [
-      { content: "Composant", key: "comp" },
-      { content: "Rôle", key: "role" },
-      { content: "Technos", key: "tech" }
-    ],
-    rows: [
-      ["Domaine", "Écosystème académique : personnes, disciplines, villes, régions", "Java (POO, génériques)"],
-      ["Persistance", "Accès via JDBC ; chargement villes/régions et relations", "PostgreSQL + JDBC"],
-      ["Moteur GA", "Population, fitness, sélection pondérée, crossover TSP, mutation swap, élitisme", "Java (interfaces + impl)"],
-      ["Interface", "Paramétrage, exécution, visualisation des résultats", "JavaFX (scènes, contrôleurs)"],
-      ["Tests & doc", "Tests ciblés et Javadoc", "JUnit5, Javadoc"]
-    ]
-  }}
-/>
+## Une architecture pensée pour durer
 
 <Text align="justify">
-Le moteur d’algorithme génétique est <strong>réutilisable</strong> : les opérateurs (crossover/mutation) sont interchangeables et le cœur peut servir à d’autres problèmes d’optimisation sans impacter l’UI ni la persistance.
+Dès le départ, nous avons misé sur une <strong>architecture claire et modulaire</strong>. Le dossier <InlineCode>src</InlineCode> est organisé en plusieurs packages, chacun avec une responsabilité bien définie : interface utilisateur, logique métier, persistance des données, algorithme génétique et tests.
 </Text>
 
-## Points techniques notables
+<Callout tone="brand">Cette séparation a permis à chaque membre de l’équipe de travailler indépendamment, tout en gardant un code propre et évolutif.</Callout>
 
-<ul>
-  <li><strong>Sélection proportionnelle</strong> : tirage pondéré, favorisant les cycles courts.</li>
-  <li><strong>Crossover TSP</strong> (cycle) : combine deux parents tout en préservant la validité de la permutation.</li>
-  <li><strong>Mutation swap</strong> : permutation aléatoire de deux villes pour maintenir la diversité.</li>
-  <li><strong>Élitisme</strong> : conservation d’un pourcentage des meilleurs individus.</li>
-</ul>
+- **application/** : tout ce qui touche à l’interface JavaFX et aux contrôleurs. Des classes comme <InlineCode>ControllerSimulation</InlineCode> ou <InlineCode>MainController</InlineCode> orchestrent la navigation et les interactions utilisateur.
+- **database/** : la couche d’accès aux données, où <InlineCode>ConnexionBDD</InlineCode> et <InlineCode>DatabaseHelper</InlineCode> gèrent la communication avec PostgreSQL.
+- **genetic/** : le cœur du moteur d’algorithme génétique, avec des classes comme <InlineCode>GeneticAlgorithm</InlineCode> ou <InlineCode>MutationOperator</InlineCode> pour modéliser les différentes étapes de la recherche de solutions.
+- **projet/** : les entités du domaine (villes, régions, personnes) et un sous-package <InlineCode>tsp</InlineCode> pour l’adaptation de l’algorithme génétique au problème du voyageur de commerce.
+- **test/** : les tests JUnit5, essentiels pour valider la stabilité du projet.
 
-## Résultats et apprentissages
-
-<ul>
-  <li>Amélioration par rapport aux heuristiques simples (ex. nearest neighbor) sur jeux de test.</li>
-  <li>Convergence reproductible via seed + élitisme ; compromis qualité/temps via paramètres.</li>
-  <li>Renforcement pratique : <strong>POO Java</strong> (génériques), <strong>JavaFX</strong> (UI), <strong>JDBC</strong> (accès données), <strong>JUnit5</strong> (tests).</li>
-</ul>
-
-## Prérequis et exécution (résumé)
-
-<Table
-  data={{
-    headers: [
-      { content: "Étape", key: "step", sortable: true },
-      { content: "Détail", key: "detail" }
-    ],
-    rows: [
-      ["Dépendances", "OpenJDK 21, JavaFX, PostgreSQL + driver JDBC"],
-      ["JavaFX (VM args)", "--module-path <chemin>/javafx/lib --add-modules javafx.controls,javafx.fxml"],
-      ["Base de données", "Créer la base, restaurer le script SQL, vérifier le driver et les identifiants"],
-      ["Lancement", "Démarrer l’app JavaFX, charger l’écosystème, régler GA, lancer, exporter"]
-    ]
-  }}
-/>
+## Un moteur d’algorithme génétique modulaire
 
 <Text align="justify">
-Pour la procédure détaillée (installation JavaFX, configuration PostgreSQL, VM arguments IDE, et étapes pas-à-pas), voir le README du projet.
+La partie la plus stimulante a sans doute été la conception du moteur génétique. L’idée était de créer un système générique, réutilisable pour d’autres problèmes d’optimisation. Chaque opérateur (sélection, crossover, mutation, élitisme) est défini par une interface et peut être remplacé sans modifier le reste du moteur. Ce choix s’est avéré payant : nous avons pu tester facilement plusieurs stratégies de mutation ou de sélection.
 </Text>
 
----
+<Callout tone="success">Un moteur générique et flexible, adapté à la résolution du TSP mais réutilisable pour d’autres applications d’optimisation.</Callout>
 
-<Feedback>
-  <strong>Référence :</strong> la documentation complète d’installation et d’utilisation est disponible dans le 
-  <SmartLink href="https://github.com/ton-depot/chat-multi-clients-c#readme" suffixIcon="chevronRight">  README du projet. </SmartLink>
-</Feedback>
+## Le défi de la base de données
+
+<Text align="justify">
+La gestion des données via PostgreSQL a été un autre grand chantier. Les contraintes relationnelles et les erreurs de cohérence ont souvent nécessité des ajustements entre le modèle objet Java et la structure SQL. Les classes de service comme <InlineCode>FetchDataService</InlineCode> ont permis de fluidifier les échanges et de maintenir la synchronisation entre la base et l’application.
+</Text>
+
+<Callout tone="critical">Chaque modification du schéma SQL impliquait une refonte partielle du code Java : un vrai apprentissage sur la dépendance entre persistance et modèle objet.</Callout>
+
+## JavaFX : entre plaisir et frustration
+
+<Text align="justify">
+Créer une interface en JavaFX fut à la fois gratifiant et exigeant. Scene Builder nous a aidés à concevoir rapidement les vues, mais connecter ces FXML à la logique métier via les contrôleurs a demandé rigueur et patience. Les interactions dynamiques entre les vues de simulation et l’écosystème ont représenté une part importante du débogage.
+</Text>
+
+<Callout tone="neutral">Une bonne interface ne suffit pas : il faut une logique claire derrière chaque interaction utilisateur.</Callout>
+
+## Tests et validation
+
+<Text align="justify">
+Nous avons mis un point d’honneur à tester toutes les couches du projet. Les tests les plus pertinents portaient sur l’algorithme génétique (validité de la population, mutation, croisement), les relations entre entités (Chercheurs et Étudiants), et la cohérence des objets de base comme <InlineCode>Ville</InlineCode>. Grâce à JUnit5, chaque modification majeure passait par une série de validations automatiques.
+</Text>
+
+<Callout tone="brand">Les tests unitaires nous ont permis de corriger tôt les incohérences et de maintenir un projet robuste jusqu’à la fin.</Callout>
+
+## Ce que nous avons appris
+
+<Text align="justify">
+Ce projet nous a permis d’expérimenter toutes les facettes du développement logiciel moderne : modélisation objet, conception d’algorithmes, gestion de base de données, interfaces utilisateur et tests automatisés. La difficulté a résidé dans la coordination de ces couches, mais c’est précisément ce qui en a fait une expérience formatrice.
+</Text>
+
+<Callout tone="success">Nous avons appris à concevoir un logiciel complet, du modèle jusqu’à l’expérience utilisateur, en comprenant l’importance de la modularité et du test unitaire.</Callout>
+
+<Button
+  variant="primary"
+  label="Accéder au dépôt GitHub"
+  href="https://github.com/aemane-m/Projet_Algo_Genetic_Java"
+  target="_blank"
+  rel="noopener"
+/>

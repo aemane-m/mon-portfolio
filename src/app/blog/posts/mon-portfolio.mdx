@@ -1,0 +1,87 @@
+---
+title: "Comment j’ai créé mon portfolio avec Next.js et Cloudflare Pages"
+publishedAt: "2025-11-08"
+summary: "Retour d’expérience sur la création de mon site portfolio, de l’achat du nom de domaine à la mise en ligne automatique via GitHub Actions et Cloudflare Pages."
+tags: ["Next.js", "Cloudflare", "Portfolio", "GitHub Actions", "Deployment"]
+image: "/images/blog/Mon_Portfolio.jpeg"
+lang: "fr"
+draft: false
+seo:
+  title: "Les avantages d’un portfolio en ligne"
+  description: "Découvrez pourquoi un portfolio en ligne est essentiel pour valoriser votre travail, renforcer votre crédibilité et attirer de nouvelles opportunités."
+  canonical: "/blog/interet-portfolio"
+  ogImage: "/images/blog/Mon_Portfolio.jpeg"
+---
+
+Créer un **portfolio professionnel moderne** est devenu indispensable pour présenter ses projets, son parcours et sa veille technique.  
+Dans cet article, je partage les étapes de la création de mon site personnel — du choix du nom de domaine à la mise en ligne automatisée.
+
+---
+
+## Étape 1 — Achat du nom de domaine
+
+La première étape a été de **réserver mon nom de domaine**.  
+J’ai choisi [OVH](https://www.ovh.com) pour sa simplicité et ses tarifs accessibles, et j’ai enregistré le domaine **`aemanemouteirou.com`**.  
+
+Cela m’a permis de disposer d’une adresse propre et professionnelle pour mon portfolio, tout en gardant la possibilité d’y connecter mes futurs projets.
+
+---
+
+## Étape 2 — Choisir un template moderne
+
+Plutôt que de partir de zéro, j’ai utilisé un template open-source que je trouvais à la fois élégant et bien structuré :  le **[Magic Portfolio](https://github.com/once-ui-system/magic-portfolio)** basé sur **Next.js** et **Once UI**.  
+
+Ce template m’a servi de base solide, avec une architecture claire, une gestion de contenu via **MDX** (idéal pour mes articles de blog), et un design épuré.
+
+---
+
+## Étape 3 — Personnaliser le design et les contenus
+
+J’ai ensuite **personnalisé le template** pour l’adapter à mon univers :
+
+- Modification des couleurs, polices et styles pour refléter mon identité visuelle  
+- Ajout de mes projets (comme mes travaux en C, JavaFX ou mes projets IA)  
+- Création d’articles MDX pour détailler mes réalisations  
+- Configuration des métadonnées SEO (titres, descriptions, balises sociales)  
+
+Cette étape m’a permis de transformer un modèle générique en **portfolio personnel unique**.
+
+---
+
+## Étape 4 — Déploiement avec Cloudflare Pages
+
+Pour héberger le site, j’ai choisi **[Cloudflare Pages](https://pages.cloudflare.com/)** — une solution gratuite et performante.  
+L’intégration avec **GitHub** est directe : il suffit de connecter son dépôt, et Cloudflare s’occupe du reste.
+
+Dès que je **pousse du code sur la branche `main`**, Cloudflare déclenche automatiquement un **workflow GitHub Actions** qui :
+
+1. reconstruit l’application Next.js  
+2. déploie la nouvelle version en ligne en quelques secondes  
+
+Cela garantit une **mise à jour continue** sans manipulation manuelle.
+
+---
+
+## Étape 5 — Sécurité et maintenance
+
+Avant la mise en ligne, j’ai veillé à désactiver le mode développement et à :
+
+- activer le mode **production** de Next.js (`next build && next start`)  
+- ajouter les **variables d’environnement** nécessaires dans Cloudflare  
+- vérifier les **entêtes de sécurité** (CSP, HTTPS, etc.)  
+
+Résultat : un site rapide, sécurisé et entièrement automatisé.
+
+---
+
+## Bilan
+
+Créer un portfolio ne se résume pas à publier quelques projets : c’est un **véritable produit personnel**, pensé, structuré et automatisé.
+
+Grâce à **Next.js**, **Cloudflare Pages** et **GitHub Actions**, j’ai mis en place une **chaîne de déploiement continue** sans coût, rapide et scalable.
+
+---
+
+<Callout tone="brand">
+Ce site n’est pas seulement une vitrine — c’est aussi un **laboratoire** où j’expérimente mes projets techniques et mes idées.
+</Callout>
