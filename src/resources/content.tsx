@@ -47,7 +47,7 @@ const home: Home = {
         </Text>
       </Row>
     ),
-    href: "/work/optimisation-portefeuille-sectoriel",
+    href: "/work/quant-mlops",
   },
   subline: (
       <Text align="justify">

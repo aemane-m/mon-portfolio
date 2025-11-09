@@ -99,31 +99,30 @@ export type EffectsConfig = {
   dots: {
     display: boolean;
     opacity: number;
-    size: string;
+    size: string;   // garde string pour accepter "2"
     color: string;
   };
   grid: {
     display: boolean;
     opacity: number;
     color: string;
-    width: string;
-    height: string;
+    width: string;  // ex: "0.25rem"
+    height: string; // ex: "0.25rem"
   };
   lines: {
     display: boolean;
     opacity: number;
     color: string;
-    size: string;
+    size: string;     // garde string pour accepter "16"
     thickness: number;
     angle: number;
   };
 };
 
 /**
- * Mailchimp configuration for newsletter forms.
+ * Configuration visuelle du bloc newsletter (anciennement Mailchimp)
  */
-export type MailchimpConfig = {
-  action: string;
+export type NewsletterEffectsConfig = {
   effects: EffectsConfig;
 };
 
@@ -166,11 +165,11 @@ export type SocialSharingConfig = {
 };
 
 /**
- * Top-level config types for once-ui.config.js
+ * Top-level config types for once-ui.config.ts
+ * (Tu exportes souvent chaque variable séparément ; ce champ newsletterEffects est optionnel.)
  */
 export type OnceUIConfig = {
   display: DisplayConfig;
-  mailchimp: MailchimpConfig;
   routes: RoutesConfig;
   protectedRoutes: ProtectedRoutesConfig;
   baseURL: string;
@@ -181,4 +180,5 @@ export type OnceUIConfig = {
   socialSharing: SocialSharingConfig;
   effects: EffectsConfig;
   dataStyle: DataStyleConfig;
+  newsletterEffects?: NewsletterEffectsConfig; // ✅ optionnel
 };

@@ -1,4 +1,4 @@
-// import a pre-defined template for config and content options
+// Import des templates de contenu
 export {
   person,
   social,
@@ -9,9 +9,9 @@ export {
   work,
 } from "./content";
 
+// Import des configurations principales
 export {
   display,
-  mailchimp,
   routes,
   protectedRoutes,
   baseURL,
@@ -22,4 +22,5 @@ export {
   socialSharing,
   effects,
   dataStyle,
+  newsletterEffects,
 } from "./once-ui.config";

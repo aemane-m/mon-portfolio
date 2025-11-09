@@ -3,18 +3,18 @@ import {
   DisplayConfig,
   EffectsConfig,
   FontsConfig,
-  MailchimpConfig,
   ProtectedRoutesConfig,
   RoutesConfig,
   SameAsConfig,
   SchemaConfig,
   SocialSharingConfig,
   StyleConfig,
+  NewsletterEffectsConfig,
 } from "@/types";
 import { home } from "./index";
 
-// IMPORTANT: Replace with your own domain address - it's used for SEO in meta tags and schema
-const baseURL: string = "https://demo.magic-portfolio.com";
+// IMPORTANT: Remplace par ton domaine (sans slash final)
+const baseURL: string = "https://www.aemanemouteirou.com/";
 
 const routes: RoutesConfig = {
   "/": true,
@@ -29,13 +29,10 @@ const display: DisplayConfig = {
   themeSwitcher: true,
 };
 
-// Enable password protection on selected routes
-// Set password in the .env file, refer to .env.example
-const protectedRoutes: ProtectedRoutesConfig = {
-  "/work/automate-design-handovers-with-a-figma-to-code-pipeline": true,
-};
+// Tu ne protèges aucune route pour l’instant
+const protectedRoutes: ProtectedRoutesConfig = {};
 
-// Import and set font for each variant
+// Import et set des fonts
 import { Geist } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
 
@@ -64,30 +61,30 @@ const code = Geist_Mono({
 });
 
 const fonts: FontsConfig = {
-  heading: heading,
-  body: body,
-  label: label,
-  code: code,
+  heading,
+  body,
+  label,
+  code,
 };
 
-// default customization applied to the HTML in the main layout.tsx
+// Customisation globale
 const style: StyleConfig = {
   theme: "system", // dark | light | system
   neutral: "gray", // sand | gray | slate | custom
-  brand: "cyan", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan | custom
-  accent: "red", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan | custom
-  solid: "contrast", // color | contrast
-  solidStyle: "flat", // flat | plastic
-  border: "playful", // rounded | playful | conservative
-  surface: "translucent", // filled | translucent
-  transition: "all", // all | micro | macro
-  scaling: "100", // 90 | 95 | 100 | 105 | 110
+  brand: "cyan", // ...
+  accent: "red",  // ...
+  solid: "contrast",
+  solidStyle: "flat",
+  border: "playful",
+  surface: "translucent",
+  transition: "all",
+  scaling: "100",
 };
 
 const dataStyle: DataStyleConfig = {
   variant: "gradient", // flat | gradient | outline
   mode: "categorical", // categorical | divergent | sequential
-  height: 24, // default chart height
+  height: 24,
   axis: {
     stroke: "var(--neutral-alpha-weak)",
   },
@@ -99,12 +96,7 @@ const dataStyle: DataStyleConfig = {
 };
 
 const effects: EffectsConfig = {
-  mask: {
-    cursor: false,
-    x: 50,
-    y: 0,
-    radius: 100,
-  },
+  mask: { cursor: false, x: 50, y: 0, radius: 100 },
   gradient: {
     display: false,
     opacity: 100,
@@ -116,12 +108,7 @@ const effects: EffectsConfig = {
     colorStart: "accent-background-strong",
     colorEnd: "page-background",
   },
-  dots: {
-    display: true,
-    opacity: 40,
-    size: "2",
-    color: "brand-background-strong",
-  },
+  dots: { display: true, opacity: 40, size: "2", color: "brand-background-strong" },
   grid: {
     display: false,
     opacity: 100,
@@ -129,25 +116,12 @@ const effects: EffectsConfig = {
     width: "0.25rem",
     height: "0.25rem",
   },
-  lines: {
-    display: false,
-    opacity: 100,
-    color: "neutral-alpha-weak",
-    size: "16",
-    thickness: 1,
-    angle: 45,
-  },
+  lines: { display: false, opacity: 100, color: "neutral-alpha-weak", size: "16", thickness: 1, angle: 45 },
 };
 
-const mailchimp: MailchimpConfig = {
-  action: "https://url/subscribe/post?parameters",
+const newsletterEffects: NewsletterEffectsConfig = {
   effects: {
-    mask: {
-      cursor: true,
-      x: 50,
-      y: 0,
-      radius: 100,
-    },
+    mask: { cursor: true, x: 50, y: 0, radius: 100 },
     gradient: {
       display: true,
       opacity: 90,
@@ -159,12 +133,7 @@ const mailchimp: MailchimpConfig = {
       colorStart: "accent-background-strong",
       colorEnd: "static-transparent",
     },
-    dots: {
-      display: true,
-      opacity: 20,
-      size: "2",
-      color: "brand-on-background-weak",
-    },
+    dots: { display: true, opacity: 20, size: "2", color: "brand-on-background-weak" },
     grid: {
       display: false,
       opacity: 100,
@@ -172,38 +141,31 @@ const mailchimp: MailchimpConfig = {
       width: "0.25rem",
       height: "0.25rem",
     },
-    lines: {
-      display: false,
-      opacity: 100,
-      color: "neutral-alpha-medium",
-      size: "16",
-      thickness: 1,
-      angle: 90,
-    },
+    lines: { display: false, opacity: 100, color: "neutral-alpha-medium", size: "16", thickness: 1, angle: 90 },
   },
 };
 
-// default schema data
+// Données schema par défaut (pense à personnaliser)
 const schema: SchemaConfig = {
   logo: "",
   type: "Organization",
-  name: "Once UI",
+  name: "dpmaine",
   description: home.description,
-  email: "lorant@once-ui.com",
+  email: "contact@dpmaine.fr",
 };
 
-// social links
+// Liens sociaux (à personnaliser)
 const sameAs: SameAsConfig = {
-  threads: "https://www.threads.com/@once_ui",
-  linkedin: "https://www.linkedin.com/company/once-ui/",
-  discord: "https://discord.com/invite/5EyAQ4eNdS",
+  threads: "",
+  linkedin: "https://www.linkedin.com/in/aemane-mouteirou/",
+  discord: "",
 };
 
-// social sharing configuration for blog posts
+// Partage social
 const socialSharing: SocialSharingConfig = {
   display: true,
   platforms: {
-    x: true,
+    x: false,
     linkedin: true,
     facebook: false,
     pinterest: false,
@@ -217,7 +179,6 @@ const socialSharing: SocialSharingConfig = {
 
 export {
   display,
-  mailchimp,
   routes,
   protectedRoutes,
   baseURL,
@@ -228,4 +189,5 @@ export {
   socialSharing,
   effects,
   dataStyle,
+  newsletterEffects,
 };
