@@ -15,9 +15,7 @@ import { opacity, SpacingToken } from "@once-ui-system/core";
 import React, { useCallback, useState } from "react";
 
 type Props = React.ComponentProps<typeof Column> & {
-  /** URL Substack (ex: https://aemanedev.substack.com) */
   substackUrl?: string;
-  /** Ouvrir l'inscription Substack dans un nouvel onglet */
   openInNewTab?: boolean;
 };
 
@@ -26,10 +24,9 @@ export function NewsletterForm({
   openInNewTab = true,
   ...flex
 }: Props) {
+  // ✅ Hooks toujours appelés, quelle que soit la condition
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-
-  if (!newsletter.display) return null;
 
   const isValid = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
@@ -41,9 +38,7 @@ export function NewsletterForm({
         return;
       }
       const url =
-        `${substackUrl.replace(/\/$/, "")}/subscribe` +
-        `?email=${encodeURIComponent(email)}&utm_source=portfolio`;
-
+        `${substackUrl.replace(/\/$/, "")}/subscribe?email=${encodeURIComponent(email)}&utm_source=portfolio`;
       if (openInNewTab) {
         window.open(url, "_blank", "noopener,noreferrer");
       } else {
@@ -52,6 +47,9 @@ export function NewsletterForm({
     },
     [email, substackUrl, openInNewTab],
   );
+
+  // ✅ La condition arrive après les Hooks
+  if (!newsletter.display) return null;
 
   return (
     <Column
@@ -66,7 +64,6 @@ export function NewsletterForm({
       border="neutral-alpha-weak"
       {...flex}
     >
-      {/* Effets visuels conservés (ex-Mailchimp) */}
       <Background
         top="0"
         position="absolute"
@@ -114,10 +111,7 @@ export function NewsletterForm({
         </Text>
       </Column>
 
-      <form
-        onSubmit={onSubmit}
-        style={{ width: "100%", display: "flex", justifyContent: "center" }}
-      >
+      <form onSubmit={onSubmit} style={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <Row id="substack_signup" fillWidth maxWidth={24} s={{ direction: "column" }} gap="8">
           <Input
             id="substack-email"
@@ -133,11 +127,13 @@ export function NewsletterForm({
             errorMessage={error}
           />
           <Row height="48" vertical="center">
-            <Button size="m" fillWidth type="submit">
-              S’abonner
-            </Button>
+            <Button size="m" fillWidth type="submit">S’abonner</Button>
           </Row>
-          
+          <Row horizontal="center">
+            <SmartLink href={`${substackUrl}?utm_source=portfolio`} target="_blank" rel="noopener noreferrer">
+              S’abonner sur Substack
+            </SmartLink>
+          </Row>
         </Row>
       </form>
     </Column>
