@@ -24,7 +24,6 @@ export function NewsletterForm({
   openInNewTab = true,
   ...flex
 }: Props) {
-  // ✅ Hooks toujours appelés, quelle que soit la condition
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
@@ -128,11 +127,6 @@ export function NewsletterForm({
           />
           <Row height="48" vertical="center">
             <Button size="m" fillWidth type="submit">S’abonner</Button>
-          </Row>
-          <Row horizontal="center">
-            <SmartLink href={`${substackUrl}?utm_source=portfolio`} target="_blank" rel="noopener noreferrer">
-              S’abonner sur Substack
-            </SmartLink>
           </Row>
         </Row>
       </form>
