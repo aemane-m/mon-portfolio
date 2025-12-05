@@ -3,7 +3,6 @@ import React, { ReactNode } from "react";
 import { slugify as transliterate } from "transliteration";
 
 import {
-  Heading,
   HeadingLink,
   Text,
   InlineCode,
@@ -26,6 +25,58 @@ import {
   ListItem,
   Line,
 } from "@once-ui-system/core";
+
+// ---------------------------------------------------------
+// FIX #1 — New universal safe slugify (NO CRASH EVER AGAIN)
+// ---------------------------------------------------------
+
+function slugify(input: any): string {
+  let str = "";
+
+  // Case 1: string
+  if (typeof input === "string") {
+    str = input;
+  }
+  // Case 2: number
+  else if (typeof input === "number") {
+    str = input.toString();
+  }
+  // Case 3: array of children
+  else if (Array.isArray(input)) {
+    str = input
+      .map((child) =>
+        typeof child === "string" || typeof child === "number" ? child : ""
+      )
+      .join(" ");
+  }
+  // Case 4: React element with props.children
+  else if (typeof input === "object" && input !== null) {
+    str = String((input as any)?.props?.children ?? "");
+  }
+  // Fallback
+  else {
+    str = String(input ?? "");
+  }
+
+  // Normalize unicode (important for accents)
+  str = str.normalize("NFKD");
+
+  // Replace '&'
+  str = str.replace(/&/g, " and ");
+
+  // Transliterate & build slug
+  const slug = transliterate(str, {
+    lowercase: true,
+    separator: "-",
+  });
+
+  // Remove duplicate hyphens
+  return slug.replace(/\-+/g, "-").trim();
+}
+
+// ---------------------------------------------------------
+// LINK HANDLING
+// ---------------------------------------------------------
 
 type CustomLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   href: string;
@@ -56,6 +107,10 @@ function CustomLink({ href, children, ...props }: CustomLinkProps) {
   );
 }
 
+// ---------------------------------------------------------
+// MEDIA WRAPPER
+// ---------------------------------------------------------
+
 function createImage({ alt, src, ...props }: MediaProps & { src: string }) {
   if (!src) {
     console.error("Media requires a valid 'src' property.");
@@ -77,31 +132,36 @@ function createImage({ alt, src, ...props }: MediaProps & { src: string }) {
   );
 }
 
-function slugify(str: string): string {
-  const strWithAnd = str.replace(/&/g, " and "); // Replace & with 'and'
-  return transliterate(strWithAnd, {
-    lowercase: true,
-    separator: "-", // Replace spaces with -
-  }).replace(/\-\-+/g, "-"); // Replace multiple - with single -
-}
+// ---------------------------------------------------------
+// FIX #2 — NEW HEADING THAT NEVER CRASHES slugify
+// ---------------------------------------------------------
 
 function createHeading(as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6") {
   const CustomHeading = ({
     children,
     ...props
   }: Omit<React.ComponentProps<typeof HeadingLink>, "as" | "id">) => {
-    const slug = slugify(children as string);
+    const slug = slugify(children); // ← FIXED HERE
     return (
-      <HeadingLink marginTop="24" marginBottom="12" as={as} id={slug} {...props}>
+      <HeadingLink
+        marginTop="24"
+        marginBottom="12"
+        as={as}
+        id={slug}
+        {...props}
+      >
         {children}
       </HeadingLink>
     );
   };
 
-  CustomHeading.displayName = `${as}`;
-
+  CustomHeading.displayName = `${as.toUpperCase()}`;
   return CustomHeading;
 }
+
+// ---------------------------------------------------------
+// PARAGRAPH
+// ---------------------------------------------------------
 
 function createParagraph({ children }: TextProps) {
   return (
@@ -117,16 +177,21 @@ function createParagraph({ children }: TextProps) {
   );
 }
 
+// ---------------------------------------------------------
+// INLINE CODE
+// ---------------------------------------------------------
+
 function createInlineCode({ children }: { children: ReactNode }) {
   return <InlineCode>{children}</InlineCode>;
 }
 
-function createCodeBlock(props: any) {
-  // For pre tags that contain code blocks
-  if (props.children && props.children.props && props.children.props.className) {
-    const { className, children } = props.children.props;
+// ---------------------------------------------------------
+// CODE BLOCK
+// ---------------------------------------------------------
 
-    // Extract language from className (format: language-xxx)
+function createCodeBlock(props: any) {
+  if (props.children?.props?.className) {
+    const { className, children } = props.children.props;
     const language = className.replace("language-", "");
     const label = language.charAt(0).toUpperCase() + language.slice(1);
 
@@ -141,14 +206,17 @@ function createCodeBlock(props: any) {
             label,
           },
         ]}
-        copyButton={true}
+        copyButton
       />
     );
   }
 
-  // Fallback for other pre tags or empty code blocks
   return <pre {...props} />;
 }
+
+// ---------------------------------------------------------
+// LISTS
+// ---------------------------------------------------------
 
 function createList({ children }: { children: ReactNode }) {
   return <List>{children}</List>;
@@ -162,6 +230,10 @@ function createListItem({ children }: { children: ReactNode }) {
   );
 }
 
+// ---------------------------------------------------------
+// HR
+// ---------------------------------------------------------
+
 function createHR() {
   return (
     <Row fillWidth horizontal="center">
@@ -170,9 +242,9 @@ function createHR() {
   );
 }
 
-//-----
-
-// 🔽 AJOUTE ceci quelque part au-dessus de `const components = { ... }`
+// ---------------------------------------------------------
+// CALLOUT COMPONENT
+// ---------------------------------------------------------
 
 type CalloutTone = "brand" | "neutral" | "critical";
 
@@ -185,17 +257,13 @@ function Callout({
   title?: ReactNode;
   children: ReactNode;
 }) {
-  // On s’appuie uniquement sur des tokens déjà vus dans ton fichier
-  // (surface / neutral-alpha-medium) pour éviter les valeurs inconnues.
-  // L’iconographie varie selon le tone, ce qui donne un feedback visuel clair.
-  const iconName: Record<CalloutTone, React.ComponentProps<typeof Icon>["name"]> = {
+  const iconName: Record<CalloutTone, any> = {
     brand: "info",
     neutral: "info",
     critical: "warning",
   };
 
-  // Couleur de l’icône via onBackground : valeurs déjà utilisées dans tes exemples
-  const iconTone: Record<CalloutTone, React.ComponentProps<typeof Icon>["onBackground"]> = {
+  const iconTone: Record<CalloutTone, any> = {
     brand: "info-medium",
     neutral: "neutral-medium",
     critical: "warning-medium",
@@ -214,42 +282,48 @@ function Callout({
     >
       <Icon name={iconName[tone]} onBackground={iconTone[tone]} size="m" />
       <Column gap="4">
-        {title ? (
+        {title && (
           <Text variant="body-strong-m" onBackground="neutral-strong">
             {title}
           </Text>
-        ) : null}
-        <Text variant="body-default-m" onBackground="neutral-medium" style={{ lineHeight: "175%" }}>
+        )}
+        <Text variant="body-default-m" onBackground="neutral-medium">
           {children}
         </Text>
       </Column>
     </Row>
   );
 }
-// 🔼 FIN ajout Callout
 
+// ---------------------------------------------------------
+// COMPONENTS MAP
+// ---------------------------------------------------------
 
 const components = {
-  p: createParagraph as any,
-  h1: createHeading("h1") as any,
-  h2: createHeading("h2") as any,
-  h3: createHeading("h3") as any,
-  h4: createHeading("h4") as any,
-  h5: createHeading("h5") as any,
-  h6: createHeading("h6") as any,
-  img: createImage as any,
-  a: CustomLink as any,
-  code: createInlineCode as any,
-  pre: createCodeBlock as any,
-  ol: createList as any,
-  ul: createList as any,
-  li: createListItem as any,
-  hr: createHR as any,
-  Heading,
-  Text,
-  CodeBlock,
-  InlineCode,
+  p: createParagraph,
+  h1: createHeading("h1"),
+  h2: createHeading("h2"),
+  h3: createHeading("h3"),
+  h4: createHeading("h4"),
+  h5: createHeading("h5"),
+  h6: createHeading("h6"),
+  img: createImage,
+  a: CustomLink,
+  code: createInlineCode,
+  pre: createCodeBlock,
+  ol: createList,
+  ul: createList,
+  li: createListItem,
+  hr: createHR,
+  
+  // --- Composants UI exposés ---
+  Text,        
+  Line,         
+  List,         
+  ListItem,    
   Accordion,
+  InlineCode,
+  CodeBlock,
   AccordionGroup,
   Table,
   Feedback,
@@ -261,13 +335,22 @@ const components = {
   Icon,
   Media,
   SmartLink,
-  Callout: Callout as any,
+  Callout,
 };
+
+// ---------------------------------------------------------
+// MDX RENDERER
+// ---------------------------------------------------------
 
 type CustomMDXProps = MDXRemoteProps & {
   components?: typeof components;
 };
 
 export function CustomMDX(props: CustomMDXProps) {
-  return <MDXRemote {...props} components={{ ...components, ...(props.components || {}) }} />;
+  return (
+    <MDXRemote
+      {...props}
+      components={{ ...components, ...(props.components || {}) }}
+    />
+  );
 }
