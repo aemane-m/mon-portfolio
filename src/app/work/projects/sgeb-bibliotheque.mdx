@@ -31,7 +31,6 @@ draft: false
 
 Le **SGEB** est une application de bureau conçue pour gérer l’ensemble des opérations d’une bibliothèque : documents, adhérents, emprunts, retours et pénalités.  
 Développé dans le cadre du **Master MIAGE — Université Paris Dauphine / PSL**, ce projet démontre une architecture moderne, robuste et évolutive, combinant **JavaFX (MVVM)**, **Domain-Driven Design (DDD)** et **Architecture Hexagonale**.  
-:contentReference[oaicite:0]{index=0}
 
 <Callout tone="brand">
 Ce projet met l’accent sur la séparation stricte des responsabilités, la testabilité du domaine et la facilité d’évolution technique.
@@ -47,7 +46,6 @@ Ce projet met l’accent sur la séparation stricte des responsabilités, la tes
 - Emprunt de documents disponibles  
 - Suivi des emprunts en cours  
 - Gestion et demande de règlement des pénalités  
-:contentReference[oaicite:1]{index=1}
 
 <Media
   src="/images/projects/sgeb/catalogue.jpeg"
@@ -62,21 +60,19 @@ Ce projet met l’accent sur la séparation stricte des responsabilités, la tes
 - Gestion des adhérents : comptes, suspensions, mots de passe  
 - Gestion des emprunts et des retours  
 - Gestion des pénalités et validations  
-:contentReference[oaicite:2]{index=2}
 
 <Media
-  src="/images/projects/sgeb/dashboard.jpeg"
-  alt="Tableau de bord administrateur du SGEB"
-  aspectRatio="16/9"
+    src="/images/projects/sgeb/dashboard.jpeg"
+    alt="Tableau de bord administrateur du SGEB"
+    aspectRatio="16/9"
+    radius="l"
 />
-
 ---
 
 ## Architecture Logicielle
 
 L’application repose sur une **architecture hexagonale** structurée en trois couches autonomes.  
 Cette organisation permet d’isoler la logique métier, de remplacer facilement les technologies (BDD, API, UI), et d’assurer une forte testabilité.  
-:contentReference[oaicite:3]{index=3}
 
 ### 1. Domaine (`application.domain`)
 - Entités riches : *Emprunt*, *Document*, *Adherent*, *Penalite*  
@@ -109,7 +105,6 @@ La base SQLite utilise un modèle simple et cohérent.
 - Tables principales : **PERSONNE**, **DOCUMENT**, **EMPRUNT**, **PENALITE**  
 - Héritage TPH (discrimination via `dtype` pour Livre, Magazine, CD)  
 - Contraintes d’intégrité activées (foreign keys)  
-:contentReference[oaicite:4]{index=4}
 
 <Media
   src="/images/projects/sgeb/db-schema.png"
@@ -125,7 +120,7 @@ L’utilisateur commence par un écran de connexion simple et minimaliste.
 Le tout premier compte créé devient automatiquement **administrateur**.
 
 <Media
-  src="public/images/projects/sgeb/initial.jpeg"
+  src="/images/projects/sgeb/initial.jpeg"
   alt="Écran de connexion du SGEB"
   aspectRatio="16/9"
 />
@@ -147,7 +142,7 @@ Le tout premier compte créé devient automatiquement **administrateur**.
 ## Démo Vidéo
 
 <Media
-  src="/images/projects/sgeb/Demo.mov"
+  src="/images/projects/sgeb/Demo.mp4"
   alt="Démo vidéo du SGEB"
   aspectRatio="16/9"
 />
@@ -178,8 +173,6 @@ Ce projet a solidifié ma compréhension des architectures modernes et m’a don
 - **SQLite**  
 - **Maven**  
 - API **OpenLibrary**  
-:contentReference[oaicite:5]{index=5}
-
 ---
 
 ## Limites & Améliorations futures
@@ -195,7 +188,6 @@ Ce projet a solidifié ma compréhension des architectures modernes et m’a don
 - Export CSV / Excel  
 - Envoi d’emails via un NotificationPort  
 - Intégration code-barres  
-:contentReference[oaicite:6]{index=6}
 
 ---
 
