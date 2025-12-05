@@ -14,10 +14,13 @@ tags:
 
 images:
   - "/images/projects/sgeb/Cover1.jpg"
+
 team:
   - name: "Aemane Mouteirou"
     avatar: "/images/avatar.jpg"
   - name: "Sara Lopez De Varo"
+link: "https://github.com/aemane-m/SGEB_Projet.git"
+
 seo:
   title: "SGEB — Système de Gestion des Emprunts de Bibliothèque"
   description: "Application Java modulaire (Hexagonal + MVVM JavaFX), gestion complète d’une bibliothèque : emprunts, retours, pénalités, catalogue, tableau de bord et export PDF."
@@ -27,14 +30,6 @@ seo:
 lang: "fr"
 draft: false
 ---
-
-# SGEB — Système de Gestion des Emprunts de Bibliothèque
-
-<Media
-  src="/images/projects/sgeb/cover1.jpg"
-  alt="Interface du SGEB présentant le tableau de bord administrateur"
-  aspectRatio="16/9"
-/>
 
 ## Introduction
 
@@ -76,6 +71,7 @@ Ce projet met l’accent sur la séparation stricte des responsabilités, la tes
     aspectRatio="16/9"
     radius="l"
 />
+
 ---
 
 ## Architecture Logicielle
@@ -87,7 +83,7 @@ Cette organisation permet d’isoler la logique métier, de remplacer facilement
 - Entités riches : *Emprunt*, *Document*, *Adherent*, *Penalite*  
 - Value Objects : *Money*  
 - Policies : durée de prêt, calcul des pénalités, limite d’emprunts  
-- Ports : interfaces des repositories & services externes  
+- Ports : interfaces des repositories et services externes  
 - Services applicatifs : orchestration des cas d’usage
 
 ### 2. Infrastructure (`application.infrastructure`)
@@ -124,7 +120,7 @@ La base SQLite utilise un modèle simple et cohérent.
 
 ## Parcours utilisateur
 
-### Connexion & création de compte
+### Connexion et création de compte
 L’utilisateur commence par un écran de connexion simple et minimaliste.  
 Le tout premier compte créé devient automatiquement **administrateur**.
 
@@ -166,8 +162,8 @@ Elle m’a permis de me familiariser de manière concrète avec :
 - **le Domain-Driven Design (DDD)** et la structuration d'un domaine riche ;  
 - **l’architecture hexagonale**, ses ports, adaptateurs et la séparation claire des responsabilités ;  
 - **la conception orientée domaine**, en adoptant un langage ubiquitaire cohérent ;  
-- **la modélisation UML** pour représenter le métier et les interactions du système ;  
-- **la mise en place d’une architecture modulaire, maintenable et testable**.
+- **la modélisation UML** ;  
+- **la mise en place d’une architecture modulaire, maintenable et testable**.  
 
 <Callout tone="brand">
 Ce projet a solidifié ma compréhension des architectures modernes et m’a donné les bases nécessaires pour développer des applications robustes, maintenables et orientées métier.
@@ -182,9 +178,10 @@ Ce projet a solidifié ma compréhension des architectures modernes et m’a don
 - **SQLite**  
 - **Maven**  
 - API **OpenLibrary**  
+
 ---
 
-## Limites & Améliorations futures
+## Limites et améliorations futures
 
 ### Limites actuelles
 - Sécurité des mots de passe simplifiée  
@@ -202,11 +199,12 @@ Ce projet a solidifié ma compréhension des architectures modernes et m’a don
 
 ## Conclusion
 
-Le **SGEB** constitue une démonstration complète de conception logicielle moderne : architecture hexagonale, séparation des responsabilités, approche DDD, interface JavaFX élégante et expérience utilisateur fluide.  
-Ce projet académique illustre comment construire une application modulaire, évolutive et maintenable tout en répondant à de véritables besoins métier.
+Le **SGEB** constitue une démonstration complète de conception logicielle moderne : architecture hexagonale, séparation des responsabilités, approche DDD, interface JavaFX élégante et expérience utilisateur fluide.
 
-
-<Feedback>
-  Pour plus de détails (commandes, code source et schémas), consultez le 
-  <SmartLink href="https://github.com/aemane-m/SGEB_Projet.git" suffixIcon="chevronRight">  README complet du projet.  </SmartLink>
-</Feedback>
+<Button
+  variant="primary"
+  label="Accéder au dépôt GitHub"
+  href="https://github.com/aemane-m/SGEB_Projet.git"
+  target="_blank"
+  rel="noopener"
+/>
