@@ -3,16 +3,17 @@ import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
 const posts = (await getCollection("posts", (p) => !p.data.draft)).sort((a, b) => +b.data.publishedAt - +a.data.publishedAt);
 ---
-<Base title="Writing — data and production" description="Aemane Mouteirou’s write-ups on data, automation and shipping to production.">
+<Base title="Journal — notes and write-ups" description="Aemane Mouteirou’s journal: notes, experiments and write-ups on data, infrastructure and analogue film.">
   <div class="wrap page">
-    <p class="eyebrow"><b>Writing</b></p>
-    <h1 class="big">Lessons learned, <em>without needless jargon.</em></h1>
+    <p class="eyebrow"><b>Journal</b></p>
+    <h1 class="big">Notes from the lab, <em>as they happen.</em></h1>
     <ul class="posts">
       {posts.map((p) => (
         <li><a href={`/blog/${p.id}`}>
-          <span class="mono dim">{p.data.publishedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</span>
+          <span class="mono dim">{p.data.publishedAt.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })} · {p.data.type}</span>
           <h2>{p.data.title}</h2>
           <p class="dim">{p.data.summary}</p>
+          <span class="tags" style="display:flex;flex-wrap:wrap;gap:.35rem">{p.data.tags.map((t) => <span class="chip">{t}</span>)}</span>
         </a></li>
       ))}
     </ul>

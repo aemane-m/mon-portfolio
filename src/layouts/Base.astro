@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { getCollection } from "astro:content";
 import { person, social } from "../data/profile";
 
 interface Props { title: string; description: string; image?: string; type?: "website" | "article"; }
@@ -8,7 +9,8 @@ const { title, description, image = "/images/avatar.jpg", type = "website" } = A
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const canonical = new URL(path === "/" ? "/" : path, Astro.site).href;
 const og = new URL(image, Astro.site).href;
-const nav = [{ href: "/about", label: "About" }, { href: "/work", label: "Projects" }, { href: "/blog", label: "Writing" }];
+const hasPhotos = (await getCollection("photos", (p) => !p.data.draft)).length > 0;
+const nav = [{ href: "/about", label: "About" }, { href: "/work", label: "Projects" }, { href: "/blog", label: "Journal" }, ...(hasPhotos ? [{ href: "/photos", label: "Photos" }] : [])];
 const ld = {
   "@context": "https://schema.org", "@type": "Person", name: person.name, jobTitle: person.role,
   url: Astro.site?.href, email: person.email, sameAs: social.filter((s) => s.href.startsWith("http")).map((s) => s.href),

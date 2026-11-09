@@ -13,7 +13,7 @@ const d = entry.data;
 ---
 <Base title={`${d.title} — Aemane Mouteirou`} description={d.summary} image={d.image} type="article">
   <article class="wrap page">
-    <p class="eyebrow"><a href="/blog" style="text-decoration:none">← Writing</a> · {d.publishedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
+    <p class="eyebrow"><a href="/blog" style="text-decoration:none">← Journal</a> · {d.publishedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
     <h1 class="big" style="font-size:clamp(2rem,4.6vw,3.6rem)">{d.title}</h1>
     {d.image && <img class="cover" src={d.image} alt="" width="1600" height="900" fetchpriority="high" decoding="async" />}
     <div class="prose"><Content components={mdxComponents} /></div>

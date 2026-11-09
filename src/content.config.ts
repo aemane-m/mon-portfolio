@@ -29,10 +29,25 @@ const posts = defineCollection({
     title: z.string(),
     summary: z.string(),
     publishedAt: z.coerce.date(),
+    type: z.enum(["note", "article"]).default("article"),
     tags: z.array(z.string()).default([]),
     image: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });
 
-export const collections = { projects, posts };
+const photos = defineCollection({
+  loader: glob({ pattern: "*.md", base: "./src/content/photos" }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    image: z.string(),
+    film: z.string().optional(),
+    camera: z.string().optional(),
+    developer: z.string().optional(),
+    scan: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { projects, posts, photos };
