@@ -118,6 +118,8 @@ sequenceDiagram
   Note over S,N: On any Proxmox or NAS error,<br/>stop and leave the NAS on
 ```
 
+The whole nightly run takes about **an hour**, give or take, depending on how much has changed since the day before. That is why it starts at 1:50: it is long finished before I am awake.
+
 The script lives in my homelab repository and is deployed by the same pipeline as everything else, so nothing is configured by hand on the Proxmox node. The schedule itself is a small systemd timer:
 
 ```ini
