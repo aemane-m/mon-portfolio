@@ -38,7 +38,7 @@ The SSD needs power as well as data, and the optical drive's power connector is 
 
 This is where it stopped being easy. By default, the Gen8 only boots from its microSD slot or from one of the four main bays — **not** from a drive in the optical bay. Putting the SSD there is not enough.
 
-The fix is to declare the SSD to the server's storage controller as a one-disk volume, using HPE's Smart Storage tool, and then mark that volume as the **primary boot volume**. From then on the server boots from the SSD. It took me a few attempts, because every step is done from the firmware screens (through the iLO remote console), and one wrong choice means starting again.
+The fix is to declare the SSD to the server's storage controller as a one-disk volume, using HPE's Smart Storage tool, and then mark that volume as the **primary boot volume**. From then on the server boots from the SSD. The hard part was not the doing, it was **finding out how**: nothing in the machine hints that this is possible, and the answer is spread across forum posts, a written guide and a couple of videos. Once I knew the exact procedure, the steps themselves are short — and they are done from the firmware screens, through the iLO remote console, so I never needed a monitor.
 
 ## Upgrading the processor and the memory
 
