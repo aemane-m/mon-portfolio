@@ -3,6 +3,7 @@ export const shapes: Record<string, { layout: string; note: string }> = {
   "quant-mlops": { layout: "series", note: "A financial time series: each dot is an observation, orange dots are detected signals." },
   quantlab: { layout: "clusters", note: "Many strategies, one portable engine that runs on either platform." },
   "sas-to-pyspark": { layout: "grid", note: "The same data, moved from one platform to another and laid back in order." },
+  "finance-tracker": { layout: "bars", note: "Spending grouped by category — the dashboard’s main chart." },
   stage: { layout: "bars", note: "Thousands of requests grouped into a handful of themes." },
   homelab: { layout: "cluster", note: "Three cluster nodes, each running its own pods, all wired together." },
   cinerestore: { layout: "film", note: "Six frames of film, scanned one after another." },
