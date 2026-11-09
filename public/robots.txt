@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.aemanemouteirou.com/sitemap-index.xml

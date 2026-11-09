@@ -1,0 +1,26 @@
+---
+title: "Writing guide (draft — not published)"
+publishedAt: "2026-11-09"
+type: "article"
+summary: "A template showing what an article can contain."
+tags: ["template"]
+draft: true
+---
+
+Write in plain Markdown. Headings, **bold**, lists and [links](https://example.com) all work.
+
+## Add a callout
+
+<Callout tone="brand">Use tones: brand, neutral, success, critical.</Callout>
+
+## Add code
+
+<CodeBlock codes={[{ code: "SELECT 1;", language: "sql", label: "A query" }]} />
+
+## Add an image or a table
+
+<Media src="/images/projects/cinerestore/resto.jpg" alt="Describe the image" aspectRatio="16/10" />
+
+<Table data={{ headers: [{ content: "Name" }, { content: "Value" }], rows: [["A", "1"], ["B", "2"]] }} />
+
+Set `draft: false` to publish.

@@ -1,0 +1,9 @@
+---
+import Post from "../../../views/Post.astro";
+import { postsFor } from "../../../lib/content";
+export async function getStaticPaths() {
+  return (await postsFor("fr")).map(({ entry, fallback }) => ({ params: { slug: entry.id }, props: { entry, fallback } }));
+}
+const { entry, fallback } = Astro.props;
+---
+<Post lang="fr" entry={entry} fallback={fallback} />

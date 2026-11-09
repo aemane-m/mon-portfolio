@@ -1,0 +1,150 @@
+---
+title: "Automating Moodle support with AI: internship at CIP PSL"
+publishedAt: "2025-09-01"
+name: "stage-cip-psl"
+impact: "Lighten Moodle support: ~9,000 tickets analysed and ~1,900 recurring questions identified to feed a help chatbot for teachers."
+room: "data"
+status: "completed"
+kind: "internship"
+stack: ["Python","Ollama","Pandas","Docker","n8n","SpaCy"]
+summary: "Development of a Python pipeline and an AI chatbot prototype to improve Moodle support at PSL's Centre for Educational Innovation."
+images:
+  - "/images/projects/stage/stage.jpg"
+team:
+  - name: "Aemane Mouteirou"
+    avatar: "/images/avatar.jpg"
+link: "/images/docs/Rapport Stage.pdf"
+draft: false
+---
+
+After three years at the <SmartLink href="https://innovation-pedagogique.psl.eu/"> **Centre for Educational Innovation (CIP)** </SmartLink> of **PSL** University as a student assistant, I continued with an **end-of-bachelor's internship (MIAGE)**, still within the **Uses & Tools team**.
+It was a chance to lead a more ambitious project on a subject I knew well: **Moodle support**.
+
+Every year this service receives several thousand tickets from the various PSL institutions (*Dauphine, ENS, MINES Paris, ESPCI*, etc.).
+Over time, the volume of exchanges made it hard to sort tickets and reuse answers.
+
+The idea was simple: **see how artificial intelligence could help structure this data** and **automate part of the handling**, without removing the human side of support.
+
+<Callout tone="brand">
+The project combined workflow automation and language processing to make better use of the Moodle ticket history.
+</Callout>
+
+---
+
+## Goals
+
+The work revolved around two main strands:
+
+<Table
+  data={{
+    headers: [
+      { content: "Strand", key: "task" },
+      { content: "Description", key: "desc" }
+    ],
+    rows: [
+      ["Data structuring", "Automatically categorise tickets and build a usable database"],
+      ["Support automation", "Experiment with automated-answer approaches based on language models"]
+    ]
+  }}
+/>
+
+This assignment let me concretely explore **AI applications in a university setting**, between **data analysis**, **natural language processing** and **internal process optimisation**.
+
+---
+
+## Technical approach
+
+The project relies on two complementary environments:
+**n8n** to prototype workflows, then a **Python pipeline** to industrialise the processing.
+
+```mermaid
+flowchart LR
+  T["~9,000 support tickets"] --> A["Anonymise"] --> N["Normalise text"] --> L["Classify by theme<br/>local LLMs (Ollama)"] --> K["~1,900 recurring questions<br/>knowledge base"] --> CB["Chatbot prototype<br/>linked to Moodle tutorials"]
+  classDef accent fill:#ff5500,color:#0b0b0b,stroke:none
+  class L accent
+```
+
+<CodeBlock
+  codes={[
+    {
+      code: "python main.py --threads 8 --source crisp_api.json --output anonymized_tickets.json",
+      language: "bash",
+      label: "Running the Python pipeline"
+    }
+  ]}
+/>
+
+Main tools used:
+- **Python** (Pandas, Regex, SpaCy, multi-threading)
+- **Ollama** to run language models locally (*Mistral, LLaMA, Granite*)
+- **n8n** for task automation
+- **Docker** to guarantee reproducibility
+
+<Callout tone="neutral">
+The pipeline processed about 9,000 tickets, extracted 1,900 recurring questions and built an anonymised knowledge base.
+</Callout>
+
+---
+
+## Results
+
+- ~9,000 tickets processed and anonymised
+- 1,900+ recurring questions identified automatically
+- Internal knowledge base on Moodle support
+- Crisp chatbot prototype linked to teaching tutorials
+
+<Media
+  src="/images/projects/stage/chatbot.png"
+  alt="Crisp chatbot prototype linked to Moodle tutorials"
+  aspectRatio="16/9"
+/>
+
+---
+
+## Skills used
+
+<Table
+  data={{
+    headers: [
+      { content: "Category", key: "domain" },
+      { content: "Skills", key: "skills" }
+    ],
+    rows: [
+      ["Development", "Python, JavaScript"],
+      ["Data / AI", "Pandas, SpaCy, Regex, NLP, local LLMs (Ollama)"],
+      ["Automation", "n8n, Docker, multi-threaded processing"],
+      ["Methodology", "Documentation, testing, project structuring"],
+      ["Teamwork", "Cross-team collaboration, technical support"]
+    ]
+  }}
+/>
+
+---
+
+## Takeaways
+
+This project let me connect my knowledge of **development**, **data** and **artificial intelligence** to a concrete use case inside the university.
+It also gave me a better understanding of the constraints of an educational support service and of data-confidentiality issues.
+
+<Callout tone="neutral">
+A technical project, but above all a highly formative experience in putting real solutions in place within an institutional environment.
+</Callout>
+
+<Button
+  variant="primary"
+  label="Download the full internship report (in French)"
+  href="/images/docs/Rapport Stage.pdf"
+  target="_blank"
+  rel="noopener"
+/>
+
+## Acknowledgements
+
+Warm thanks to:
+
+- **Marion SALES-CHARPENTIER**, educational engineer, for her guidance and advice.
+- **Willy MORSCHEIDT**, head of the Uses & Tools team, for his trust and expertise.
+- **Élisabeth LACAZE**, **Estelle GOUZE** and **Soazig CALLAC**, for their constructive feedback.
+- **Lola TURGIS-MOY**, for opening the doors of the CIP to me four years ago.
+
+And more broadly, **PSL University** and **Dauphine – PSL** for their stimulating and innovative environment.

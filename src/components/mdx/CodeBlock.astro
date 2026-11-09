@@ -1,0 +1,15 @@
+---
+import { Code } from "astro:components";
+const { codes = [] } = Astro.props;
+---
+{codes.map((c: { code: string; language?: string; label?: string }) => (
+  <figure class="cb">
+    {c.label && <figcaption>{c.label}</figcaption>}
+    <Code code={c.code} lang={(c.language ?? "txt") as any} theme="tokyo-night" />
+  </figure>
+))}
+<style>
+  .cb { margin:1.5rem 0; border:1px solid var(--line); }
+  figcaption { font-family:var(--mono); font-size:.78rem; color:var(--dim); padding:.35rem .8rem; border-bottom:1px solid var(--line); background:var(--panel); }
+  .cb :global(pre){ margin:0; padding:.9rem 1rem; overflow-x:auto; font-size:.85rem; }
+</style>

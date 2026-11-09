@@ -1,0 +1,119 @@
+---
+title: "Messagerie multiclients en C — projet universitaire"
+publishedAt: "2024-11-30"
+name: "chat-c"
+impact: "Une messagerie temps réel multi-utilisateurs, pour démontrer la gestion de plusieurs connexions simultanées et du réseau."
+room: "foundations"
+status: "completed"
+kind: "academic"
+stack: ["C","TCP/IP","pthread","Ncurses"]
+summary: "Application de messagerie temps réel en C avec sockets TCP, threads POSIX, interface Ncurses et export JSON. Projet universitaire démontrant la gestion concurrente et la modularité logicielle."
+images:
+  - "/images/projects/chat-c/chat.jpeg"
+  - "/images/projects/chat-c/chat2.jpeg"
+team:
+  - name: "Aemane Mouteirou"
+    avatar: "/images/avatar.jpg"
+  - name: "Clara Brehon"
+link: "https://github.com/aemane-m/messagerie_instantanee"
+draft: false
+---
+
+<Row gap="12">
+  <Text onBackground="neutral-strong">Projet universitaire</Text>
+  <Text>·</Text>
+  <Text>C (C99)</Text>
+  <Text>·</Text>
+  <Text>TCP/IP</Text>
+  <Text>·</Text>
+  <Text>pthread</Text>
+  <Text>·</Text>
+  <Text>ncurses</Text>
+</Row>
+
+## Objectif du projet
+
+<Text align="justify">
+Ce projet universitaire visait à développer une application de messagerie temps réel en ligne de commande, permettant à plusieurs clients de communiquer via un serveur TCP. L’enjeu principal était d’illustrer la <strong>gestion concurrente</strong> en C à l’aide de pthread, tout en assurant une interface utilisateur fluide grâce à <strong>ncurses</strong>.
+</Text>
+
+<Callout tone="brand">Ce projet démontre comment la programmation système peut offrir des expériences interactives performantes, même sans interface graphique moderne.</Callout>
+
+## Principales fonctionnalités
+
+<Table data={{
+  headers: [
+    { content: "Fonctionnalité", key: "feature", sortable: true },
+    { content: "Description", key: "description" }
+  ],
+  rows: [
+    ["Connexion multiclients", "Chaque client communique avec le serveur via un socket TCP dédié."],
+    ["Interface Ncurses", "Affichage clair et coloré, avec zones distinctes pour les messages et la saisie."],
+    ["Pause clavier Ctrl+C", "Les messages entrants sont temporairement stockés pendant la saisie."],
+    ["Thread pool serveur", "Les tâches longues (ex. sauvegarde JSON) sont déléguées en arrière-plan."],
+    ["Export JSON automatique", "Historique sauvegardé toutes les 5 à 20 entrées dans un fichier JSON."],
+    ["Commandes intégrées", "/help, /quit et pause clavier pour un usage fluide en terminal."]
+  ]
+}} />
+
+## Architecture technique
+
+<Table data={{
+  headers: [
+    { content: "Composant", key: "component" },
+    { content: "Rôle", key: "role" },
+    { content: "Technologie", key: "tech" }
+  ],
+  rows: [
+    ["Serveur", "Gère les connexions, les messages et le thread pool", "C + pthread"],
+    ["Client", "Interface Ncurses, réception et saisie utilisateur", "C + ncurses"],
+    ["Protocole", "Définition du format d’échange et des structures", "TCP/IP"],
+    ["Archivage", "Export périodique de l’historique au format JSON", "C + stdio.h"],
+    ["Buffer circulaire", "Stockage temporaire des messages en pause", "Structure optimisée en mémoire"]
+  ]
+}} />
+
+<Text align="justify">
+Le projet repose sur un modèle <strong>thread-par-client</strong> pour gérer la communication en temps réel, complété par un <strong>thread pool serveur</strong> pour les opérations asynchrones. L’interface Ncurses offre une gestion fine du terminal (curseur, couleurs, rafraîchissement de zones) et rend l’expérience fluide malgré la nature textuelle de l’application.
+</Text>
+
+<Callout tone="neutral">La robustesse du système repose sur une architecture simple mais bien cloisonnée entre client, serveur et protocole.</Callout>
+
+## Conception et décisions clés
+
+### Threads POSIX pour la concurrence
+<Text align="justify">Chaque client connecté dispose d’un thread dédié, assurant un traitement parallèle des messages et une communication fluide, même sous forte charge.</Text>
+
+### Thread pool pour les tâches asynchrones
+<Text align="justify">Le serveur exécute les sauvegardes JSON et autres opérations coûteuses via un pool fixe, limitant la surcharge CPU et les fuites de threads.</Text>
+
+### Mode pause avec Ctrl+C
+<Text align="justify">Un signal <InlineCode>SIGINT</InlineCode> déclenche un mode pause pendant la saisie. Les messages reçus sont stockés dans un buffer circulaire et affichés après l’envoi.</Text>
+
+### Interface Ncurses
+<Text align="justify">Ncurses permet la gestion du rendu textuel : multifenêtres, couleurs, barre d’état et rafraîchissement rapide pour une meilleure ergonomie.</Text>
+
+<Callout tone="success">Cette approche prouve que l’on peut construire une expérience utilisateur fluide en C, même sans framework graphique.</Callout>
+
+## Résultats obtenus
+
+<Text align="justify">
+Le résultat est une application robuste, interactive et stable. L’approche modulaire (client, serveur, commun) simplifie l’évolution du code et facilite l’ajout futur de fonctionnalités comme l’authentification ou le chiffrement. Le mode pause et l’export JSON illustrent la combinaison entre ergonomie et performance.
+</Text>
+
+<Callout tone="brand">Ce projet illustre la convergence entre performance bas-niveau et design orienté utilisateur dans un contexte purement C.</Callout>
+
+## Enseignements tirés
+
+- Compréhension approfondie des threads POSIX et des risques de concurrence (verrous, race conditions).
+- Maîtrise du modèle producteur-consommateur et de la synchronisation entre threads.
+- Expérience concrète avec Ncurses et les signaux Unix.
+- Vision d’ensemble d’un projet réseau complet (serveur, client, protocole, persistance).
+
+<Button
+  variant="primary"
+  label="Accéder au dépôt GitHub"
+  href="https://github.com/aemane-m/messagerie_instantanee"
+  target="_blank"
+  rel="noopener"
+/>

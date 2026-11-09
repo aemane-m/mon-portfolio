@@ -1,0 +1,54 @@
+---
+title: "Lab Photo Dauphine — a website volunteers can edit without code"
+seoTitle: "Lab Photo Dauphine: a website volunteers can edit"
+publishedAt: "2026-11-06"
+name: "lab-photo"
+room: "darkroom"
+impact: "Rebuilding the website of Dauphine's film-photography association so that any volunteer can update it from a simple editor — and so it stays fast, secure and cheap to run."
+status: "in_progress"
+kind: "personal"
+stack: ["Astro","Sanity","Cloudflare Pages","Turnstile","Resend"]
+summary: "Migration of the Lab Photo Dauphine website from WordPress to a static Astro site, with Sanity as the editing studio, a protected contact form and automatic redeployment after every publish."
+images:
+  - "/images/projects/labphoto/cover.jpg"
+link: "https://www.labphotodauphine.fr"
+draft: false
+---
+
+## Context
+
+The Lab Photo Dauphine is the university's film-photography association: an analogue and digital darkroom, workshops, outings and an annual photo competition. I am still a member and I still look after its website.
+
+The site had grown on WordPress. I am rebuilding it around one constraint: **the people who maintain it are volunteers, not developers, and they change every year.**
+
+<Callout tone="brand">The design question is not "what is the best stack?" but "what will still be easy for someone who joins the committee next September?"</Callout>
+
+## What changes
+
+<Table
+  data={{
+    headers: [
+      { content: "Need", key: "need" },
+      { content: "Solution", key: "solution" }
+    ],
+    rows: [
+      ["Fast, secure public site", "Static Astro pages, served from Cloudflare Pages with security headers and redirects for the old URLs"],
+      ["Edit content without code", "A Sanity Studio: competitions, photographers' galleries, committee, services and site settings are all forms"],
+      ["Updates appear on their own", "A webhook triggers a rebuild after every Publish; the change is live in a minute or two"],
+      ["Contact form without spam", "Cloudflare Turnstile and Resend, with a tested server function"],
+      ["No lock-in", "The site is static, and a backup script exports all content and images; the exit plan is written down"]
+    ]
+  }}
+/>
+
+## Migrating the content
+
+The existing WordPress content was imported once through a re-runnable script that does not create duplicates: **38 documents and 87 images**. The old WordPress backup is kept, unpublished, until the new site is validated.
+
+## Making it usable by non-developers
+
+I wrote an editors' guide in plain language, with ready-made recipes: add a new competition (the previous edition moves to the archives by itself), change the committee in September, add photos by drag and drop, show an announcement on the homepage, set a price. The guide also reminds contributors to publish only photos they have the authors' agreement for.
+
+## Status
+
+The new site is built and the go-live checklist (CMS project, deploy hook, contact form, domain switch) is documented. It is in progress rather than finished, and I will update this page when the switch is done.

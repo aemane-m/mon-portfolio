@@ -1,0 +1,31 @@
+---
+import { langOf, mk } from "../i18n";
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+const tr = mk(langOf(Astro.url));
+const SUBSTACK = "https://aemanedev.substack.com";
+---
+<section class:list={["news", compact && "compact"]} aria-labelledby="news-title">
+  <div class="news-text">
+    <h2 id="news-title">{tr("Subscribe to my newsletter", "Abonnez-vous à ma newsletter")}</h2>
+    <p>{tr("Clear, concrete articles on data engineering, MLOps and automation. I document what I'm learning: orchestration, CI/CD, infrastructure as code.", "Des articles clairs et concrets sur le data engineering, le MLOps et l'automatisation. Je documente ce que j'apprends : orchestration, CI/CD, infrastructure as code.")}</p>
+  </div>
+  <form class="news-form" action={`${SUBSTACK}/subscribe`} method="get" target="_blank">
+    <input type="hidden" name="utm_source" value="portfolio" />
+    <label class="sr" for="news-email">{tr("Email address", "Adresse e-mail")}</label>
+    <input id="news-email" name="email" type="email" placeholder={tr("you@example.com", "vous@exemple.fr")} required autocomplete="email" />
+    <button type="submit" class="btn solid">{tr("Subscribe", "S'abonner")}</button>
+  </form>
+</section>
+<style is:global>
+  .news { display: grid; grid-template-columns: 1.1fr 1fr; gap: 2rem 3rem; align-items: center; margin: 6rem auto 0; max-width: 1160px; padding: 2.4rem; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+  .news.compact { margin-top: 3.5rem; }
+  .news h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0 0 .6rem; }
+  .news p { margin: 0; color: var(--dim); max-width: 34em; }
+  .news-form { display: flex; gap: .6rem; flex-wrap: wrap; }
+  .news-form input[type="email"] { flex: 1 1 220px; min-width: 0; font: inherit; padding: .75rem 1.1rem; border-radius: 999px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); }
+  .news-form input[type="email"]:focus { border-color: var(--accent); outline: none; }
+  .news-form .btn { cursor: pointer; font-family: inherit; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 800px) { .news { grid-template-columns: 1fr; margin-left: 1.5rem; margin-right: 1.5rem; padding: 1.6rem; } }
+</style>

@@ -1,0 +1,9 @@
+---
+const { tone = "neutral" } = Astro.props;
+---
+<aside class={`callout ${tone}`}><div><slot /></div></aside>
+<style>
+  .callout { margin: 1.8rem 0; padding: 1rem 1.3rem; border-left: 4px solid var(--c); background: var(--panel); font-size: .98rem; --c: var(--dim); border-radius: 0 6px 6px 0; }
+  .callout :global(p) { margin: 0; }
+  .brand { --c: var(--accent); } .success { --c: var(--ok); } .critical { --c: var(--err); } .neutral { --c: var(--cyan); }
+</style>

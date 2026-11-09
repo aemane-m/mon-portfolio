@@ -1,43 +1,8 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# ------------------------------------------------------
-#  Node & builds
-# ------------------------------------------------------
 node_modules/
-.npmrc
-npm-debug.log*
-*.log
-
-# ------------------------------------------------------
-#  Next.js / Tooling
-# ------------------------------------------------------
-.turbo/
-.vercel/
-.next/
-out/
-build/
-coverage/
-
-# ------------------------------------------------------
-#  Environnements & secrets
-# ------------------------------------------------------
-.env
-.env.*
-!.env.example
-.direnv/
-.envrc
-
-# ------------------------------------------------------
-#  Gestionnaires de paquets (lockfiles divers)
-# ------------------------------------------------------
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
-bun.lockb
-
-# ------------------------------------------------------
-#  OS & fichiers temporaires
-# ------------------------------------------------------
+dist/
+.astro/
 .DS_Store
-Thumbs.db
-*.pem
+*.log
+.env*
+*.tsbuildinfo
+.palettes/

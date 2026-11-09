@@ -1,0 +1,19 @@
+---
+import { langOf } from "../../i18n";
+const { hash } = Astro.props;
+const svgs = import.meta.glob("../../diagrams/*.svg", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
+const light = svgs[`../../diagrams/${hash}.light.svg`];
+const dark = svgs[`../../diagrams/${hash}.dark.svg`];
+const label = langOf(Astro.url) === "fr" ? "Schéma" : "Diagram";
+---
+<figure class="mdiagram" role="img" aria-label={label}>
+  <div class="d-light" set:html={light} />
+  <div class="d-dark" set:html={dark} />
+</figure>
+<style is:global>
+  .mdiagram .d-light, .mdiagram .d-dark { width: 100%; justify-content: center; }
+  .mdiagram .d-light { display: none; }
+  .mdiagram .d-dark { display: flex; }
+  :root[data-theme="light"] .mdiagram .d-light { display: flex; }
+  :root[data-theme="light"] .mdiagram .d-dark { display: none; }
+</style>

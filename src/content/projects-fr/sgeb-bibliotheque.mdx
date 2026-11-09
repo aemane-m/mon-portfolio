@@ -1,0 +1,197 @@
+---
+title: "SGEB — Système de Gestion des Emprunts de Bibliothèque"
+summary: "Projet M1 MIAGE 2025–2026 : un SGEB robuste et réactif, conçu en Hexagonal + MVVM (JavaFX) sur SQLite, avec règles métier d’emprunt, pénalités, tableaux de bord et export PDF."
+publishedAt: "2025-12-05"
+name: "sgeb"
+impact: "Un outil de gestion des emprunts d'une bibliothèque, avec les règles métier (durées, pénalités) et des tableaux de bord pour les responsables."
+room: "foundations"
+status: "completed"
+kind: "academic"
+stack: ["Java","JavaFX","SQLite","PDFBox"]
+images:
+  - "/images/projects/sgeb/Cover1.jpg"
+team:
+  - name: "Aemane Mouteirou"
+    avatar: "/images/avatar.jpg"
+  - name: "Sara Lopez De Varo"
+link: "https://github.com/aemane-m/SGEB_Projet"
+draft: false
+---
+
+## Introduction
+
+Le **SGEB** est une application de bureau conçue pour gérer l’ensemble des opérations d’une bibliothèque : documents, adhérents, emprunts, retours et pénalités.  
+Développé dans le cadre du **Master MIAGE — Université Paris Dauphine / PSL**, ce projet démontre une architecture moderne, robuste et évolutive, combinant **JavaFX (MVVM)**, **Domain-Driven Design (DDD)** et **Architecture Hexagonale**.  
+
+<Callout tone="brand">
+Ce projet met l’accent sur la séparation stricte des responsabilités, la testabilité du domaine et la facilité d’évolution technique.
+</Callout>
+
+---
+
+## Fonctionnalités principales
+
+### Espace Adhérent
+- Consultation du catalogue  
+- Recherche par titre, auteur, type ou ISBN  
+- Emprunt de documents disponibles  
+- Suivi des emprunts en cours  
+- Gestion et demande de règlement des pénalités  
+
+<Media
+  src="/images/projects/sgeb/catalogue.jpeg"
+  alt="Aperçu du catalogue dans le SGEB"
+  aspectRatio="16/9"
+/>
+
+### Espace Administrateur
+- Tableau de bord complet (KPIs, graphiques, emprunts récents)  
+- Ajout / modification / suppression des documents  
+- Import automatique via **OpenLibrary (ISBN)**  
+- Gestion des adhérents : comptes, suspensions, mots de passe  
+- Gestion des emprunts et des retours  
+- Gestion des pénalités et validations  
+
+<Media
+    src="/images/projects/sgeb/dashboard.jpeg"
+    alt="Tableau de bord administrateur du SGEB"
+    aspectRatio="16/9"
+   
+/>
+
+---
+
+## Architecture Logicielle
+
+L’application repose sur une **architecture hexagonale** structurée en trois couches autonomes.  
+Cette organisation permet d’isoler la logique métier, de remplacer facilement les technologies (BDD, API, UI), et d’assurer une forte testabilité.  
+
+### 1. Domaine (`application.domain`)
+- Entités riches : *Emprunt*, *Document*, *Adherent*, *Penalite*  
+- Value Objects : *Money*  
+- Policies : durée de prêt, calcul des pénalités, limite d’emprunts  
+- Ports : interfaces des repositories et services externes  
+- Services applicatifs : orchestration des cas d’usage
+
+### 2. Infrastructure (`application.infrastructure`)
+- Repositories SQLite  
+- Adaptateurs API OpenLibrary  
+- Stockage local des couvertures
+
+### 3. Interface utilisateur (`application.ui`)
+- JavaFX basé sur le pattern **MVVM**  
+- Vues FXML + ViewModels + Controllers  
+- Navigation centralisée
+
+<Media
+  src="/images/projects/sgeb/architecture.png"
+  alt="Schéma de l'architecture hexagonale du SGEB"
+/>
+
+---
+
+## Modèle de Données
+
+La base SQLite utilise un modèle simple et cohérent.
+
+- Tables principales : **PERSONNE**, **DOCUMENT**, **EMPRUNT**, **PENALITE**  
+- Héritage TPH (discrimination via `dtype` pour Livre, Magazine, CD)  
+- Contraintes d’intégrité activées (foreign keys)  
+
+<Media
+  src="/images/projects/sgeb/db-schema.png"
+  alt="Schéma relationnel de la base SQLite du SGEB"
+/>
+
+---
+
+## Parcours utilisateur
+
+### Connexion et création de compte
+L’utilisateur commence par un écran de connexion simple et minimaliste.  
+Le tout premier compte créé devient automatiquement **administrateur**.
+
+<Media
+  src="/images/projects/sgeb/initial.jpeg"
+  alt="Écran de connexion du SGEB"
+  aspectRatio="16/9"
+/>
+
+### Navigation Adhérent
+- Exploration du catalogue  
+- Consultation de fiches détail  
+- Emprunts accessibles via une interface intuitive  
+- Historique et pénalités clairement présentés
+
+### Navigation Administrateur
+- Menus structurés par tâche  
+- Ajout rapide de documents (manuel ou via ISBN)  
+- Gestion des comptes adhérents  
+- Validations des demandes de règlement
+
+---
+
+## Démo Vidéo
+
+<Media
+  src="/images/projects/sgeb/Demo.mp4"
+  alt="Démo vidéo du SGEB"
+  aspectRatio="16/9"
+/>
+
+---
+
+## Ce que ce projet m’a apporté
+
+La réalisation du SGEB a été une étape clé dans ma montée en compétences.  
+Elle m’a permis de me familiariser de manière concrète avec :
+
+- **le Domain-Driven Design (DDD)** et la structuration d'un domaine riche ;  
+- **l’architecture hexagonale**, ses ports, adaptateurs et la séparation claire des responsabilités ;  
+- **la conception orientée domaine**, en adoptant un langage ubiquitaire cohérent ;  
+- **la modélisation UML** ;  
+- **la mise en place d’une architecture modulaire, maintenable et testable**.  
+
+<Callout tone="brand">
+Ce projet a solidifié ma compréhension des architectures modernes et m’a donné les bases nécessaires pour développer des applications robustes, maintenables et orientées métier.
+</Callout>
+
+---
+
+## Technologies utilisées
+
+- **Java 21**  
+- **JavaFX** (FXML + MVVM)  
+- **SQLite**  
+- **Maven**  
+- API **OpenLibrary**  
+
+---
+
+## Limites et améliorations futures
+
+### Limites actuelles
+- Sécurité des mots de passe simplifiée  
+- Pas d'expiration de session utilisateur  
+- Mode mono-poste dû à SQLite  
+
+### Améliorations envisagées
+- Passage à PostgreSQL  
+- Système de réservation  
+- Export CSV / Excel  
+- Envoi d’emails via un NotificationPort  
+- Intégration code-barres  
+
+---
+
+## Conclusion
+
+Le **SGEB** constitue une démonstration complète de conception logicielle moderne : architecture hexagonale, séparation des responsabilités, approche DDD, interface JavaFX élégante et expérience utilisateur fluide.
+
+<Button
+  variant="primary"
+  label="Voir le dépôt GitHub"
+  href="https://github.com/aemane-m/SGEB_Projet"
+  target="_blank"
+  rel="noopener"
+/>

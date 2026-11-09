@@ -1,0 +1,182 @@
+---
+title: "Building an isolated home network with UniFi: servers, personal and IoT VLANs"
+seoTitle: "UniFi home network: VLANs, IoT isolation, firewall zones"
+seoDescription: "Isolate a home network with UniFi: servers, personal and IoT VLANs, two Wi-Fi SSIDs, firewall zones and an allow-list of named rules."
+publishedAt: "2026-09-12"
+type: "article"
+summary: "How I split my home network into separate VLANs — servers, personal devices and IoT — with a UniFi gateway, switch and access point, and what I learnt making a Proxmox homelab live on it."
+tags: ["Networking", "UniFi", "VLAN", "Homelab", "IoT"]
+draft: false
+---
+
+<Tldr>
+
+- **What:** four VLANs on UniFi (Management, Servers, Personal, IoT), grouped into three firewall zones.
+- **The result:** I can reach my IoT devices, but they cannot start a conversation with my machines.
+- **The lesson:** tag a VLAN in one place only, and give every firewall rule a name that says why it exists.
+
+</Tldr>
+
+A homelab quickly stops being "a few machines on the home network". Once photos, home automation and backups live on hardware I own, I want to control **who can talk to what**. This article explains how I built my local network around that idea, with UniFi equipment and separate VLANs.
+
+<Callout tone="brand">I am a learner, not a network engineer. I describe what I built and what went wrong, not a reference design.</Callout>
+
+## The hardware
+
+<Table
+  data={{
+    headers: [
+      { content: "Device", key: "dev" },
+      { content: "Role", key: "role" }
+    ],
+    rows: [
+      ["UniFi UXG Fiber", "The gateway: routing between networks, DHCP, DNS, and the firewall"],
+      ["UniFi USW Lite", "The switch that connects the wired devices, including the Proxmox hosts"],
+      ["UniFi U7 Lite", "The Wi-Fi access point"],
+      ["A Mac mini", "Hosts **UniFi OS Server**, the controller that manages all three devices, and also runs my local LLM experiments and containers"]
+    ]
+  }}
+/>
+
+## Why separate networks
+
+A flat network treats a smart plug, a laptop and a server as equals. They are not. A cheap IoT device that is never updated should not be able to reach the machine that holds my photos. Splitting the network into **VLANs** gives each kind of device its own space, and puts the gateway in the middle, so every crossing between spaces becomes a rule I decide.
+
+## The networks
+
+I use four separate networks, each with its own address range:
+
+<Table
+  data={{
+    headers: [
+      { content: "Network", key: "net" },
+      { content: "VLAN", key: "vlan" },
+      { content: "What lives there", key: "what" }
+    ],
+    rows: [
+      ["Management", "1", "The servers' remote-management interface (iLO) and a Mac mini that runs the UniFi controller, local LLM experiments and containers"],
+      ["Servers", "3", "The homelab: Proxmox virtual machines, the Kubernetes cluster, Home Assistant, Immich"],
+      ["Personal", "4", "My own and my family's laptops and phones"],
+      ["IoT", "5", "Connected devices of the house"]
+    ]
+  }}
+/>
+
+All four are routed by the gateway, which is also their DHCP server.
+
+## Wi-Fi: one access point, two networks
+
+A single access point serves the whole house, but it does not put everyone on the same network. I broadcast **two separate Wi-Fi networks (SSIDs)**:
+
+- one for my **personal devices**, mapped to the Personal VLAN;
+- one for the **connected devices**, mapped to the IoT VLAN.
+
+Both are available on the 2.4 and 5 GHz bands and use WPA2. The point is that a device ends up in the right network **simply by the Wi-Fi it joins**: a smart plug that I connect to the IoT network can never land next to my laptop. There is no configuration on the devices themselves, and no way to forget a step.
+
+## What the gateway does for the homelab
+
+The gateway is more than a router for me. It is also the **DNS resolver** (so my services have friendly names), the **DHCP server** (with reservations, so every service keeps a fixed address), and the peer that my Kubernetes cluster talks to: the cluster announces the address of its entry point to the gateway using BGP, so a service in the cluster is reachable from the rest of the network like any other.
+
+## Putting Proxmox on a VLAN: the mistake that cost me an evening
+
+My Proxmox hosts are plugged into a switch port that already belongs to the Servers VLAN. The VLAN is applied by the switch, and the traffic arrives untagged on the host.
+
+I then also told Terraform to tag every virtual machine with the same VLAN. The result: **no virtual machine received an address**. The VLAN was being applied twice. The rule I now follow is to choose **one** place to tag:
+
+- If the switch port is an *access* port in the VLAN, the virtual machines must **not** carry a tag.
+- A tag on the hypervisor side only makes sense when the bridge is connected to a *trunk*.
+
+## Stable addresses without chaos
+
+**Every service has a fixed IP address**, so nothing moves under my feet. The Kubernetes nodes use **static addresses**, because control-plane nodes must be predictable. The other machines get a **DHCP reservation** on the gateway: the address never changes, and there is still one source of truth without configuring each machine by hand.
+
+## Isolation: zones and an explicit allow-list
+
+VLANs separate the networks. What decides who can talk to whom is the **firewall**, and I use UniFi's zone-based model: networks are grouped into **zones**, and each pair of zones has a default behaviour.
+
+<Table
+  data={{
+    headers: [
+      { content: "Zone", key: "zone" },
+      { content: "What it holds", key: "holds" }
+    ],
+    rows: [
+      ["Internal", "My trusted networks: the Servers network and the Personal network"],
+      ["Management", "The Management network: the iLO and the Mac mini that hosts the UniFi controller"],
+      ["Untrusted", "The IoT network"]
+    ]
+  }}
+/>
+
+### What the zone matrix says
+
+UniFi shows all of this as a grid of source zone against destination zone, which is the easiest way to check the whole design at a glance:
+
+<Table
+  data={{
+    headers: [
+      { content: "From", key: "from" },
+      { content: "Can reach", key: "reach" },
+      { content: "Cannot reach", key: "cannot" }
+    ],
+    rows: [
+      ["Internal", "Everything", "—"],
+      ["IoT (Untrusted)", "The Internet and the gateway (for DHCP and DNS). It can only reply to connections that Internal opened", "Internal, Management and the VPN: blocked. The matrix also blocks traffic between IoT devices themselves"],
+      ["Management", "The Internet and the gateway", "Internal and IoT: blocked by default, except for a handful of named rules"]
+    ]
+  }}
+/>
+
+This is what I wanted: **I can reach my IoT devices, but they cannot start a conversation with anything of mine.** A compromised smart plug can talk to the Internet and answer me; it cannot scan my servers.
+
+```mermaid
+flowchart LR
+  NET(("Internet"))
+  subgraph INT["Internal zone"]
+    SRV["Servers"]
+    PER["Personal"]
+  end
+  subgraph MGT["Management zone"]
+    UOS["UniFi controller<br/>Mac mini"]
+    ILO["iLO"]
+  end
+  subgraph UNT["Untrusted zone"]
+    IOT["IoT"]
+  end
+  INT -- "allowed" --> UNT
+  UNT -. "replies only" .-> INT
+  INT -- "named rules only" --> MGT
+  MGT -- "blocked by default" --x INT
+  UNT --> NET
+  INT --> NET
+  classDef accent fill:#ff5500,color:#0b0b0b,stroke:none
+```
+
+### The exceptions are named rules
+
+Everything that crosses a blocked boundary is an explicit rule, named after its purpose. There are only a handful:
+
+<Table
+  data={{
+    headers: [
+      { content: "Rule", key: "rule" },
+      { content: "Why it exists", key: "why" }
+    ],
+    rows: [
+      ["My workstation to Management", "The UniFi controller and the iLO live there, so this is how I administer the network and the servers, from one machine and not from everywhere"],
+      ["The Mac mini to Internal", "Besides the UniFi controller, the Mac mini runs local LLM projects and containers (through OrbStack), and needs to reach my other machines"],
+      ["The first Proxmox node to the Mac mini, over SSH", "So that the nightly backup script can reach it"],
+      ["The first Proxmox node to the iLO", "So that the same script can power the NAS on and off"],
+      ["Internal to Untrusted", "So I can control and check my IoT devices from my side"],
+      ["mDNS to the gateway", "So that devices on different networks can still discover each other"]
+    ]
+  }}
+/>
+
+Two things I like about this approach. First, **the rules describe intent**: six months later I can still tell why each one exists. Second, the hit counters tell me the truth: the rules for the backup script were last used the night before, at the time it runs, while the busiest rule, by far, is the one that lets my side talk to the IoT devices. A rule that is never used is one I can question.
+
+<Callout tone="neutral">Isolation is a set of rules, not a label. A VLAN on its own separates broadcast traffic; it is the firewall rules between zones that decide what can actually cross.</Callout>
+
+## What I would improve
+
+I treat the network configuration as the one part of my homelab that is not yet described as code: it lives in the UniFi controller, which runs on a Mac mini I also use for other things, and my repository depends on it (for example for DNS entries). That makes the controller something I need to protect and back up. Bringing it under version control is on my list.

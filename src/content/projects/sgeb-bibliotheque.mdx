@@ -1,0 +1,196 @@
+---
+title: "SGEB — Library Loan Management System"
+summary: "MSc 1 MIAGE project 2025–2026: a robust, responsive library management app built with Hexagonal architecture + MVVM (JavaFX) on SQLite, with loan business rules, penalties, dashboards and PDF export."
+publishedAt: "2025-12-05"
+name: "sgeb"
+impact: "A tool to manage a library's loans, with business rules (loan periods, penalties) and dashboards for managers."
+room: "foundations"
+status: "completed"
+kind: "academic"
+stack: ["Java","JavaFX","SQLite","PDFBox"]
+images:
+  - "/images/projects/sgeb/Cover1.jpg"
+team:
+  - name: "Aemane Mouteirou"
+    avatar: "/images/avatar.jpg"
+  - name: "Sara Lopez De Varo"
+link: "https://github.com/aemane-m/SGEB_Projet"
+draft: false
+---
+
+## Introduction
+
+**SGEB** is a desktop application designed to manage all the operations of a library: documents, members, loans, returns and penalties.
+Built as part of the **MIAGE Master's — Paris Dauphine / PSL University**, this project demonstrates a modern, robust and scalable architecture combining **JavaFX (MVVM)**, **Domain-Driven Design (DDD)** and **Hexagonal Architecture**.
+
+<Callout tone="brand">
+The project emphasises strict separation of responsibilities, testability of the domain and ease of technical evolution.
+</Callout>
+
+---
+
+## Main features
+
+### Member area
+- Browse the catalogue
+- Search by title, author, type or ISBN
+- Borrow available documents
+- Track current loans
+- Manage and request payment of penalties
+
+<Media
+  src="/images/projects/sgeb/catalogue.jpeg"
+  alt="Preview of the catalogue in SGEB"
+  aspectRatio="16/9"
+/>
+
+### Administrator area
+- Full dashboard (KPIs, charts, recent loans)
+- Add / edit / delete documents
+- Automatic import through **OpenLibrary (ISBN)**
+- Member management: accounts, suspensions, passwords
+- Loan and return management
+- Penalty management and validation
+
+<Media
+    src="/images/projects/sgeb/dashboard.jpeg"
+    alt="SGEB administrator dashboard"
+    aspectRatio="16/9"
+/>
+
+---
+
+## Software architecture
+
+The application is built on a **hexagonal architecture** organised in three autonomous layers.
+This organisation isolates business logic, makes it easy to swap technologies (database, API, UI) and ensures strong testability.
+
+### 1. Domain (`application.domain`)
+- Rich entities: *Loan*, *Document*, *Member*, *Penalty*
+- Value objects: *Money*
+- Policies: loan duration, penalty calculation, loan limit
+- Ports: interfaces for repositories and external services
+- Application services: orchestration of use cases
+
+### 2. Infrastructure (`application.infrastructure`)
+- SQLite repositories
+- OpenLibrary API adapters
+- Local storage of cover images
+
+### 3. User interface (`application.ui`)
+- JavaFX based on the **MVVM** pattern
+- FXML views + ViewModels + Controllers
+- Centralised navigation
+
+<Media
+  src="/images/projects/sgeb/architecture.png"
+  alt="Diagram of SGEB's hexagonal architecture"
+/>
+
+---
+
+## Data model
+
+The SQLite database uses a simple, consistent model.
+
+- Main tables: **PERSON**, **DOCUMENT**, **LOAN**, **PENALTY**
+- TPH inheritance (discrimination through `dtype` for Book, Magazine, CD)
+- Integrity constraints enabled (foreign keys)
+
+<Media
+  src="/images/projects/sgeb/db-schema.png"
+  alt="Relational schema of SGEB's SQLite database"
+/>
+
+---
+
+## User journey
+
+### Sign-in and account creation
+Users start from a simple, minimal sign-in screen.
+The very first account created automatically becomes the **administrator**.
+
+<Media
+  src="/images/projects/sgeb/initial.jpeg"
+  alt="SGEB sign-in screen"
+  aspectRatio="16/9"
+/>
+
+### Member navigation
+- Catalogue browsing
+- Detail pages
+- Loans through an intuitive interface
+- History and penalties clearly presented
+
+### Administrator navigation
+- Menus organised by task
+- Quick document entry (manual or via ISBN)
+- Member account management
+- Validation of payment requests
+
+---
+
+## Video demo
+
+<Media
+  src="/images/projects/sgeb/Demo.mp4"
+  alt="SGEB video demo"
+  aspectRatio="16/9"
+/>
+
+---
+
+## What this project gave me
+
+Building SGEB was a key step in my skills growth.
+It let me get concretely familiar with:
+
+- **Domain-Driven Design (DDD)** and structuring a rich domain;
+- **hexagonal architecture**, its ports, adapters and clear separation of responsibilities;
+- **domain-oriented design**, with a consistent ubiquitous language;
+- **UML modelling**;
+- **building a modular, maintainable and testable architecture**.
+
+<Callout tone="brand">
+This project strengthened my understanding of modern architectures and gave me the foundations to build robust, maintainable, business-oriented applications.
+</Callout>
+
+---
+
+## Technologies used
+
+- **Java 21**
+- **JavaFX** (FXML + MVVM)
+- **SQLite**
+- **Maven**
+- **OpenLibrary** API
+
+---
+
+## Limitations and future improvements
+
+### Current limitations
+- Simplified password security
+- No user session expiry
+- Single-user mode because of SQLite
+
+### Planned improvements
+- Move to PostgreSQL
+- Reservation system
+- CSV / Excel export
+- Email sending through a NotificationPort
+- Barcode integration
+
+---
+
+## Conclusion
+
+**SGEB** is a complete demonstration of modern software design: hexagonal architecture, separation of responsibilities, a DDD approach, an elegant JavaFX interface and a smooth user experience.
+
+<Button
+  variant="primary"
+  label="View the GitHub repository"
+  href="https://github.com/aemane-m/SGEB_Projet"
+  target="_blank"
+  rel="noopener"
+/>

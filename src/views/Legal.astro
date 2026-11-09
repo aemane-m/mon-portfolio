@@ -1,0 +1,67 @@
+---
+import Base from "../layouts/Base.astro";
+import { person, social } from "../data/profile";
+import { mk, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = mk(lang);
+const links = social.filter((s) => s.href.startsWith("http"));
+---
+<Base title={tr("Legal notice — Aemane Mouteirou", "Mentions légales — Aemane Mouteirou")} description={tr("Legal notice, hosting, personal data and credits for aemanemouteirou.com.", "Mentions légales, hébergement, données personnelles et crédits de aemanemouteirou.com.")}>
+  <div class="wrap page">
+    <p class="eyebrow"><b>{tr("Legal", "Légal")}</b></p>
+    <h1 class="big">{tr("Legal notice", "Mentions légales")}</h1>
+    <div class="prose">
+      {lang === "fr" ? (
+        <Fragment>
+          <h2>Éditeur du site</h2>
+          <p>Ce site est un portfolio personnel, édité à titre non professionnel par <strong>{person.name}</strong>, qui en est aussi le directeur de la publication.</p>
+          <p>Contact : <button type="button" class="reveal" data-reveal>Afficher l'adresse e-mail</button><noscript> (JavaScript requis — ou écrivez-moi via LinkedIn)</noscript>{links.map((l) => <Fragment> · <a href={l.href} rel="noopener">{l.name === "github" ? "GitHub" : "LinkedIn"}</a></Fragment>)}</p>
+
+          <h2>Hébergement et nom de domaine</h2>
+          <p>Le site est hébergé par <strong>Cloudflare, Inc.</strong>, 101 Townsend Street, San Francisco, CA 94107, États-Unis (Cloudflare Pages). Le nom de domaine est enregistré auprès d'<strong>OVH SAS</strong>, 2 rue Kellermann, 59100 Roubaix, France.</p>
+
+          <h2>Données personnelles et cookies</h2>
+          <p>Ce site <strong>n'utilise aucun cookie</strong>, aucun traceur et aucun outil de mesure d'audience. Il mémorise uniquement votre choix de thème (clair ou sombre) dans le stockage local de votre navigateur ; cette information reste sur votre appareil et n'est jamais transmise.</p>
+          <p><strong>Newsletter.</strong> Le formulaire d'inscription vous redirige vers Substack : votre adresse e-mail est saisie et traitée par Substack, selon sa propre politique de confidentialité, et non par ce site.</p>
+          <p><strong>Contact.</strong> Si vous m'écrivez, votre adresse e-mail n'est utilisée que pour vous répondre. Conformément au RGPD, vous pouvez demander l'accès, la rectification ou la suppression des données qui vous concernent en écrivant à l'adresse de contact ci-dessus.</p>
+
+          <h2>Propriété intellectuelle et crédits</h2>
+          <p>Sauf mention contraire, les textes, schémas et illustrations de ce site sont l'œuvre de {person.name}. Les maquettes d'interface de CineRestore sont de ma conception. Les œuvres et ressources d'autres auteurs sont créditées là où elles sont utilisées : par exemple le guide de McFlyPartages, les vidéos de No Tech Drama et d'AnChan Tech, et le scanner open source Gugusse de Denis Carl.</p>
+
+          <h2>Responsabilité</h2>
+          <p>Les contenus sont publiés à titre d'information et décrivent souvent des projets d'apprentissage : ils sont fournis tels quels, sans garantie. Les avis exprimés sont les miens et n'engagent aucun employeur ni aucune organisation. Je ne contrôle pas le contenu des sites externes vers lesquels renvoient certains liens.</p>
+
+          <p class="dim">Dernière mise à jour : novembre 2026.</p>
+        </Fragment>
+      ) : (
+        <Fragment>
+          <h2>Publisher</h2>
+          <p>This site is a personal portfolio, published on a non-professional basis by <strong>{person.name}</strong>, who is also the publication director.</p>
+          <p>Contact: <button type="button" class="reveal" data-reveal>Show email address</button><noscript> (JavaScript required — or message me on LinkedIn)</noscript>{links.map((l) => <Fragment> · <a href={l.href} rel="noopener">{l.name === "github" ? "GitHub" : "LinkedIn"}</a></Fragment>)}</p>
+
+          <h2>Hosting and domain name</h2>
+          <p>The site is hosted by <strong>Cloudflare, Inc.</strong>, 101 Townsend Street, San Francisco, CA 94107, USA (Cloudflare Pages). The domain name is registered with <strong>OVH SAS</strong>, 2 rue Kellermann, 59100 Roubaix, France.</p>
+
+          <h2>Personal data and cookies</h2>
+          <p>This site <strong>uses no cookies</strong>, no trackers and no analytics. It only remembers your theme choice (light or dark) in your browser’s local storage; that information stays on your device and is never transmitted.</p>
+          <p><strong>Newsletter.</strong> The sign-up form sends you to Substack: your email address is entered and processed by Substack, under its own privacy policy, not by this site.</p>
+          <p><strong>Contact.</strong> If you write to me, your email address is used only to reply to you. Under the GDPR you can ask for access to, correction of or deletion of the data concerning you by writing to the contact address above.</p>
+
+          <h2>Intellectual property and credits</h2>
+          <p>Unless stated otherwise, the texts, diagrams and illustrations on this site are the work of {person.name}. The CineRestore interface mock-ups are my own design. Works and resources by other authors are credited where they are used: for example the McFlyPartages guide, the videos by No Tech Drama and AnChan Tech, and the open-source Gugusse scanner by Denis Carl.</p>
+
+          <h2>Liability</h2>
+          <p>The content is published for information and often describes learning projects: it is provided as is, without warranty. The views expressed are my own and do not represent any employer or organisation. I do not control the content of the external sites that some links point to.</p>
+
+          <p class="dim">Last updated: November 2026.</p>
+        </Fragment>
+      )}
+    </div>
+  </div>
+</Base>
+<style is:global>
+  .reveal { font: inherit; color: var(--text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .reveal:hover { color: var(--accent-text); }
+</style>

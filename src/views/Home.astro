@@ -1,0 +1,312 @@
+---
+import Base from "../layouts/Base.astro";
+import Newsletter from "../components/Newsletter.astro";
+import { getCollection } from "astro:content";
+import { person, social } from "../data/profile";
+import { shapes as shape, roomLabel, roomBlurb } from "../data/shapes";
+import { mk, lp, dateLocale, type Lang } from "../i18n";
+import { projectsFor, postsFor } from "../lib/content";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = mk(lang);
+const l = (path: string) => lp(lang, path);
+const linkedin = social.find((x) => x.name === "linkedin")!.href;
+
+const projects = (await projectsFor(lang)).map((x) => x.entry);
+const posts = (await postsFor(lang)).map((x) => x.entry);
+const photos = await getCollection("photos", (p) => !p.data.draft);
+
+type Item = { kind: "project" | "note" | "article" | "photo"; title: string; date: Date; href: string; text?: string; image?: string; live?: boolean };
+const items: Item[] = [
+  ...projects.map((p) => ({ kind: "project" as const, title: p.data.title.split(/ [—:] /)[0], date: p.data.publishedAt, href: l(`/work/${p.id}`), text: p.data.impact ?? p.data.summary, live: p.data.status === "in_progress" })),
+  ...posts.map((p) => ({ kind: p.data.type, title: p.data.title, date: p.data.publishedAt, href: l(`/blog/${p.id}`), text: p.data.summary })),
+  ...photos.map((p) => ({ kind: "photo" as const, title: p.data.title, date: p.data.date, href: l("/photos"), image: p.data.image })),
+].sort((a, b) => +b.date - +a.date);
+const latest = items.slice(0, 6);
+
+// Activité : un point par chose publiée, sur les 24 derniers mois.
+const now = new Date(), MONTHS = 24;
+const months = Array.from({ length: MONTHS }, (_, i) => { const d = new Date(now.getFullYear(), now.getMonth() - (MONTHS - 1 - i), 1); return { key: d.getFullYear() * 12 + d.getMonth(), month: d.getMonth(), label: d.toLocaleDateString(dateLocale(lang), { month: "short" }).replace(".", ""), year: d.getFullYear(), n: [] as Item[] }; });
+items.forEach((it) => { const k = it.date.getFullYear() * 12 + it.date.getMonth(); months.find((m) => m.key === k)?.n.push(it); });
+const rowsMax = Math.max(3, ...months.map((m) => m.n.length));
+const CW = 30, RH = 20, AW = MONTHS * CW + 10, AH = rowsMax * RH + 44;
+const kindLabel = { project: tr("Project", "Projet"), note: tr("Note", "Note"), article: tr("Article", "Article"), photo: "Photo" } as const;
+const rooms = (["data", "infra", "darkroom", "foundations"] as const).map((key) => ({ key, title: roomLabel[lang][key], blurb: roomBlurb[lang][key] }));
+const roomsUsed = rooms.filter((r) => projects.some((p) => p.data.room === r.key));
+const ordered = roomsUsed.flatMap((r) => projects.filter((p) => p.data.room === r.key));
+const strengths = [
+  { t: tr("Reliable pipelines", "Des pipelines fiables"), d: tr("Collecting, cleaning and moving data so it arrives complete, on time and protected — from 9,000 anonymised support tickets to a governed data platform on Databricks.", "Collecter, nettoyer et acheminer les données pour qu'elles arrivent complètes, à l'heure et protégées — de 9 000 tickets de support anonymisés à une plateforme de données gouvernée sur Databricks.") },
+  { t: tr("From prototype to production", "Du prototype à la production"), d: tr("I self-host my own data and learn infrastructure as code the hard way, on hardware I own.", "J'héberge mes propres données et j'apprends l'infrastructure as code à la dure, sur du matériel qui m'appartient.") },
+  { t: tr("A bridge to the business", "Un pont vers le métier"), d: tr("I start from the question the team is asking, and explain the result in plain language.", "Je pars de la question que se pose l'équipe, et j'explique le résultat en langage clair.") },
+];
+---
+<Base title={tr("Aemane Mouteirou — Data engineer, homelab and film", "Aemane Mouteirou — Data engineer, homelab et pellicule")} description={tr("Aemane Mouteirou, MSc 2 MIAGE at Paris Dauphine – PSL: data pipelines, a Kubernetes homelab and film-scanning tools. Projects explained simply.", "Aemane Mouteirou, M2 MIAGE à Paris Dauphine – PSL : pipelines de données, homelab Kubernetes et outils de numérisation de film. Projets expliqués simplement.")}>
+  <section class="story wrap" id="story">
+    <div class="stage" aria-hidden="true">
+      <canvas id="story-canvas"></canvas>
+      <p class="mono legend">{tr("illustrative shapes · each world has its own", "formes illustratives · chaque monde a la sienne")}</p>
+    </div>
+
+    <div class="steps">
+      <article class="step" data-target="0">
+        <p class="eyebrow"><b>{tr("MSc 2 MIAGE", "M2 MIAGE")}</b> · Dauphine – PSL · {tr("work-study at an insurance group", "alternance dans un grand groupe d'assurance")}</p>
+        <h1>{tr("Data, infrastructure and film — ", "Données, infrastructure et pellicule — ")}<em>{tr("built by hand.", "faits main.")}</em></h1>
+        <p class="lead">{tr("I like building things end to end, from data platforms to the machines that develop film. I work as a data engineer in an insurance group, host my own data at home and am building my own film-developing and scanning tools. The instinct is the same everywhere: take something raw, build a reliable process, make the result useful.", "J'aime construire les choses de bout en bout, des plateformes de données aux machines qui développent la pellicule. Je travaille comme data engineer dans un grand groupe d'assurance, j'héberge mes propres données à la maison et je construis mes propres outils de développement et de numérisation de film. L'instinct est le même partout : prendre une matière brute, bâtir un processus fiable, rendre le résultat utile.")}</p>
+        <p class="actions"><a class="btn solid" href="#projets">{tr("See the projects", "Voir les projets")}</a><a class="btn" href={l("/about")}>{tr("My background", "Mon parcours")}</a></p>
+        <p class="hint mono">{tr("↓ scroll — three worlds, one way of working", "↓ défilez — trois mondes, une seule façon de travailler")}</p>
+      </article>
+
+      <article class="step" data-target="1">
+        <p class="eyebrow"><b>01</b> · {tr("Data", "Données")}</p>
+        <h2>{tr("From thousands of messages to the questions that matter.", "De milliers de messages aux questions qui comptent.")}</h2>
+        <p>{tr("At Dauphine – PSL’s Centre for Educational Innovation I turned about 9,000 Moodle support tickets into 1,900 recurring questions — anonymised, classified by local language models, ready to feed a chatbot.", "Au Centre d'Innovation Pédagogique de Dauphine – PSL, j'ai transformé environ 9 000 tickets de support Moodle en 1 900 questions récurrentes — anonymisées, classées par des modèles de langage locaux, prêtes à alimenter un chatbot.")}</p>
+        <p>{tr("Since May 2026, in work-study at an insurance group, I help set up a data platform on Databricks: a medallion architecture decoupled from the infrastructure, pipeline orchestration and data governance — plus a tool that exports data from SAS and Azure straight into it. On my own time, I designed QuantLab so the same business logic runs on Databricks or on infrastructure I host myself.", "Depuis mai 2026, en alternance dans un grand groupe d'assurance, je participe à la mise en place d'une plateforme de données sur Databricks : une architecture en médaillon découplée de l'infrastructure, l'orchestration des pipelines et la gouvernance des données — plus un outil qui exporte des données de SAS et d'Azure directement dedans. Sur mon temps libre, j'ai conçu QuantLab pour que la même logique métier tourne sur Databricks ou sur une infrastructure que j'héberge moi-même.")}</p>
+        <p class="tags"><span class="chip">Databricks</span><span class="chip">PySpark</span><span class="chip">Medallion</span><span class="chip">Azure</span><span class="chip">SAS</span></p>
+        <p class="actions"><a class="btn" href={l("/work/databricks-data-platform")}>{tr("The data platform →", "La plateforme de données →")}</a><a class="btn" href={l("/work/quantlab")}>QuantLab →</a></p>
+      </article>
+
+      <article class="step" data-target="2">
+        <p class="eyebrow"><b>02</b> · Infrastructure</p>
+        <h2>{tr("A homelab for the sovereignty of my data.", "Un homelab pour la souveraineté de mes données.")}</h2>
+        <p>{tr("My photos live in Immich, my house runs on Home Assistant, and everything is backed up to a TrueNAS machine I own. I’m learning Terraform to provision the virtual machines from code — and a small Kubernetes cluster sits on the same Proxmox nodes.", "Mes photos vivent dans Immich, ma maison tourne sous Home Assistant, et tout est sauvegardé sur une machine TrueNAS qui m'appartient. J'apprends Terraform pour provisionner les machines virtuelles depuis du code — et un petit cluster Kubernetes tourne sur les mêmes nœuds Proxmox.")}</p>
+        <p class="tags"><span class="chip">Proxmox</span><span class="chip">Terraform</span><span class="chip">Immich</span><span class="chip">Home Assistant</span><span class="chip">TrueNAS</span></p>
+        <p class="actions"><a class="btn" href={l("/work/homelab")}>{tr("The homelab →", "Le homelab →")}</a></p>
+      </article>
+
+      <article class="step" data-target="3">
+        <p class="eyebrow"><b>03</b> · {tr("Darkroom", "Chambre noire")}</p>
+        <h2>{tr("Machines to develop and scan film, in the making.", "Des machines pour développer et numériser la pellicule, en construction.")}</h2>
+        <p>{tr("CineRestore is the software, firmware and electronics I am developing for a film-developing machine and film scanners — plus the website of the photo lab I’m still a member of.", "CineRestore, c'est le logiciel, le firmware et l'électronique que je développe pour une machine à développer la pellicule et des scanners de film — plus le site web du labo photo dont je suis toujours membre.")}</p>
+        <p class="pull">{tr("Analogue film is data too: a negative goes in, a traceable digital master comes out.", "La pellicule argentique est aussi de la donnée : un négatif entre, un master numérique traçable sort.")}</p>
+        <p class="tags"><span class="chip">Rust</span><span class="chip">Tauri</span><span class="chip">ESP32</span><span class="chip">React</span><span class="chip">Astro</span></p>
+        <p class="actions"><a class="btn" href={l("/work/cinerestore")}>CineRestore →</a><a class="btn" href={l("/work/labphoto")}>{tr("The lab’s website →", "Le site du labo →")}</a></p>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap sec" id="latest">
+    <p class="eyebrow"><b>{tr("Latest", "Dernières nouvelles")}</b> · {tr("this site is where I share what I build, as I build it", "ce site est l'endroit où je partage ce que je construis, au fur et à mesure")}</p>
+    <h2>{tr("Always something in progress.", "Toujours quelque chose en cours.")}</h2>
+
+    <figure class="act">
+      <svg viewBox={`0 0 ${AW} ${AH}`} role="img" aria-label={tr("Activity chart: one dot per project, note or photo published over the last 24 months", "Graphique d'activité : un point par projet, note ou photo publié sur les 24 derniers mois")}>
+        {months.map((m, i) => (
+          <g>
+            {m.n.map((it, j) => <circle cx={i * CW + CW / 2 + 5} cy={AH - 30 - j * RH - RH / 2} r="6.5" class:list={["a-dot", it.kind, it.live && "live"]}><title>{`${it.title} — ${kindLabel[it.kind]}`}</title></circle>)}
+            <text x={i * CW + CW / 2 + 5} y={AH - 12} text-anchor="middle" class="a-lab">{m.label}</text>
+            {(m.month === 0 || i === 0) && <text x={i * CW + 5} y={AH - 1} class="a-yr">{m.year}</text>}
+          </g>
+        ))}
+      </svg>
+      <figcaption class="mono"><span class="k project"></span>{tr("project", "projet")} <span class="k note"></span>{tr("note / article", "note / article")} <span class="k photo"></span>photo — {tr("one dot per thing published", "un point par chose publiée")}</figcaption>
+    </figure>
+
+    <ul class="feed">
+      {latest.map((it) => (
+        <li>
+          <a href={it.href}>
+            <span class="f-meta mono"><span class:list={["f-kind", it.kind]}>{kindLabel[it.kind]}</span>{it.date.toLocaleDateString(dateLocale(lang), { day: "numeric", month: "short", year: "numeric" })}{it.live && <span class="badge live"><i></i>{tr("in progress", "en cours")}</span>}</span>
+            <span class="f-title">{it.title}</span>
+            {it.text && <span class="f-text">{it.text}</span>}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="actions" style="display:flex;gap:.8rem;margin-top:1.6rem"><a class="btn" href={l("/blog")}>{tr("Open the journal →", "Ouvrir le journal →")}</a></p>
+  </section>
+
+  <section class="wrap sec proj" id="projets">
+    <p class="eyebrow"><b>{tr("Projects", "Projets")}</b> · {tr("one room at a time", "une pièce après l'autre")}</p>
+    <h2>{tr("Four rooms, one lab.", "Quatre pièces, un seul labo.")}</h2>
+    <div class="vit" id="vitrine">
+      <div class="vit-tabs" role="tablist" aria-label={tr("Rooms", "Pièces")}>
+        {roomsUsed.map((room) => <button type="button" role="tab" class="vit-tab" data-room={room.key}>{room.title}</button>)}
+      </div>
+      <div class="vit-body">
+        <div class="vit-list">
+          {ordered.map((p) => (
+            <article class="pv" data-room={p.data.room} data-layout={shape[p.id]?.layout} data-note={lang === "fr" ? shape[p.id]?.fr : shape[p.id]?.note}>
+              <p class="mono pv-room">{roomLabel[lang][p.data.room as keyof typeof roomLabel["en"]]} · <span class:list={["pv-st", p.data.status === "in_progress" && "live"]}><i></i>{p.data.status === "in_progress" ? tr("In progress", "En cours") : tr("Completed", "Terminé")}</span></p>
+              <h3 class="pn"><a href={l(`/work/${p.id}`)}>{p.data.title.split(/ [—:] /)[0]}</a></h3>
+              <p class="pi">{p.data.impact ?? p.data.summary}</p>
+              <p class="tags">{p.data.stack.slice(0, 6).map((t) => <span class="chip">{t}</span>)}</p>
+              <p class="actions"><a class="btn" href={l(`/work/${p.id}`)}>{tr("Open the project →", "Ouvrir le projet →")}</a></p>
+            </article>
+          ))}
+        </div>
+        <div class="vit-stage" aria-hidden="true">
+          <canvas id="proj-canvas"></canvas>
+          <p class="mono legend" id="proj-note"></p>
+        </div>
+      </div>
+      <div class="vit-ctl" hidden>
+        <button type="button" class="vit-b" data-act="prev" aria-label={tr("Previous project", "Projet précédent")}>‹</button>
+        <button type="button" class="vit-b" data-act="next" aria-label={tr("Next project", "Projet suivant")}>›</button>
+        <span class="vit-bar" aria-hidden="true"><i></i></span>
+        <span class="mono vit-count" aria-live="off"></span>
+      </div>
+    </div>
+    <p class="actions" style="display:flex;gap:.8rem;margin-top:1.6rem"><a class="btn" href={l("/work")}>{tr("All projects →", "Tous les projets →")}</a></p>
+  </section>
+
+  <section class="wrap sec">
+    <p class="eyebrow"><b>{tr("What I’m looking for", "Ce que je recherche")}</b></p>
+    <h2>{tr("A permanent data engineering role, ", "Un poste de data engineer en CDI, ")}<em>{tr("from 2027.", "à partir de 2027.")}</em></h2>
+    <p class="lead" style="max-width:34em;margin:0 0 2.5rem">{tr("I finish my Master’s in 2027 and I’m looking for a CDI as a data engineer — the next step after my work-study year. I want to build the data foundations teams actually rely on, in any industry. My experience already spans education, banking and insurance, and I’m happy to learn a new domain.", "Je termine mon Master en 2027 et je cherche un CDI de data engineer — l'étape suivante après mon année d'alternance. Je veux construire les fondations de données sur lesquelles les équipes s'appuient vraiment, dans n'importe quel secteur. Mon expérience couvre déjà l'éducation, la banque et l'assurance, et je suis ravi d'apprendre un nouveau domaine.")}</p>
+    <div class="roles">
+      {strengths.map((r, i) => <div><span class="mono n">0{i + 1}</span><h3>{r.t}</h3><p>{r.d}</p></div>)}
+    </div>
+    <p class="actions" style="display:flex;gap:.8rem;margin-top:2.5rem"><a class="btn solid" href={linkedin} target="_blank" rel="noopener noreferrer">{tr("Get in touch", "Me contacter")}</a><a class="btn" href={l("/about")}>{tr("My background", "Mon parcours")}</a></p>
+  </section>
+  <Newsletter />
+</Base>
+
+<script>
+  import { createDots } from "../scripts/dots";
+  const layouts = ["scatter", "clusters", "cluster", "film"] as const;
+
+  // — Story : le scroll pilote la transformation des points
+  const sc = document.getElementById("story-canvas") as HTMLCanvasElement;
+  const steps = [...document.querySelectorAll<HTMLElement>(".step")];
+  if (sc && steps.length) {
+    const dots = createDots(sc, "scatter");
+    const update = () => {
+      const mid = innerHeight * 0.5;
+      const c = steps.map((s) => { const r = s.getBoundingClientRect(); return r.top + r.height / 2; });
+      let tt = Number(steps[0].dataset.target);
+      if (mid >= c[c.length - 1]) tt = Number(steps[steps.length - 1].dataset.target);
+      else for (let i = 0; i < c.length - 1; i++) {
+        if (mid >= c[i] && mid < c[i + 1]) {
+          const f = (mid - c[i]) / (c[i + 1] - c[i]), a = Number(steps[i].dataset.target), b = Number(steps[i + 1].dataset.target);
+          tt = a + (b - a) * Math.min(1, Math.max(0, (f - 0.2) / 0.6)); break;
+        }
+      }
+      const k = Math.min(layouts.length - 2, Math.floor(tt));
+      dots.blend(layouts[k], layouts[k + 1], tt - k);
+    };
+    addEventListener("scroll", update, { passive: true }); addEventListener("resize", update); update();
+  }
+
+  // — Projets : vitrine automatique par pièces
+  const vit = document.getElementById("vitrine");
+  const pc = document.getElementById("proj-canvas") as HTMLCanvasElement;
+  const note = document.getElementById("proj-note");
+  if (vit && pc) {
+    const dots = createDots(pc, "scatter", { mesh: true });
+    const cards = [...vit.querySelectorAll<HTMLElement>(".pv")];
+    const tabs = [...vit.querySelectorAll<HTMLButtonElement>(".vit-tab")];
+    const ctl = vit.querySelector<HTMLElement>(".vit-ctl")!;
+    const count = vit.querySelector<HTMLElement>(".vit-count")!;
+    const DELAY = 7000;
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let i = 0, paused = still, hover = false, timer = 0;
+    vit.classList.add("on"); ctl.hidden = false;
+    const arm = () => {
+      clearTimeout(timer);
+      vit.classList.remove("run"); void vit.offsetWidth;
+      if (paused || hover) return;
+      vit.classList.add("run");
+      timer = window.setTimeout(() => go(i + 1), DELAY);
+    };
+    const go = (n: number) => {
+      i = (n + cards.length) % cards.length;
+      const c = cards[i];
+      cards.forEach((x) => x.classList.toggle("cur", x === c));
+      tabs.forEach((t) => { const on = t.dataset.room === c.dataset.room; t.classList.toggle("cur", on); t.setAttribute("aria-selected", String(on)); });
+      if (c.dataset.layout) dots.to(c.dataset.layout as any, 900);
+      if (note) note.textContent = c.dataset.note ?? "";
+      count.textContent = `${i + 1} / ${cards.length}`;
+      arm();
+    };
+    tabs.forEach((t) => t.addEventListener("click", () => { const k = cards.findIndex((c) => c.dataset.room === t.dataset.room); if (k >= 0) go(k); }));
+    vit.querySelector('[data-act="prev"]')!.addEventListener("click", () => go(i - 1));
+    vit.querySelector('[data-act="next"]')!.addEventListener("click", () => go(i + 1));
+    const body = vit.querySelector(".vit-body")!;
+    body.addEventListener("mouseenter", () => { hover = true; arm(); });
+    body.addEventListener("mouseleave", () => { hover = false; arm(); });
+    body.addEventListener("focusin", () => { hover = true; arm(); });
+    body.addEventListener("focusout", () => { hover = false; arm(); });
+    // ne tourne que lorsque la section est visible
+    new IntersectionObserver((e) => { hover = !e[0].isIntersecting; arm(); }).observe(vit);
+    go(0);
+  }
+</script>
+
+<style is:global>
+  .story { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; }
+  .stage { position: sticky; top: var(--hh); height: calc(100vh - var(--hh)); order: 2; display: flex; flex-direction: column; justify-content: center; }
+  .stage canvas { width: 100%; height: min(78vh, 640px); display: block; }
+  .legend { font-size: .7rem; color: var(--dim); text-align: center; margin: .6rem 0 0; min-height: 2.4em; }
+  .steps { order: 1; }
+  .step { min-height: 92vh; display: flex; flex-direction: column; justify-content: center; max-width: 520px; padding: 4rem 0; }
+  .step:first-child { min-height: calc(100vh - 64px); }
+  .step h1 { font-size: clamp(2.8rem, 6.4vw, 5.6rem); margin: 1rem 0 1.6rem; letter-spacing: -0.035em; text-wrap: balance; }
+  .step h1 em { color: var(--accent-display); font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; }
+  .step h2 { font-size: clamp(2rem, 4vw, 3.1rem); margin: .8rem 0 1.2rem; text-wrap: balance; }
+  .step p { margin: 0 0 1.1rem; }
+  .lead { font-size: 1.25rem; line-height: 1.5; max-width: 30em; }
+  .actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: .8rem !important; }
+  .hint { font-size: .75rem; color: var(--dim); margin-top: 3rem !important; }
+  .tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .pull { font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--dim); border-left: 3px solid var(--accent); padding-left: 1rem; }
+
+  .act { margin: 0 0 2.5rem; overflow-x: auto; }
+  .act svg { width: 100%; min-width: 620px; height: auto; display: block; }
+  .a-dot { fill: var(--text); } .a-dot.project { fill: var(--accent); } .a-dot.photo { fill: none; stroke: var(--text); stroke-width: 2; }
+  .a-dot.live { animation: pulse 1.8s ease-in-out infinite; }
+  .a-lab { font: 500 9px var(--mono); fill: var(--dim); } .a-yr { font: 600 9px var(--mono); fill: var(--text); }
+  .act figcaption { font-size: .7rem; color: var(--dim); margin-top: .6rem; display: flex; align-items: center; flex-wrap: wrap; gap: .3rem .6rem; }
+  .act .k { display: inline-block; width: .7rem; height: .7rem; border-radius: 50%; background: var(--text); }
+  .act .k.project { background: var(--accent); } .act .k.photo { background: none; border: 2px solid var(--text); }
+  .feed { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--text); }
+  .feed a { display: grid; grid-template-columns: 13rem 1fr; grid-template-areas: "m t" "m x"; gap: .15rem 1.5rem; padding: 1.2rem 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .feed a:hover .f-title { color: var(--accent-display); }
+  .f-meta { grid-area: m; font-size: .72rem; color: var(--dim); display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; }
+  .f-kind { color: var(--text); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; } .f-kind.project { color: var(--accent-text); }
+  .f-title { grid-area: t; font-family: var(--serif); font-size: clamp(1.3rem, 2.4vw, 1.8rem); line-height: 1.15; }
+  .f-text { grid-area: x; color: var(--dim); font-size: .95rem; max-width: 46em; }
+  @media (max-width: 640px) { .feed a { grid-template-columns: 1fr; grid-template-areas: "m" "t" "x"; } .f-meta { flex-direction: row; align-items: center; } }
+  .vit-tabs { display: flex; flex-wrap: wrap; gap: .4rem; border-bottom: 1px solid var(--text); margin: 1.6rem 0 0; }
+  .vit-tab { font: 600 .78rem var(--mono); text-transform: uppercase; letter-spacing: .08em; background: none; border: 0; border-bottom: 3px solid transparent; padding: .7rem .9rem; color: var(--dim); cursor: pointer; margin-bottom: -1px; }
+  .vit-tab:hover { color: var(--text); } .vit-tab.cur { color: var(--accent-text); border-bottom-color: var(--accent); }
+  .vit-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; align-items: center; padding: 2rem 0; }
+  .vit-list { display: grid; }
+  .pv { padding: 1.6rem 0; border-bottom: 1px solid var(--line); }
+  .vit.on .pv { display: none; padding: 0; border: 0; animation: pvIn .5s ease; } .vit.on .pv.cur { display: block; }
+  @keyframes pvIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .pv-room { font-size: .72rem; color: var(--dim); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 .6rem; }
+  .pv-st { display: inline-flex; align-items: center; gap: .35rem; } .pv-st i { width: .5rem; height: .5rem; border-radius: 50%; background: var(--dim); } .pv-st.live i { background: var(--accent); animation: pulse 1.8s ease-in-out infinite; }
+  .pn { font-family: var(--serif); font-size: clamp(2.2rem, 4.6vw, 3.6rem); line-height: 1.02; letter-spacing: -0.025em; margin: 0 0 .8rem; font-weight: 400; }
+  .pn a { text-decoration: none; } .pn a:hover { color: var(--accent-display); }
+  .pi { color: var(--dim); max-width: 34em; font-size: 1.02rem; margin: 0 0 1rem; }
+  .vit-stage canvas { width: 100%; aspect-ratio: 1; display: block; max-height: 460px; }
+  .vit-ctl { display: flex; align-items: center; gap: .5rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  .vit-ctl[hidden] { display: none; }
+  .vit-b { width: 2.4rem; height: 2.4rem; border: 1px solid var(--text); background: none; color: var(--text); border-radius: 50%; font: 600 .85rem var(--mono); cursor: pointer; }
+  .vit-b:hover { background: var(--text); color: var(--bg); }
+  .vit-bar { flex: 1; height: 3px; background: var(--line); margin: 0 .8rem; overflow: hidden; }
+  .vit-bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+  .vit.run .vit-bar i { animation: vitFill 7s linear forwards; }
+  @keyframes vitFill { to { width: 100%; } }
+  .vit-count { font-size: .72rem; color: var(--dim); }
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); border-top: 1px solid var(--text); }
+  .roles > div { padding: 1.6rem 1.6rem 2rem 0; border-bottom: 1px solid var(--line); }
+  .roles .n { color: var(--accent-text); font-size: .8rem; }
+  .sec > h2 em { color: var(--accent-display); font-style: italic; }
+  .roles h3 { font-size: 1.7rem; margin: .5rem 0 .6rem; }
+  .roles p { margin: 0; color: var(--dim); max-width: 26em; }
+
+  @media (max-width: 900px) {
+    .story { display: block; padding: 0; }
+    .stage { top: var(--hh); height: 42vh; order: 0; background: var(--bg); z-index: 5; padding: .5rem 1rem 0; border-bottom: 1px solid var(--line); }
+    .stage canvas { height: 34vh; }
+    .stage .legend { margin: 0; font-size: .62rem; min-height: 0; }
+    .steps { padding: 0 1.5rem; }
+    .step { min-height: 70vh; padding: 2rem 0; }
+    .step:first-child { min-height: 70vh; }
+    .vit-body { grid-template-columns: 1fr; gap: 1rem; }
+    .vit-stage { order: -1; } .vit-stage canvas { max-height: 240px; }
+    .vit-tabs { overflow-x: auto; flex-wrap: nowrap; } .vit-tab { white-space: nowrap; }
+  }
+</style>

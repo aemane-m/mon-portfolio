@@ -1,0 +1,111 @@
+---
+import Base from "../layouts/Base.astro";
+import Newsletter from "../components/Newsletter.astro";
+import { render, type CollectionEntry } from "astro:content";
+import { mdxComponents } from "../components/mdx";
+import { mk, lp, dateLocale, type Lang } from "../i18n";
+import { postsFor, projectsFor } from "../lib/content";
+import { articleProject } from "../data/related";
+
+interface Props { lang: Lang; entry: CollectionEntry<"posts">; fallback?: boolean }
+const { lang, entry, fallback = false } = Astro.props;
+const tr = mk(lang);
+const l = (path: string) => lp(lang, path);
+const { Content, headings } = await render(entry);
+const d = entry.data;
+const toc = headings.filter((h) => h.depth === 2);
+const fmt = (x: Date) => x.toLocaleDateString(dateLocale(lang), { month: "long", day: "numeric", year: "numeric" });
+
+// Article suggéré : le plus de tags en commun, à défaut le plus proche dans le temps.
+const others = (await postsFor(lang)).map((x) => x.entry).filter((p) => p.id !== entry.id);
+const score = (p: (typeof others)[number]) => p.data.tags.filter((t) => d.tags.includes(t)).length;
+const gap = (p: (typeof others)[number]) => Math.abs(+p.data.publishedAt - +d.publishedAt);
+const projId = articleProject[entry.id];
+const proj = projId ? (await projectsFor(lang)).map((x) => x.entry).find((p) => p.id === projId) : undefined;
+const next = [...others].sort((a, b) => score(b) - score(a) || gap(a) - gap(b))[0];
+---
+<Base title={d.seoTitle ?? d.title} description={d.seoDescription ?? d.summary} image={d.image} type="article" kind="article" published={d.publishedAt} keywords={d.tags} crumbs={[{ name: "Journal", href: l("/blog") }, { name: d.title, href: l(`/blog/${entry.id}`) }]}>
+  <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+  <div class="wrap page">
+    <p class="eyebrow"><a href={l("/blog")} style="text-decoration:none">← Journal</a> · {fmt(d.publishedAt)}</p>
+    <h1 class="big" style="font-size:clamp(2rem,4.6vw,3.6rem)">{d.title}</h1>
+    <p class="tags" style="margin:0 0 2.5rem">{d.tags.map((t) => <span class="chip">{t}</span>)}</p>
+    {d.image && <img class="cover" src={d.image} alt="" fetchpriority="high" decoding="async" />}
+
+    <div class="art-grid">
+      <article class="art-main" lang={fallback ? "en" : undefined}>{fallback && <p class="fb mono">{tr("", "Cet article n'est pas encore disponible en français : voici la version anglaise.")}</p>}<div class="prose"><Content components={mdxComponents} /></div></article>
+      {toc.length > 0 && (
+        <aside class="art-toc">
+          <nav class="toc" aria-label={tr("On this page", "Sur cette page")}>
+            <p class="eyebrow">{tr("On this page", "Sur cette page")}</p>
+            <ol>{toc.map((h) => <li><a href={`#${h.slug}`} data-id={h.slug}>{h.text}</a></li>)}</ol>
+          </nav>
+        </aside>
+      )}
+    </div>
+
+    {proj && (
+      <p class="part mono">{tr("Part of the project", "Fait partie du projet")} <a href={l(`/work/${proj.id}`)}>{proj.data.title.split(/ [—:] /)[0]}</a> — {proj.data.impact ?? proj.data.summary}</p>
+    )}
+
+    {next && (
+      <aside class="read-next" aria-labelledby="rn">
+        <p class="eyebrow" id="rn"><b>{tr("Read next", "À lire ensuite")}</b></p>
+        <a href={l(`/blog/${next.id}`)} class="rn-card">
+          <span class="mono dim">{fmt(next.data.publishedAt)}</span>
+          <span class="rn-title">{next.data.title}</span>
+          <span class="rn-sum">{next.data.summary}</span>
+          <span class="rn-go mono">{tr("Read the article →", "Lire l'article →")}</span>
+        </a>
+        <p class="mono dim rn-all"><a href={l("/blog")}>{tr("← All articles", "← Tous les articles")}</a></p>
+      </aside>
+    )}
+  </div>
+  <Newsletter compact />
+</Base>
+
+<script>
+  const bar = document.getElementById("bar");
+  const links = [...document.querySelectorAll<HTMLAnchorElement>(".toc a")];
+  const heads = links.map((a) => document.getElementById(a.dataset.id!)).filter(Boolean) as HTMLElement[];
+  const onScroll = () => {
+    const h = document.documentElement;
+    if (bar) bar.style.transform = `scaleX(${Math.min(1, h.scrollTop / Math.max(1, h.scrollHeight - innerHeight))})`;
+    let cur = -1; heads.forEach((el, i) => { if (el.getBoundingClientRect().top < innerHeight * 0.3) cur = i; });
+    links.forEach((a, i) => a.classList.toggle("on", i === cur));
+  };
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
+</script>
+
+<style is:global>
+  .fb { margin: 0 0 1.5rem; padding: .6rem .9rem; border: 1px dashed var(--accent); border-radius: 8px; font-size: .78rem; color: var(--dim); }
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 40; }
+  .progress i { display: block; height: 100%; background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; }
+  .cover { width: auto; max-width: 100%; height: auto; max-height: 300px; border-radius: 8px; margin: 0 0 2.5rem; border: 1px solid var(--line); display: block; background: var(--panel); }
+
+  .art-grid { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 4rem; align-items: start; }
+  .art-main { min-width: 0; }
+  .art-main .prose h2 { scroll-margin-top: calc(var(--hh) + 26px); }
+  .art-toc { position: sticky; top: calc(var(--hh) + 26px); }
+  .toc ol { list-style: none; margin: .8rem 0 0; padding: 0; border-left: 1px solid var(--line); }
+  .toc a { display: block; padding: .35rem 0 .35rem 1rem; margin-left: -1px; border-left: 2px solid transparent; font-size: .88rem; line-height: 1.35; color: var(--dim); text-decoration: none; }
+  .toc a:hover { color: var(--text); }
+  .toc a.on { color: var(--text); border-left-color: var(--accent); font-weight: 600; }
+
+  .part { margin: 3.5rem 0 0; max-width: 760px; font-size: .82rem; line-height: 1.6; color: var(--dim); } .part a { color: var(--text); font-weight: 600; }
+  .read-next { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--text); max-width: 760px; }
+  .rn-card { display: grid; gap: .5rem; margin-top: 1rem; padding: 1.6rem 1.8rem; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); text-decoration: none; transition: border-color .2s, transform .2s; }
+  .rn-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .rn-title { font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.1rem); line-height: 1.1; letter-spacing: -0.02em; }
+  .rn-card:hover .rn-title { color: var(--accent-display); }
+  .rn-sum { color: var(--dim); max-width: 40em; }
+  .rn-go { font-size: .8rem; color: var(--accent-text); margin-top: .3rem; }
+  .rn-all { font-size: .8rem; margin: 1.2rem 0 0; }
+  .rn-all a { color: inherit; text-decoration: none; }
+
+  @media (max-width: 960px) {
+    .art-grid { display: flex; flex-direction: column; align-items: stretch; gap: 1.5rem; }
+    .art-toc { position: static; order: -1; }
+    .art-toc .toc { border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.2rem; }
+  }
+</style>
