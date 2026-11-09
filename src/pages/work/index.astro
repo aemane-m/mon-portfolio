@@ -14,7 +14,7 @@ const projects = (await getCollection("projects", (p) => !p.data.draft)).sort((a
 const count = (k: string) => projects.filter((p) => p.data.room === k).length;
 const year = (d: Date) => d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
 ---
-<Base title="Projects — Aemane Mouteirou" description="Data, infrastructure and film projects by Aemane Mouteirou — from a SAS-to-PySpark migration to a Kubernetes homelab and film-scanning machines.">
+<Base title="Projects — Aemane Mouteirou" description="Data, infrastructure and film projects by Aemane Mouteirou — from a Databricks data platform to a self-hosted homelab and film-scanning machines.">
   <div class="wrap page">
     <p class="eyebrow"><b>Projects</b> · {projects.length} and counting</p>
     <h1 class="big">What I’ve built, <em>explained simply.</em></h1>
