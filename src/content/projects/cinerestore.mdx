@@ -112,6 +112,13 @@ The cine scanner starts from the mechanical model of [Gugusse](https://www.denis
 
 Data engineering and analogue film look unrelated, and I like that. What links them is not the subject but the craft: I can write software, and that is what lets me explore both. I would rather follow my curiosity into a new field than stay inside one.
 
+There is also a real technical link, in how the work is built:
+
+- **A pipeline of separate stages.** Decode, normalise, convert the negative, restore, export: each stage has a clear input contract, the same logic as the layers of a data pipeline.
+- **Traceability.** Every frame knows which roll it came from, how it was captured and what was changed. In data engineering this is called lineage.
+- **Data quality.** The software detects missing and duplicate frames, like a quality check on a dataset.
+- **Recovery after interruption.** Rolls, sessions and recipes are saved and can be resumed, a robustness habit I would expect from any pipeline.
+
 ## Where it honestly stands
 
 The repository keeps a validation report that separates what is *coded and tested in software* from what still needs *real hardware*. As of its 1 November 2026 version:

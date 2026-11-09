@@ -112,6 +112,13 @@ Le scanner cinéma part du modèle mécanique de [Gugusse](https://www.deniscarl
 
 Le data engineering et l'argentique semblent n'avoir rien en commun, et cela me plaît. Ce qui les relie n'est pas le sujet mais le savoir-faire : je sais développer, et c'est ce qui me permet d'explorer les deux. Je préfère suivre ma curiosité vers un nouveau domaine plutôt que rester dans un seul.
 
+Il y a aussi un vrai lien technique, dans la façon dont le travail est construit :
+
+- **Un pipeline d'étapes séparées.** Décoder, normaliser, convertir le négatif, restaurer, exporter : chaque étape a un contrat d'entrée clair, comme les couches d'un pipeline de données.
+- **La traçabilité.** Chaque photogramme sait de quelle bobine il vient, comment il a été capturé et ce qui a été modifié. En data engineering, on parle de lignée de la donnée (*lineage*).
+- **La qualité des données.** Le logiciel détecte les photogrammes manquants ou en double, comme un contrôle qualité sur un jeu de données.
+- **La reprise après interruption.** Les bobines, les sessions et les recettes sont enregistrées et peuvent être reprises, un réflexe de robustesse qu'on attend de tout pipeline.
+
 ## Où il en est, honnêtement
 
 Le dépôt tient un rapport de validation qui sépare ce qui est *codé et testé en logiciel* de ce qui demande encore du *vrai matériel*. Dans sa version du 1er novembre 2026 :
