@@ -33,6 +33,13 @@ const when = d.status === "in_progress" ? `Since ${d.publishedAt.toLocaleDateStr
 
     {cover && <img class="cover" src={cover} alt={`Preview of ${d.title}`} width="1600" height="900" fetchpriority="high" decoding="async" />}
 
+    {d.updates.length > 0 && (
+      <section class="upd">
+        <p class="eyebrow"><b>Progress log</b></p>
+        <ol>{[...d.updates].sort((a, b) => +b.date - +a.date).map((u) => <li><time class="mono dim">{u.date.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}</time><span>{u.text}</span></li>)}</ol>
+      </section>
+    )}
+
     <div class="prose"><Content components={mdxComponents} /></div>
 
     {rest.length > 0 && (
@@ -45,6 +52,11 @@ const when = d.status === "in_progress" ? `Since ${d.publishedAt.toLocaleDateStr
 </Base>
 
 <style is:global>
+  .upd { margin: 0 0 3rem; max-width: 700px; }
+  .upd ol { list-style: none; margin: .8rem 0 0; padding: 0; border-left: 2px solid var(--accent); }
+  .upd li { display: grid; grid-template-columns: 8.5rem 1fr; gap: 1rem; padding: .5rem 0 .5rem 1rem; }
+  .upd time { font-size: .76rem; padding-top: .2rem; }
+  @media (max-width: 560px) { .upd li { grid-template-columns: 1fr; gap: .1rem; } }
   .lead2 { font-family: var(--serif); font-size: clamp(1.25rem, 2.2vw, 1.7rem); line-height: 1.35; max-width: 34em; margin: 0 0 2.2rem; color: var(--text); }
   .facts { display: flex; flex-wrap: wrap; gap: 1.2rem 3rem; margin: 0 0 1.6rem; padding: 1.2rem 0; border-top: 1px solid var(--text); border-bottom: 1px solid var(--line); }
   .facts dt { font-family: var(--mono); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); }

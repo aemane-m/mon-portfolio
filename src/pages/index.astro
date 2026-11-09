@@ -4,6 +4,24 @@ import { getCollection } from "astro:content";
 import { person } from "../data/profile";
 
 const projects = (await getCollection("projects", (p) => !p.data.draft)).sort((a, b) => +b.data.publishedAt - +a.data.publishedAt);
+const posts = await getCollection("posts", (p) => !p.data.draft);
+const photos = await getCollection("photos", (p) => !p.data.draft);
+
+type Item = { kind: "project" | "note" | "article" | "photo"; title: string; date: Date; href: string; text?: string; image?: string; live?: boolean };
+const items: Item[] = [
+  ...projects.map((p) => ({ kind: "project" as const, title: p.data.title.split(/ [—:] /)[0], date: p.data.publishedAt, href: `/work/${p.id}`, text: p.data.impact ?? p.data.summary, live: p.data.status === "in_progress" })),
+  ...posts.map((p) => ({ kind: p.data.type, title: p.data.title, date: p.data.publishedAt, href: `/blog/${p.id}`, text: p.data.summary })),
+  ...photos.map((p) => ({ kind: "photo" as const, title: p.data.title, date: p.data.date, href: "/photos", image: p.data.image })),
+].sort((a, b) => +b.date - +a.date);
+const latest = items.slice(0, 6);
+
+// Activité : un point par chose publiée, sur les 24 derniers mois.
+const now = new Date(), MONTHS = 24;
+const months = Array.from({ length: MONTHS }, (_, i) => { const d = new Date(now.getFullYear(), now.getMonth() - (MONTHS - 1 - i), 1); return { key: d.getFullYear() * 12 + d.getMonth(), label: d.toLocaleDateString("en-US", { month: "short" }), year: d.getFullYear(), n: [] as Item[] }; });
+items.forEach((it) => { const k = it.date.getFullYear() * 12 + it.date.getMonth(); months.find((m) => m.key === k)?.n.push(it); });
+const rowsMax = Math.max(3, ...months.map((m) => m.n.length));
+const CW = 30, RH = 20, AW = MONTHS * CW + 10, AH = rowsMax * RH + 44;
+const kindLabel = { project: "Project", note: "Note", article: "Article", photo: "Photo" } as const;
 const shape: Record<string, { layout: string; note: string }> = {
   "quant-mlops": { layout: "series", note: "A financial time series: each dot is an observation, orange dots are detected signals." },
   quantlab: { layout: "clusters", note: "Many strategies, one portable engine that runs on either platform." },
@@ -65,11 +83,42 @@ const strengths = [
         <p class="eyebrow"><b>03</b> · Darkroom</p>
         <h2>Machines that develop and scan film.</h2>
         <p>CineRestore is the software, firmware and electronics behind a film-developing machine and film scanners — plus the website of the photo lab I’m still a member of.</p>
-        <p class="note">Analogue film is data too: a negative goes in, a traceable digital master comes out.</p>
+        <p class="pull">Analogue film is data too: a negative goes in, a traceable digital master comes out.</p>
         <p class="tags"><span class="chip">Rust</span><span class="chip">Tauri</span><span class="chip">ESP32</span><span class="chip">React</span><span class="chip">Astro</span></p>
         <p class="actions"><a class="btn" href="/work/cinerestore">CineRestore →</a><a class="btn" href="/work/labphoto">The lab’s website →</a></p>
       </article>
     </div>
+  </section>
+
+  <section class="wrap sec" id="latest">
+    <p class="eyebrow"><b>Latest</b> · this site is where I share what I build, as I build it</p>
+    <h2>Always something in progress.</h2>
+
+    <figure class="act">
+      <svg viewBox={`0 0 ${AW} ${AH}`} role="img" aria-label="Activity chart: one dot per project, note or photo published over the last 24 months">
+        {months.map((m, i) => (
+          <g>
+            {m.n.map((it, j) => <circle cx={i * CW + CW / 2 + 5} cy={AH - 30 - j * RH - RH / 2} r="6.5" class:list={["a-dot", it.kind, it.live && "live"]}><title>{`${it.title} — ${kindLabel[it.kind]}`}</title></circle>)}
+            <text x={i * CW + CW / 2 + 5} y={AH - 12} text-anchor="middle" class="a-lab">{m.label}</text>
+            {(m.label === "Jan" || i === 0) && <text x={i * CW + 5} y={AH - 1} class="a-yr">{m.year}</text>}
+          </g>
+        ))}
+      </svg>
+      <figcaption class="mono"><span class="k project"></span>project <span class="k note"></span>note / article <span class="k photo"></span>photo — one dot per thing published</figcaption>
+    </figure>
+
+    <ul class="feed">
+      {latest.map((it) => (
+        <li>
+          <a href={it.href}>
+            <span class="f-meta mono"><span class:list={["f-kind", it.kind]}>{kindLabel[it.kind]}</span>{it.date.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}{it.live && <span class="badge live"><i></i>in progress</span>}</span>
+            <span class="f-title">{it.title}</span>
+            {it.text && <span class="f-text">{it.text}</span>}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="actions" style="display:flex;gap:.8rem;margin-top:1.6rem"><a class="btn" href="/blog">Open the journal →</a></p>
   </section>
 
   <section class="wrap sec proj" id="projets">
@@ -174,9 +223,25 @@ const strengths = [
   .actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: .8rem !important; }
   .hint { font-size: .75rem; color: var(--dim); margin-top: 3rem !important; }
   .tags { display: flex; flex-wrap: wrap; gap: .4rem; }
-  .note { font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--dim); border-left: 3px solid var(--accent); padding-left: 1rem; }
+  .pull { font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--dim); border-left: 3px solid var(--accent); padding-left: 1rem; }
 
   .proj-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 3rem; align-items: start; }
+  .act { margin: 0 0 2.5rem; overflow-x: auto; }
+  .act svg { width: 100%; min-width: 620px; height: auto; display: block; }
+  .a-dot { fill: var(--text); } .a-dot.project { fill: var(--accent); } .a-dot.photo { fill: none; stroke: var(--text); stroke-width: 2; }
+  .a-dot.live { animation: pulse 1.8s ease-in-out infinite; }
+  .a-lab { font: 500 9px var(--mono); fill: var(--dim); } .a-yr { font: 600 9px var(--mono); fill: var(--text); }
+  .act figcaption { font-size: .7rem; color: var(--dim); margin-top: .6rem; display: flex; align-items: center; flex-wrap: wrap; gap: .3rem .6rem; }
+  .act .k { display: inline-block; width: .7rem; height: .7rem; border-radius: 50%; background: var(--text); }
+  .act .k.project { background: var(--accent); } .act .k.photo { background: none; border: 2px solid var(--text); }
+  .feed { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--text); }
+  .feed a { display: grid; grid-template-columns: 13rem 1fr; grid-template-areas: "m t" "m x"; gap: .15rem 1.5rem; padding: 1.2rem 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .feed a:hover .f-title { color: var(--accent); }
+  .f-meta { grid-area: m; font-size: .72rem; color: var(--dim); display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; }
+  .f-kind { color: var(--text); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; } .f-kind.project { color: var(--accent); }
+  .f-title { grid-area: t; font-family: var(--serif); font-size: clamp(1.3rem, 2.4vw, 1.8rem); line-height: 1.15; }
+  .f-text { grid-area: x; color: var(--dim); font-size: .95rem; max-width: 46em; }
+  @media (max-width: 640px) { .feed a { grid-template-columns: 1fr; grid-template-areas: "m" "t" "x"; } .f-meta { flex-direction: row; align-items: center; } }
   .room { margin-bottom: 3rem; }
   .room-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem 1rem; font-family: var(--mono); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin: 0 0 .4rem; color: var(--accent); }
   .room-h small { font-family: var(--sans); text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--dim); font-size: .88rem; }
