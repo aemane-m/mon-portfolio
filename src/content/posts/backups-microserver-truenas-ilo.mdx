@@ -84,7 +84,7 @@ Inside the pool I created two datasets, one for each kind of backup:
     ],
     rows: [
       ["proxmox-backups", "The Proxmox nodes, over NFS", "The backups of all my virtual machines (about 0.6 TiB)"],
-      ["TimeMachine", "My Mac and the Mac mini, over SMB", "Their Time Machine backups, one sub-dataset per machine (about 0.65 TiB so far), with a space limit of roughly 2.5 TiB"]
+      ["TimeMachine", "My Mac, over SMB", "Its Time Machine backups (about 0.65 TiB so far), with a space limit of roughly 2.5 TiB"]
     ]
   }}
 />
@@ -172,7 +172,7 @@ This is a backup in the same house as the originals. It protects against a faile
 
 A backup that has never been restored is only a hope, and I have not yet done a full restore test. I plan to do it later, with a precise question: **starting only from the backups, can I recover everything?** That means:
 
-- the **Mac mini** (a 256 GB machine, whose Time Machine backup lives on the NAS);
+- the **Mac mini** (a 256 GB machine);
 - the **three Proxmox nodes**;
 - and **all the virtual machines** that run on them.
 

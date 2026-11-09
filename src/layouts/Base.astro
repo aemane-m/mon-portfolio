@@ -4,6 +4,7 @@ import frauncesUrl from "@fontsource-variable/fraunces/files/fraunces-latin-stan
 import { getCollection } from "astro:content";
 import { person, social } from "../data/profile";
 import { langOf, mk, lp, altPath, cleanPath } from "../i18n";
+import { existsSync } from "node:fs";
 
 interface Props { title: string; description: string; image?: string; type?: "website" | "article"; }
 const { title, description, image = "/images/avatar.jpg", type = "website" } = Astro.props;
@@ -17,7 +18,11 @@ const canonical = new URL(rawPath === "/" ? "/" : rawPath, Astro.site).href;
 const enUrl = new URL(lang === "en" ? rawPath : altPath(rawPath), Astro.site).href;
 const frUrl = new URL(lang === "fr" ? rawPath : altPath(rawPath), Astro.site).href;
 const switchHref = rawPath === "/404" ? (lang === "fr" ? "/" : "/fr") : altPath(rawPath);
-const og = new URL(image, Astro.site).href;
+// Image de partage dédiée (générée par `npm run og`) ; à défaut, l'image fournie ou le portrait.
+const ogKey = path === "/" ? "home" : path.replace(/^\//, "").replace(/\//g, "-");
+const ogFile = `/og/${lang}/${ogKey}.jpg`;
+const hasOg = existsSync(`${process.cwd()}/public${ogFile}`);
+const og = new URL(hasOg ? ogFile : image, Astro.site).href;
 const hasPhotos = (await getCollection("photos", (p) => !p.data.draft)).length > 0;
 const nav = [{ href: "/about", label: tr("About", "À propos") }, { href: "/work", label: tr("Projects", "Projets") }, { href: "/blog", label: tr("Journal", "Journal") }, ...(hasPhotos ? [{ href: "/photos", label: "Photos" }] : [])];
 const ld = {
@@ -48,9 +53,13 @@ const ld = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={og} />
+    {hasOg && <meta property="og:image:width" content="1200" />}
+    {hasOg && <meta property="og:image:height" content="630" />}
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:image" content={og} />
     <meta property="og:locale" content={lang === "fr" ? "fr_FR" : "en_US"} />
     <meta property="og:locale:alternate" content={lang === "fr" ? "en_US" : "fr_FR"} />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content={hasOg ? "summary_large_image" : "summary"} />
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   </head>
   <body>
@@ -76,7 +85,7 @@ const ld = {
         <div>
           <a href={`mailto:${person.email}`}>{person.email}</a><br />
           {social.filter((s) => s.href.startsWith("http")).map((s, i) => <>{i > 0 && " · "}<a href={s.href} rel="noopener">{s.name}</a></>)}
-          <div class="foot-nav">{nav.map((n) => <a href={lp(lang, n.href)}>{n.label}</a>)}<a href={switchHref} hreflang={other} lang={other}>{lang === "fr" ? "English" : "Français"}</a></div>
+          <div class="foot-nav">{nav.map((n) => <a href={lp(lang, n.href)}>{n.label}</a>)}<a href={lp(lang, "/legal")}>{tr("Legal notice", "Mentions légales")}</a><a href={switchHref} hreflang={other} lang={other}>{lang === "fr" ? "English" : "Français"}</a></div>
         </div>
       </div>
     </footer>

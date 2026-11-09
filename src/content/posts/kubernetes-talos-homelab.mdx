@@ -12,18 +12,25 @@ draft: false
 - **What it is:** a three-node Talos cluster running Cilium, Argo CD, Vault, PostgreSQL, Longhorn, Airflow and Kafka.
 - **What broke:** mostly **ordering** problems, not bugs: each layer depends on the one before it.
 - **Takeaway:** a platform is a dependency chain, and writing every incident down is half the work.
+- **Honest framing:** I run it to learn these tools, not because everything needs Kubernetes: Docker or a VM often does the job.
 
 </Tldr>
 
 I run a small Kubernetes cluster at home, next to the rest of my homelab. It is where I try the tools I meet in data engineering — an orchestrator, a message broker, a database operator, object storage — on infrastructure I fully control. This article is a tour of how it is put together, and, more usefully, of what went wrong while I built it.
 
-<Callout tone="brand">I am still learning. Everything below comes from my own deployment notes: the failures are real, and so are the fixes.</Callout>
+<Callout tone="brand">The point of this cluster is to **learn and get familiar with these tools**. I know Kubernetes is not the alpha and omega: for many needs, Docker on a single machine, or even a plain virtual machine, is simpler and perfectly enough. Everything below comes from my own deployment notes: the failures are real, and so are the fixes.</Callout>
 
 ## Why Talos
 
 The cluster runs on **Talos Linux**, an operating system built only to run Kubernetes. There is no SSH and no package manager: a node is configured by a declarative file and administered through an API. That suited what I wanted, which is a cluster I can describe in Git and rebuild, instead of a set of machines I have tweaked by hand.
 
 Three virtual machines on three Proxmox hosts form the cluster, each with 4 vCPUs and 8 GB of memory. Each one is both a control-plane node and a worker.
+
+## Do you even need Kubernetes?
+
+Usually not. That is worth saying plainly. In my own lab, several services (Immich, Portainer, a document tool) run on **a simple Docker host**, and that is the right choice for them: less to operate, less to break. A virtual machine is enough when one machine is enough.
+
+I run Kubernetes alongside, for another reason: it is the platform I meet in data engineering, and the fastest way to understand it is to operate one, break it, and fix it. The skill I want is not "using Kubernetes everywhere", it is **knowing when it is worth it, and when it is not**.
 
 ## The stack at a glance
 

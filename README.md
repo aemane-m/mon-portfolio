@@ -37,3 +37,13 @@ Commit the generated `src/diagrams/*.svg`. If a diagram has not been generated, 
 ## Languages
 
 English is the default (`/`), French lives under `/fr`. UI strings are in the views (`src/views`) and `src/data`; content is bilingual through `src/content/projects` + `projects-fr` and `posts` + `posts-fr` (same file name). A page with no French file falls back to English with a notice.
+
+## Share images
+
+Every page, project and article has a dedicated 1200×630 preview image (title + the project's dot shape), in English and French:
+
+```bash
+npm run og           # generates the missing ones into public/og/<lang>/ (needs a local Chromium)
+```
+
+Commit the generated images. A page without one falls back to the portrait.

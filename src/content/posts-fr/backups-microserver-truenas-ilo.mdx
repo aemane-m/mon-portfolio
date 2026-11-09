@@ -84,7 +84,7 @@ Dans le pool, j'ai créé deux datasets, un pour chaque type de sauvegarde :
     ],
     rows: [
       ["proxmox-backups", "Les nœuds Proxmox, en NFS", "Les sauvegardes de toutes mes machines virtuelles (environ 0,6 TiB)"],
-      ["TimeMachine", "Mon Mac et le Mac mini, en SMB", "Leurs sauvegardes Time Machine, un sous-dataset par machine (environ 0,65 TiB pour l'instant), avec une limite d'espace d'environ 2,5 TiB"]
+      ["TimeMachine", "Mon Mac, en SMB", "Ses sauvegardes Time Machine (environ 0,65 TiB pour l'instant), avec une limite d'espace d'environ 2,5 TiB"]
     ]
   }}
 />
@@ -172,7 +172,7 @@ C'est une sauvegarde dans la même maison que les originaux. Elle protège contr
 
 Une sauvegarde qui n'a jamais été restaurée n'est qu'un espoir, et je n'ai pas encore fait de test de restauration complet. Je prévois de le faire plus tard, avec une question précise : **en partant uniquement des sauvegardes, puis-je tout récupérer ?** Cela veut dire :
 
-- le **Mac mini** (une machine de 256 Go, dont la sauvegarde Time Machine vit sur le NAS) ;
+- le **Mac mini** (une machine de 256 Go) ;
 - les **trois nœuds Proxmox** ;
 - et **toutes les machines virtuelles** qui tournent dessus.
 
