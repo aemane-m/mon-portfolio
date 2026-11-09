@@ -1,0 +1,548 @@
+[
+ {
+  "hash": "bca9cd9",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "finance-tracker",
+  "subject": "add screenshots of the landing page and internal app pages (sample data, disclosed), EN/FR"
+ },
+ {
+  "hash": "41994c7",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "finance-tracker",
+  "subject": "restore GitHub links (back end, front end), add sign-in/sign-up screenshots, add the 'never commit credentials in production' lesson and security note (EN/FR)"
+ },
+ {
+  "hash": "46998de",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "SGEB repository is public again, restore the GitHub links (EN/FR)"
+ },
+ {
+  "hash": "abe2dd5",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "replace the two broken GitHub links (finance tracker back end, SGEB) with a 'coming soon' note, EN/FR"
+ },
+ {
+  "hash": "23a73c1",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "'Get in touch' buttons go to LinkedIn (footer keeps the hidden email link)"
+ },
+ {
+  "hash": "5b06726",
+  "date": "2026-11-09",
+  "type": "chore",
+  "scope": "",
+  "subject": "redirect old Next.js OG image endpoint to the home share image"
+ },
+ {
+  "hash": "a6a078d",
+  "date": "2026-11-09",
+  "type": "fix",
+  "scope": "responsive",
+  "subject": "article overflow on mobile, About skills grid at 320px, compact two-row mobile header, sticky offsets follow header height (--hh)"
+ },
+ {
+  "hash": "bde62bd",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "cinerestore",
+  "subject": "technical link with data engineering (pipeline, lineage, quality, recovery)"
+ },
+ {
+  "hash": "862ab15",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "cinerestore",
+  "subject": "cleaner closing section 'Two worlds, one toolbox'"
+ },
+ {
+  "hash": "205d70f",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "cinerestore",
+  "subject": "what I would like you to take away"
+ },
+ {
+  "hash": "c3b5eed",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "cinerestore",
+  "subject": "friend's first camera, Super 8 rarity and abandoned films, life cycle wording"
+ },
+ {
+  "hash": "e2ad2bb",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "cinerestore",
+  "subject": "personal story, why build the machines (EN/FR)"
+ },
+ {
+  "hash": "f5b0e52",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "homelab",
+  "subject": "what I am proud of"
+ },
+ {
+  "hash": "98aa2d0",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "homelab",
+  "subject": "big data course wording, AI tools as a junior"
+ },
+ {
+  "hash": "e6d8d1a",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "homelab",
+  "subject": "hardware table (3 second-hand HP ProDesk Gen 5 minis)"
+ },
+ {
+  "hash": "eed58fd",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "employer described as a major insurance group (EN/FR), share images refreshed"
+ },
+ {
+  "hash": "e701429",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "homelab",
+  "subject": "what it taught me, link with Databricks and MapReduce (EN/FR)"
+ },
+ {
+  "hash": "a608074",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "personal views on homelab sizing/consumption and on Kubernetes (EN/FR)"
+ },
+ {
+  "hash": "2e5feb3",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "homelab",
+  "subject": "add the personal story of how it started (EN/FR)"
+ },
+ {
+  "hash": "a7ae1d2",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "work",
+  "subject": "drop the shape thumbnails beside project names; content: medallion is a pattern, not a dogma"
+ },
+ {
+  "hash": "4020863",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "merge Quant-MLOps into QuantLab (new version), rewrite EN/FR with research-flow diagram, redirects, share images"
+ },
+ {
+  "hash": "35d12c9",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "drop unlinked Databricks mention from Kubernetes texts; fix awkward French sentence on the DB role/pooler"
+ },
+ {
+  "hash": "f19d52b",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "home",
+  "subject": "remove pause, mesh + pointer-reactive dots in showcase; content: fixed IPs, Kubernetes motivation (Databricks at work, learn when it is worth it)"
+ },
+ {
+  "hash": "d0e5d48",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "home",
+  "subject": "projects showcase with room tabs, auto-advance, prev/next/pause; no hover needed, works on mobile"
+ },
+ {
+  "hash": "dc54a1e",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "green accent everywhere (tokens, diagrams, share images, icons), table headers in accent"
+ },
+ {
+  "hash": "4daa966",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "amber accent everywhere (tokens, diagrams, share images, icons), accessible text shades; mail click copies the address; remove dev colour switcher; plain text in table cells"
+ },
+ {
+  "hash": "7712c66",
+  "date": "2026-11-09",
+  "type": "dev",
+  "scope": "",
+  "subject": "on-page accent colour switcher (development only)"
+ },
+ {
+  "hash": "cf11cd0",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "hide the email address from the HTML (decoded in the browser, LinkedIn fallback), reveal-on-click in the legal notice; dev-only accent palette preview"
+ },
+ {
+  "hash": "a24bb48",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "seo",
+  "subject": "fitted titles and descriptions, keyword SEO titles, JSON-LD (WebSite, BlogPosting, CreativeWork, breadcrumbs), RSS feeds, sitemap lastmod, PNG icons, project/article cross-links"
+ },
+ {
+  "hash": "c6d8b59",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "legal notice — remove the mention of Sara's agreement"
+ },
+ {
+  "hash": "1fa1f97",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "legal notice (EN/FR), dedicated share images, employer anonymised, learning framing, Time Machine fix"
+ },
+ {
+  "hash": "90cc42b",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "i18n",
+  "subject": "full French translation of all 13 projects and 5 articles, pre-rendered French diagrams, 404 language link"
+ },
+ {
+  "hash": "542f446",
+  "date": "2026-11-09",
+  "type": "perf",
+  "scope": "",
+  "subject": "static pre-rendered Mermaid diagrams (no JS), system fonts except Fraunces, lighter project thumbnails"
+ },
+ {
+  "hash": "51d99c4",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "i18n",
+  "subject": "FR/EN switch — /fr routes, bilingual UI and profile data, fallback to English, clean canonical URLs"
+ },
+ {
+  "hash": "b68a4c2",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "add Pacman under uncertainty (AI project) with measured results"
+ },
+ {
+  "hash": "91bd57c",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "CineRestore presented as in development, with the real state from the 1 November validation report"
+ },
+ {
+  "hash": "8df881b",
+  "date": "2026-11-09",
+  "type": "fix",
+  "scope": "",
+  "subject": "broken SGEB image, fonts blocked by CSP, TS hint, Node version, redirect for the removed project"
+ },
+ {
+  "hash": "07eac1a",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "backups article — restore test planned for later"
+ },
+ {
+  "hash": "84ae9fd",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "backups article — two Time Machine targets, restore test still to do"
+ },
+ {
+  "hash": "ca5ba64",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "backups article — one RAIDZ1 pool with two datasets, from the TrueNAS screens"
+ },
+ {
+  "hash": "b226916",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "backups article — nightly run duration"
+ },
+ {
+  "hash": "2094972",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "backups article — two pools (Time Machine and other backups)"
+ },
+ {
+  "hash": "3d546fd",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "whole-homelab power figures and the NAS disk pool"
+ },
+ {
+  "hash": "57796d4",
+  "date": "2026-11-09",
+  "type": "fix",
+  "scope": "",
+  "subject": "stray backslashes before inline code in articles"
+ },
+ {
+  "hash": "9b56676",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "article summaries, real code excerpts, power figures, improvement notes; rewrite the portfolio article"
+ },
+ {
+  "hash": "cc36858",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "article table of contents (right), read-next suggestion; move shared layout styles to global CSS"
+ },
+ {
+  "hash": "60920d7",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "Mermaid diagrams (lazy-loaded, themed) across articles and projects; restore Substack newsletter"
+ },
+ {
+  "hash": "5c721cb",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "articles — VM module/tags, node sizes and cluster uptime update"
+ },
+ {
+  "hash": "3aab5e3",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "spread article dates chronologically, anchored on homelab commit history"
+ },
+ {
+  "hash": "759a1b2",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "network article — remove unverified claim"
+ },
+ {
+  "hash": "b24e575",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "network article — the Mac mini hosts UniFi OS Server"
+ },
+ {
+  "hash": "729cbc8",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "publish the isolated-network article, rules taken from the UniFi zone matrix"
+ },
+ {
+  "hash": "d6a024a",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "backups article — boot difficulty was finding the procedure"
+ },
+ {
+  "hash": "45b1f2c",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "network article draft — VLAN ids and Wi-Fi mapping"
+ },
+ {
+  "hash": "e0e79af",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "network article draft — zone-based firewall section from the UniFi policy table"
+ },
+ {
+  "hash": "fd6b4d9",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "add F1 2025 ELECTRE IS decision project with report"
+ },
+ {
+  "hash": "412b132",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "backups article — CPU/RAM upgrade and video credits"
+ },
+ {
+  "hash": "09b1c1d",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "backups article — power wiring step for the SSD"
+ },
+ {
+  "hash": "f691439",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "article on backups with a HP MicroServer, iLO and TrueNAS (credits the McFly guide)"
+ },
+ {
+  "hash": "5cb05c2",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "draft article on the isolated UniFi network (VLANs)"
+ },
+ {
+  "hash": "0eea5ee",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "articles on the Talos Kubernetes setup and on Proxmox with Terraform and GitLab CI/CD"
+ },
+ {
+  "hash": "aa502a5",
+  "date": "2026-11-09",
+  "type": "copy",
+  "scope": "",
+  "subject": "projects page description"
+ },
+ {
+  "hash": "d2fba35",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "data-platform assignment (medallion, orchestration, governance) instead of single datamart migration"
+ },
+ {
+  "hash": "3e99c2a",
+  "date": "2026-11-09",
+  "type": "copy",
+  "scope": "",
+  "subject": "hero says data engineer at Allianz"
+ },
+ {
+  "hash": "286c0a4",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "homelab framed around data sovereignty; Terraform shown as learning"
+ },
+ {
+  "hash": "0768987",
+  "date": "2026-11-09",
+  "type": "copy",
+  "scope": "",
+  "subject": "broaden the hero introduction beyond the job title"
+ },
+ {
+  "hash": "5349bb2",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "add Finance Tracker (completed web-dev initiation project)"
+ },
+ {
+  "hash": "600c33f",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "projects list with generated shape thumbnails, room filters, better navigation"
+ },
+ {
+  "hash": "468dac5",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "redesigned project page, dark mode, smaller project images"
+ },
+ {
+  "hash": "c2c4758",
+  "date": "2026-11-09",
+  "type": "fix",
+  "scope": "",
+  "subject": "remove duplicated name in hero eyebrow"
+ },
+ {
+  "hash": "bdca461",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "living-lab homepage — latest feed, activity chart, project progress log"
+ },
+ {
+  "hash": "72b3eaf",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "journal, photos gallery and one-command publishing"
+ },
+ {
+  "hash": "fbf7318",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "Allianz work-study since May 2026"
+ },
+ {
+  "hash": "0b5fd63",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "three-worlds portfolio (data, infrastructure, darkroom), new projects, work-study and CDI positioning"
+ },
+ {
+  "hash": "4dd74a2",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "story-scroll homepage with live data dots, editorial design, full English content"
+ },
+ {
+  "hash": "d806fda",
+  "date": "2026-11-09",
+  "type": "content",
+  "scope": "",
+  "subject": "drop drug-discovery, plain-language copy for business readers, quant-mlops start date"
+ },
+ {
+  "hash": "9094235",
+  "date": "2026-11-09",
+  "type": "feat",
+  "scope": "",
+  "subject": "rebuild portfolio with Astro and a data-oriented terminal design (lineage graph, command palette, security headers)"
+ },
+ {
+  "hash": "95fbad6",
+  "date": "2026-11-09",
+  "type": "fix",
+  "scope": "seo,perf",
+  "subject": "remove /api/og URLs, fix sitemap double slash, compress images/video, add aria-labels"
+ }
+]
