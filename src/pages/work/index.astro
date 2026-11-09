@@ -11,9 +11,9 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
     <div class="runs">
       {projects.map((p) => (
         <a class="run" href={`/work/${p.id}`}>
-          <span class="mono st"><span class:list={["dot", p.data.status === "in_progress" && "live"]}></span>{p.data.status === "in_progress" ? "running" : "success"}</span>
+          <span class="mono st"><span class:list={["dot", p.data.status === "in_progress" && "live"]}></span>{p.data.status === "in_progress" ? "en cours" : "terminé"}</span>
           <span class="nm">{p.data.name ?? p.id}</span>
-          <span class="sm"><b style="color:var(--text);font-weight:600">{p.data.title}</b><br />{p.data.summary}</span>
+          <span class="sm"><b style="color:var(--text);font-weight:600">{p.data.title}</b><br />{p.data.impact ?? p.data.summary}</span>
           <span class="meta mono dim">{fmt(p.data.publishedAt)}</span>
           <span class="stk">{p.data.stack.map((t) => <span class="chip">{t}</span>)}</span>
         </a>

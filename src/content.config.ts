@@ -11,6 +11,7 @@ const projects = defineCollection({
     summary: z.string(),
     publishedAt: z.coerce.date(),
     name: z.string().optional(),
+    impact: z.string().optional(),
     status: z.enum(["completed", "in_progress"]).default("completed"),
     kind: z.enum(["personal", "academic", "internship"]).default("personal"),
     stack: z.array(z.string()).default([]),

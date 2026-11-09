@@ -1,14 +1,21 @@
 ---
 import Base from "../layouts/Base.astro";
-import { person, experience, education, pipeline } from "../data/profile";
+import { person, experience, education, pipeline, business } from "../data/profile";
 ---
 <Base title="À propos — Aemane Mouteirou" description="Parcours d'Aemane Mouteirou : M1 MIAGE à Dauphine – PSL, stage data/IA au CIP PSL, stack data engineering et MLOps.">
   <section class="sec" style="margin-top:3rem">
     <h2>cat about.md</h2>
     <div class="prose">
-      <p>Étudiant en <strong>M1 MIAGE</strong> à l'Université Paris Dauphine – PSL, je me spécialise dans l'industrialisation de la donnée et du machine learning : passer d'un prototype à un service <strong>stable, reproductible et observable</strong>.</p>
-      <p>Mon terrain d'expérimentation est <a href="/work/quant-mlops">Quant-MLOps</a> : orchestration (Airflow), messaging (Kafka), suivi d'expériences (MLflow), feature store (Feast), packaging (Docker) et monitoring (Prometheus/Grafana). J'avance par itérations courtes et je documente chaque étape.</p>
-      <p>Je recherche un poste en <strong>{person.seeking.join(", ")}</strong>.</p>
+      <p>Étudiant en <strong>M1 MIAGE</strong> à l'Université Paris Dauphine – PSL, je m'intéresse à tout ce qui permet de <strong>prendre de meilleures décisions grâce aux données</strong> : les collecter proprement, les analyser, les modéliser et les rendre lisibles pour ceux qui en ont besoin.</p>
+      <p>Ma formation mêle informatique, bases de données, statistiques et organisation des systèmes d'information : je suis à l'aise avec les équipes techniques comme avec les équipes métier. Je suis ouvert à <strong>tous les secteurs</strong> et à toutes les opportunités data — data engineering, data science / analytics, MLOps.</p>
+      <p>Mon projet personnel en cours, <a href="/work/quant-mlops">Quant-MLOps</a>, me sert de terrain pour apprendre à industrialiser un projet data : orchestration, suivi des expériences, conteneurs et monitoring. Il est en construction, je le documente au fil de l'eau.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>avec les équipes métier</h2>
+    <div class="biz">
+      {business.map((b) => <div><h3 class="mono">{b.title}</h3><p>{b.text}</p></div>)}
     </div>
   </section>
 
@@ -29,11 +36,11 @@ import { person, experience, education, pipeline } from "../data/profile";
     <h2>stack</h2>
     <pre class="mono sql"><span class="k">SELECT</span> stage, tool, level <span class="k">FROM</span> stack <span class="k">ORDER BY</span> pipeline_order;</pre>
     <div class="tw2"><table class="mono">
-      <thead><tr><th>stage</th><th>tool</th><th>level</th></tr></thead>
+      <thead><tr><th>étape</th><th>tool</th><th>level</th></tr></thead>
       <tbody>
         {pipeline.flatMap((s) => s.items.map((i, n) => (
           <tr class={n === 0 ? "first" : ""}>
-            <td class="accent">{n === 0 ? s.stage : ""}</td>
+            <td class="accent">{n === 0 ? s.plain : ""}</td>
             <td>{i.name}</td>
             <td class={i.level === "pratique" ? "okc" : "dim"}>{i.level === "pratique" ? "● pratique" : "○ apprentissage"}</td>
           </tr>
@@ -63,6 +70,10 @@ import { person, experience, education, pipeline } from "../data/profile";
 </Base>
 
 <style is:global>
+  .biz { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+  .biz > div { border: 1px solid var(--line); background: var(--panel); padding: 1rem 1.1rem; }
+  .biz h3 { font-size: .9rem; margin: 0 0 .5rem; color: var(--accent); }
+  .biz p { margin: 0; font-size: .92rem; color: var(--dim); }
   .log { list-style: none; margin: 0; padding: 0 0 0 1.1rem; border-left: 1px dashed var(--line); max-width: 760px; }
   .log > li { position: relative; padding: 0 0 1.9rem 1rem; }
   .log > li::before { content: ""; position: absolute; left: -1.5rem; top: .55rem; width: .55rem; height: .55rem; background: var(--bg); border: 2px solid var(--accent); border-radius: 50%; }

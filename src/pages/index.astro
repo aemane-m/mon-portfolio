@@ -8,7 +8,7 @@ const projects = (await getCollection("projects", (p) => !p.data.draft)).sort((a
 const fmt = (d: Date) => d.toISOString().slice(0, 10);
 const kindLabel = { personal: "perso", academic: "académique", internship: "stage" } as const;
 ---
-<Base title={`${person.name} — Data & MLOps engineer`} description="Portfolio d'Aemane Mouteirou : projets data engineering et MLOps (Airflow, Kafka, MLflow, FastAPI, Docker), étudiant en M1 MIAGE à Dauphine – PSL.">
+<Base title={`${person.name} — Data & MLOps engineer`} description="Aemane Mouteirou, étudiant en M1 MIAGE à Dauphine – PSL : projets data (collecte, modélisation, MLOps) expliqués simplement, ouvert à tous les secteurs.">
   <section class="hero">
     <div class="term" aria-hidden="true">
       <div class="term-bar"><i></i><i></i><i></i><span class="mono dim">whoami.yml — zsh</span></div>
@@ -16,9 +16,10 @@ const kindLabel = { personal: "perso", academic: "académique", internship: "sta
 <span class="l" style="--i:1"><u>name</u>:     {person.name}</span>
 <span class="l" style="--i:2"><u>role</u>:     {person.role}</span>
 <span class="l" style="--i:3"><u>school</u>:   {person.school}</span>
-<span class="l" style="--i:4"><u>seeking</u>:  [{person.seeking.join(", ")}]</span>
-<span class="l" style="--i:5"><u>status</u>:   <span class="ok"><span class="dot"></span>open_to_work</span></span>
-<span class="l" style="--i:6"><b class="p">$</b> ./explain --short<span class="cur"></span></span></pre>
+<span class="l" style="--i:4"><u>seeking</u>:  [{person.seeking.join(", ")}]
+<span class="l" style="--i:5"><u>sectors</u>:  {person.open}</span></span>
+<span class="l" style="--i:6"><u>status</u>:   <span class="ok"><span class="dot"></span>open_to_work</span></span>
+<span class="l" style="--i:7"><b class="p">$</b> ./explain --short<span class="cur"></span></span></pre>
     </div>
     <h1>{headline}</h1>
     <p class="cta mono">
@@ -29,7 +30,7 @@ const kindLabel = { personal: "perso", academic: "académique", internship: "sta
   </section>
 
   <section class="sec lin-sec">
-    <h2>lineage — projets → technologies</h2>
+    <h2>lineage — quel projet utilise quel outil</h2>
     <Lineage />
   </section>
 
@@ -38,9 +39,9 @@ const kindLabel = { personal: "perso", academic: "académique", internship: "sta
     <div class="runs">
       {projects.map((p) => (
         <a class="run" href={`/work/${p.id}`}>
-          <span class="mono st"><span class:list={["dot", p.data.status === "in_progress" && "live"]}></span>{p.data.status === "in_progress" ? "running" : "success"}</span>
+          <span class="mono st"><span class:list={["dot", p.data.status === "in_progress" && "live"]}></span>{p.data.status === "in_progress" ? "en cours" : "terminé"}</span>
           <span class="nm">{p.data.name ?? p.id}</span>
-          <span class="sm">{p.data.summary}</span>
+          <span class="sm">{p.data.impact ?? p.data.summary}</span>
           <span class="meta mono dim">{kindLabel[p.data.kind]} · {fmt(p.data.publishedAt)}</span>
           <span class="stk">{p.data.stack.slice(0, 6).map((t) => <span class="chip">{t}</span>)}</span>
         </a>
@@ -49,11 +50,11 @@ const kindLabel = { personal: "perso", academic: "académique", internship: "sta
   </section>
 
   <section class="sec">
-    <h2>pipeline — ma stack, étape par étape</h2>
+    <h2>pipeline — de la donnée brute à la décision</h2>
     <ol class="pipe mono">
       {pipeline.map((s) => (
         <li>
-          <span class="accent">{s.stage}</span>
+          <span class="accent">{s.plain}</span>
           <span class="dim">{s.items.map((i) => i.name).join(" · ")}</span>
         </li>
       ))}

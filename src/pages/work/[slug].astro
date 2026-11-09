@@ -20,10 +20,11 @@ const kindLabel = { personal: "perso", academic: "académique", internship: "sta
     <h1>{d.title}</h1>
 
     <dl class="runhdr mono">
+      {d.impact && <><dt>en clair</dt><dd class="plain">{d.impact}</dd></>}
       <dt>run_id</dt><dd>{entry.id}</dd>
-      <dt>status</dt><dd><span class:list={["dot", d.status === "in_progress" && "live"]}></span>{d.status === "in_progress" ? "running — développement actif" : "success"}</dd>
+      <dt>status</dt><dd><span class:list={["dot", d.status === "in_progress" && "live"]}></span>{d.status === "in_progress" ? "en cours — développement actif" : "terminé"}</dd>
       <dt>kind</dt><dd>{kindLabel}</dd>
-      <dt>date</dt><dd>{d.publishedAt.toISOString().slice(0, 10)}</dd>
+      <dt>{d.status === "in_progress" ? "début" : "date"}</dt><dd>{d.publishedAt.toISOString().slice(0, 10)}</dd>
       {d.team && <><dt>team</dt><dd>{d.team.map((m) => m.name).join(", ")}</dd></>}
       <dt>stack</dt><dd class="chips">{d.stack.map((t) => <span class="chip">{t}</span>)}</dd>
       {d.link && <><dt>{isRepo ? "repo" : "doc"}</dt><dd><a href={d.link} target={isRepo ? "_blank" : undefined} rel="noopener">{isRepo ? d.link.replace("https://", "") : "rapport (PDF)"}</a></dd></>}

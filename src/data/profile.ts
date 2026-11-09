@@ -1,11 +1,12 @@
 export const person = {
   name: "Aemane MOUTEIROU",
   handle: "aemane",
-  role: "Data / MLOps engineer",
+  role: "Data engineer · MLOps",
   school: "M1 MIAGE · Université Paris Dauphine – PSL",
   email: "aemane.mouteirou@dauphine.eu",
   location: "Paris, FR",
-  seeking: ["Data Engineering", "MLOps", "Ops / DevOps"],
+  seeking: ["Data Engineering", "Data Science / Analytics", "MLOps & Ops"],
+  open: "tous secteurs",
   avatar: "/images/avatar.jpg",
 };
 
@@ -16,7 +17,7 @@ export const social = [
 ];
 
 export const headline =
-  "Je construis des pipelines de données et des chaînes MLOps reproductibles, observables et déployables.";
+  "Je transforme les données en décisions fiables — de la collecte au tableau de bord, avec les équipes techniques comme métier.";
 
 export type Experience = { company: string; role: string; period: string; points: string[]; hash: string };
 
@@ -71,10 +72,16 @@ export const education = [
 ];
 
 export type Level = "pratique" | "apprentissage";
-export const pipeline: { stage: string; sql: string; items: { name: string; level: Level }[] }[] = [
-  { stage: "ingest", sql: "orchestration & messaging", items: [{ name: "Airflow", level: "apprentissage" }, { name: "Kafka", level: "apprentissage" }, { name: "n8n", level: "pratique" }] },
-  { stage: "store", sql: "stockage & requêtage", items: [{ name: "SQL", level: "pratique" }, { name: "PostgreSQL", level: "pratique" }, { name: "SQLite", level: "pratique" }, { name: "DuckDB", level: "apprentissage" }, { name: "Parquet", level: "apprentissage" }] },
-  { stage: "transform", sql: "traitement & ML", items: [{ name: "Python", level: "pratique" }, { name: "Pandas", level: "pratique" }, { name: "scikit-learn", level: "pratique" }, { name: "MLflow", level: "apprentissage" }, { name: "Feast", level: "apprentissage" }] },
-  { stage: "serve", sql: "API & déploiement", items: [{ name: "FastAPI", level: "pratique" }, { name: "Docker", level: "pratique" }, { name: "GitHub Actions", level: "pratique" }, { name: "Django", level: "pratique" }] },
-  { stage: "observe", sql: "monitoring", items: [{ name: "Prometheus", level: "apprentissage" }, { name: "Grafana", level: "apprentissage" }] },
+export const pipeline: { stage: string; plain: string; sql: string; items: { name: string; level: Level }[] }[] = [
+  { stage: "ingest", plain: "collecter", sql: "orchestration & messaging", items: [{ name: "Airflow", level: "apprentissage" }, { name: "Kafka", level: "apprentissage" }, { name: "n8n", level: "pratique" }] },
+  { stage: "store", plain: "stocker", sql: "stockage & requêtage", items: [{ name: "SQL", level: "pratique" }, { name: "PostgreSQL", level: "pratique" }, { name: "SQLite", level: "pratique" }, { name: "DuckDB", level: "apprentissage" }, { name: "Parquet", level: "apprentissage" }] },
+  { stage: "transform", plain: "transformer & modéliser", sql: "traitement & ML", items: [{ name: "Python", level: "pratique" }, { name: "Pandas", level: "pratique" }, { name: "scikit-learn", level: "pratique" }, { name: "MLflow", level: "apprentissage" }, { name: "Feast", level: "apprentissage" }] },
+  { stage: "serve", plain: "livrer", sql: "API & déploiement", items: [{ name: "FastAPI", level: "pratique" }, { name: "Docker", level: "pratique" }, { name: "GitHub Actions", level: "pratique" }, { name: "Django", level: "pratique" }] },
+  { stage: "observe", plain: "surveiller", sql: "monitoring", items: [{ name: "Prometheus", level: "apprentissage" }, { name: "Grafana", level: "apprentissage" }] },
+];
+
+export const business = [
+  { title: "Comprendre le besoin avant de coder", text: "Au support pédagogique de Dauphine, j'ai travaillé avec les équipes d'assistance pour identifier les questions qui revenaient le plus, puis automatisé leur traitement." },
+  { title: "Rigueur sur la donnée sensible", text: "Anonymisation de ~9 000 tickets au CIP ; conformité et traitement de dossiers de crédit chez LCL." },
+  { title: "Rendre les résultats lisibles", text: "Rapports, tableaux de bord et documentation pensés pour des lecteurs non techniques (association de 50+ membres, supports de formation)." },
 ];
