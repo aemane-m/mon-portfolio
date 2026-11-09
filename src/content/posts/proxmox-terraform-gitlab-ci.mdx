@@ -27,6 +27,25 @@ The repository is the single source of truth. A change to the infrastructure is 
 
 Each tool owns one layer. Terraform owns the **virtual machines**: their disks, their network and their sizing. It does not manage what runs inside them — Ansible configures the Docker host, Talos is configured through its own API, and Argo CD takes over inside Kubernetes. Keeping those boundaries clear is what stops the tools from fighting each other.
 
+## One module, five machines
+
+Every virtual machine is created by the same small Terraform **module**, so they all follow the same pattern. The module automatically tags each machine \`managed\` and \`iac\`, then adds tags for its role. In the Proxmox interface, that means I can see at a glance which machines belong to code, and which would be a hand-made exception.
+
+<Table
+  data={{
+    headers: [
+      { content: "Machine", key: "vm" },
+      { content: "Size", key: "size" },
+      { content: "Role", key: "role" }
+    ],
+    rows: [
+      ["Three Talos nodes, one on each Proxmox host", "4 vCPUs, 8 GB of memory each", "The Kubernetes control-plane nodes, also used as workers"],
+      ["Home Assistant OS", "2 vCPUs, 5 GB of memory", "Home automation"],
+      ["A Debian Docker host", "4 vCPUs, 8 GB of memory", "Immich, Portainer and a document tool"]
+    ]
+  }}
+/>
+
 ## The pipeline
 
 <CodeBlock

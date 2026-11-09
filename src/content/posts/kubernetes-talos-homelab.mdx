@@ -15,7 +15,7 @@ I run a small Kubernetes cluster at home, next to the rest of my homelab. It is 
 
 The cluster runs on **Talos Linux**, an operating system built only to run Kubernetes. There is no SSH and no package manager: a node is configured by a declarative file and administered through an API. That suited what I wanted, which is a cluster I can describe in Git and rebuild, instead of a set of machines I have tweaked by hand.
 
-Three virtual machines on three Proxmox hosts form the cluster. Each one is both a control-plane node and a worker.
+Three virtual machines on three Proxmox hosts form the cluster, each with 4 vCPUs and 8 GB of memory. Each one is both a control-plane node and a worker.
 
 ## The stack at a glance
 
@@ -98,5 +98,7 @@ The last one is my favourite, because it is not a bug in any tool. A database ro
 ## Where it stands
 
 The cluster runs, and the platform services above are deployed through Argo CD. It is a learning environment, so it changes often. The next gap I want to close is backup coverage for the data that lives in Longhorn.
+
+**Update, 9 November 2026.** The three nodes have now been up for over a month, all reporting healthy, with the cluster running Talos 1.13. A cluster that quietly stays up is the best test of everything above.
 
 If you want the other half — how the virtual machines under the cluster get created — I wrote it up in [Provisioning Proxmox with Terraform and GitLab CI/CD](/blog/proxmox-terraform-gitlab-ci).
