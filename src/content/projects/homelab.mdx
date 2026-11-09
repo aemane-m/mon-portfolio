@@ -1,21 +1,41 @@
 ---
-title: "Homelab as code — Proxmox, Talos Kubernetes and GitOps"
+title: "Homelab — my own data, on my own hardware"
 publishedAt: "2026-08-27"
 name: "homelab"
 room: "infra"
-impact: "A three-node home datacentre that can be rebuilt from Git alone: virtual machines, Kubernetes, backups and applications are all declared as code."
+impact: "A home datacentre built around data sovereignty: my photos, my home automation and my backups stay on hardware I own — and I'm learning to provision it all from code with Terraform."
 status: "in_progress"
 kind: "personal"
-stack: ["Proxmox","Talos","Kubernetes","Terraform","Ansible","Argo CD","Cilium","GitLab CI","Docker","UniFi"]
-summary: "Infrastructure-as-code for a personal homelab: Terraform/OpenTofu drives Proxmox, Talos runs Kubernetes, Argo CD reconciles the cluster from Git, and a GitLab pipeline validates every change."
+stack: ["Proxmox","Terraform","Immich","Home Assistant","TrueNAS","Talos","Kubernetes","Ansible","UniFi"]
+summary: "A personal homelab on Proxmox: self-hosted photos (Immich), home automation (Home Assistant) and TrueNAS backups, plus a Talos Kubernetes cluster — with Terraform and GitOps as the way I'm learning to provision and rebuild it."
 draft: false
 ---
 
-## The idea
+## Why I run it
 
-Git is the single source of truth. If the hardware died tomorrow, the logical layer — virtual machines, cluster, services — could be rebuilt from the repository. No secret, Terraform state, kubeconfig or generated Talos file is ever committed.
+I would rather keep my own data than hand it to someone else's cloud. So the photos of my family and of my film work live in **Immich**, my house is run by **Home Assistant**, and everything is backed up to a **TrueNAS** machine I own. That is the point of the whole lab: **data sovereignty**.
 
-<Callout tone="brand">The goal is not a pile of services. It is a platform where every change is reviewed, planned and applied the same way a team would ship production infrastructure.</Callout>
+It is also where I learn. I am teaching myself **Terraform** by using it to create the virtual machines on Proxmox, and the rest of the lab (cluster, backups, services) follows the same habit: described in Git, reviewed, then applied.
+
+<Callout tone="brand">The goal is not a pile of services. It is a platform I trust with my own data, and a place to practise production habits on something I actually depend on.</Callout>
+
+## What runs on it
+
+<Table
+  data={{
+    headers: [
+      { content: "Service", key: "svc" },
+      { content: "Why I self-host it", key: "why" }
+    ],
+    rows: [
+      ["Immich", "Photo and video library that stays on my own storage instead of a third-party service"],
+      ["Home Assistant", "Home automation running locally, in its own virtual machine"],
+      ["TrueNAS", "The backup target for every virtual machine, plus Time Machine for my Mac"],
+      ["Portainer, BentoPDF", "Container management and a document tool, on a small Docker host"],
+      ["Talos Kubernetes", "A three-node cluster for experiments: data and MLOps tools, managed through GitOps"]
+    ]
+  }}
+/>
 
 ## How the pieces fit together
 
@@ -70,4 +90,4 @@ The repository carries a deployment journal that records the choices, the incide
 
 ## Status
 
-Ongoing: this is a lab I keep running and improving, so the repository changes regularly. It is a personal environment, not a production service — which is exactly why it is a good place to practise production habits.
+Ongoing, and honestly **still a learning project**: I am new to Terraform and I treat every mistake as part of the course. It is a personal environment, not a production service — which is exactly why it is a safe place to learn production habits.
