@@ -1,0 +1,16 @@
+---
+const { src, alt = "", aspectRatio } = Astro.props;
+const isVideo = /\.(mp4|webm)$/i.test(src);
+const style = aspectRatio ? `aspect-ratio:${aspectRatio}` : undefined;
+---
+<figure class="media">
+  {isVideo
+    ? <video src={src} controls preload="none" playsinline style={style} aria-label={alt}></video>
+    : <img src={src} alt={alt} loading="lazy" decoding="async" style={style} />}
+  {alt && <figcaption>↳ {alt}</figcaption>}
+</figure>
+<style>
+  .media { margin:1.75rem 0; }
+  img, video { width:100%; height:auto; border:1px solid var(--line); background:var(--panel); object-fit:contain; display:block; }
+  figcaption { font-family:var(--mono); font-size:.78rem; color:var(--dim); margin-top:.4rem; }
+</style>

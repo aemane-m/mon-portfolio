@@ -1,0 +1,80 @@
+---
+import Base from "../layouts/Base.astro";
+import { person, experience, education, pipeline } from "../data/profile";
+---
+<Base title="À propos — Aemane Mouteirou" description="Parcours d'Aemane Mouteirou : M1 MIAGE à Dauphine – PSL, stage data/IA au CIP PSL, stack data engineering et MLOps.">
+  <section class="sec" style="margin-top:3rem">
+    <h2>cat about.md</h2>
+    <div class="prose">
+      <p>Étudiant en <strong>M1 MIAGE</strong> à l'Université Paris Dauphine – PSL, je me spécialise dans l'industrialisation de la donnée et du machine learning : passer d'un prototype à un service <strong>stable, reproductible et observable</strong>.</p>
+      <p>Mon terrain d'expérimentation est <a href="/work/quant-mlops">Quant-MLOps</a> : orchestration (Airflow), messaging (Kafka), suivi d'expériences (MLflow), feature store (Feast), packaging (Docker) et monitoring (Prometheus/Grafana). J'avance par itérations courtes et je documente chaque étape.</p>
+      <p>Je recherche un poste en <strong>{person.seeking.join(", ")}</strong>.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>git log --oneline experience/</h2>
+    <ol class="log">
+      {experience.map((e) => (
+        <li>
+          <div class="mono head"><span class="hash">{e.hash}</span> <b>{e.role}</b> <span class="dim">@ {e.company}</span></div>
+          <div class="mono dim when">{e.period}</div>
+          <ul>{e.points.map((p) => <li>{p}</li>)}</ul>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="sec" id="stack">
+    <h2>stack</h2>
+    <pre class="mono sql"><span class="k">SELECT</span> stage, tool, level <span class="k">FROM</span> stack <span class="k">ORDER BY</span> pipeline_order;</pre>
+    <div class="tw2"><table class="mono">
+      <thead><tr><th>stage</th><th>tool</th><th>level</th></tr></thead>
+      <tbody>
+        {pipeline.flatMap((s) => s.items.map((i, n) => (
+          <tr class={n === 0 ? "first" : ""}>
+            <td class="accent">{n === 0 ? s.stage : ""}</td>
+            <td>{i.name}</td>
+            <td class={i.level === "pratique" ? "okc" : "dim"}>{i.level === "pratique" ? "● pratique" : "○ apprentissage"}</td>
+          </tr>
+        )))}
+      </tbody>
+    </table></div>
+    <p class="mono dim" style="font-size:.78rem">Le niveau « apprentissage » signale ce que j'utilise dans mes projets en cours sans le revendiquer comme maîtrisé en production.</p>
+  </section>
+
+  <section class="sec">
+    <h2>formation</h2>
+    <ol class="log">
+      {education.map((e) => (
+        <li>
+          <div class="mono head"><b>{e.title}</b> <span class="dim">@ {e.where}</span></div>
+          <div class="mono dim when">{e.period}</div>
+          <p class="foc">{e.focus}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="sec">
+    <h2>contact</h2>
+    <p class="mono"><a href={`mailto:${person.email}`}>{person.email}</a></p>
+  </section>
+</Base>
+
+<style is:global>
+  .log { list-style: none; margin: 0; padding: 0 0 0 1.1rem; border-left: 1px dashed var(--line); max-width: 760px; }
+  .log > li { position: relative; padding: 0 0 1.9rem 1rem; }
+  .log > li::before { content: ""; position: absolute; left: -1.5rem; top: .55rem; width: .55rem; height: .55rem; background: var(--bg); border: 2px solid var(--accent); border-radius: 50%; }
+  .log .head { font-size: .92rem; } .log .hash { color: var(--accent); margin-right: .5rem; }
+  .log .when { font-size: .76rem; margin: .1rem 0 .5rem; }
+  .log ul { margin: 0; padding-left: 1.1rem; font-size: .95rem; } .log ul li { margin: .25rem 0; } .log ul li::marker { color: var(--dim); }
+  .log .foc { margin: 0; font-size: .92rem; color: var(--dim); }
+  .sql { margin: 0 0 1rem; padding: .8rem 1rem; background: var(--panel); border: 1px solid var(--line); font-size: .85rem; overflow-x: auto; }
+  .sql .k { color: var(--violet); }
+  .tw2 { overflow-x: auto; border: 1px solid var(--line); max-width: 640px; margin-bottom: .8rem; }
+  .tw2 table { border-collapse: collapse; width: 100%; font-size: .84rem; }
+  .tw2 th { text-align: left; padding: .5rem .9rem; background: var(--panel); color: var(--cyan); font-weight: 500; border-bottom: 1px solid var(--line); }
+  .tw2 td { padding: .35rem .9rem; } .tw2 tr.first td { border-top: 1px solid var(--line); }
+  .okc { color: var(--ok); }
+</style>

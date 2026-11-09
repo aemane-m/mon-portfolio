@@ -1,0 +1,4 @@
+---
+const { align } = Astro.props;
+---
+<p style={align ? `text-align:${align}` : undefined}><slot /></p>

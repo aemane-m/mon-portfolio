@@ -1,0 +1,24 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+const projects = (await getCollection("projects", (p) => !p.data.draft)).sort((a, b) => +b.data.publishedAt - +a.data.publishedAt);
+const fmt = (d: Date) => d.toISOString().slice(0, 10);
+---
+<Base title="Projets — Aemane Mouteirou" description="Projets data engineering, MLOps et développement : pipelines Airflow/Kafka, MLflow, FastAPI, Docker, Java, C.">
+  <section class="sec" style="margin-top:3rem">
+    <h2>ls -la work/</h2>
+    <p class="mono dim small2">{projects.length} projets · tri : date décroissante</p>
+    <div class="runs">
+      {projects.map((p) => (
+        <a class="run" href={`/work/${p.id}`}>
+          <span class="mono st"><span class:list={["dot", p.data.status === "in_progress" && "live"]}></span>{p.data.status === "in_progress" ? "running" : "success"}</span>
+          <span class="nm">{p.data.name ?? p.id}</span>
+          <span class="sm"><b style="color:var(--text);font-weight:600">{p.data.title}</b><br />{p.data.summary}</span>
+          <span class="meta mono dim">{fmt(p.data.publishedAt)}</span>
+          <span class="stk">{p.data.stack.map((t) => <span class="chip">{t}</span>)}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
+<style is:global>.small2 { font-size: .8rem; margin: -.4rem 0 1.2rem; }</style>

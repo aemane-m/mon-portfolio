@@ -1,0 +1,56 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection, render } from "astro:content";
+import { mdxComponents } from "../../components/mdx";
+
+export async function getStaticPaths() {
+  const all = await getCollection("projects", (p) => !p.data.draft);
+  return all.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const [cover, ...rest] = d.images;
+const isRepo = d.link?.startsWith("http");
+const kindLabel = { personal: "perso", academic: "académique", internship: "stage" }[d.kind];
+---
+<Base title={`${d.title} — Aemane Mouteirou`} description={d.summary} image={cover} type="article">
+  <article class="case">
+    <p class="mono dim crumb"><a href="/work">work/</a>{entry.id}</p>
+    <h1>{d.title}</h1>
+
+    <dl class="runhdr mono">
+      <dt>run_id</dt><dd>{entry.id}</dd>
+      <dt>status</dt><dd><span class:list={["dot", d.status === "in_progress" && "live"]}></span>{d.status === "in_progress" ? "running — développement actif" : "success"}</dd>
+      <dt>kind</dt><dd>{kindLabel}</dd>
+      <dt>date</dt><dd>{d.publishedAt.toISOString().slice(0, 10)}</dd>
+      {d.team && <><dt>team</dt><dd>{d.team.map((m) => m.name).join(", ")}</dd></>}
+      <dt>stack</dt><dd class="chips">{d.stack.map((t) => <span class="chip">{t}</span>)}</dd>
+      {d.link && <><dt>{isRepo ? "repo" : "doc"}</dt><dd><a href={d.link} target={isRepo ? "_blank" : undefined} rel="noopener">{isRepo ? d.link.replace("https://", "") : "rapport (PDF)"}</a></dd></>}
+    </dl>
+
+    {cover && <img class="cover" src={cover} alt={`Aperçu du projet ${d.title}`} width="1600" height="900" fetchpriority="high" decoding="async" />}
+
+    <div class="prose"><Content components={mdxComponents} /></div>
+
+    {rest.length > 0 && (
+      <section class="gal">
+        <h2 class="mono">artefacts</h2>
+        <div class="gal-grid">{rest.map((src) => <img src={src} alt={`Capture du projet ${d.title}`} loading="lazy" decoding="async" width="800" height="450" />)}</div>
+      </section>
+    )}
+  </article>
+</Base>
+
+<style is:global>
+  .case { padding-top: 2.5rem; }
+  .crumb { font-size: .8rem; margin: 0 0 .5rem; } .crumb a { color: var(--dim); text-decoration: none; } .crumb a::after { content: ""; }
+  .case h1 { font-size: clamp(1.4rem, 3vw, 2rem); max-width: 28em; margin: 0 0 1.6rem; text-wrap: balance; }
+  .runhdr { display: grid; grid-template-columns: max-content 1fr; gap: .35rem 1.4rem; margin: 0 0 2rem; padding: 1rem 1.1rem; border: 1px solid var(--line); background: var(--panel); font-size: .84rem; max-width: 720px; }
+  .runhdr dt { color: var(--dim); } .runhdr dt::after { content: ":"; }
+  .runhdr dd { margin: 0; overflow-wrap: anywhere; } .runhdr .chips { display: flex; flex-wrap: wrap; gap: .3rem; }
+  .cover { width: 100%; height: auto; max-height: 520px; aspect-ratio: 16/9; object-fit: cover; border: 1px solid var(--line); margin: 0 0 2.5rem; background: var(--panel); display: block; }
+  .gal { margin-top: 3rem; } .gal h2 { font-size: .95rem; color: var(--dim); font-weight: 500; } .gal h2::before { content: "## "; color: var(--accent); }
+  .gal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+  .gal-grid img { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border: 1px solid var(--line); }
+</style>

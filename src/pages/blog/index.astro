@@ -1,0 +1,20 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+const posts = (await getCollection("posts", (p) => !p.data.draft)).sort((a, b) => +b.data.publishedAt - +a.data.publishedAt);
+---
+<Base title="Blog — data, MLOps et mise en production" description="Retours d'expérience d'Aemane Mouteirou sur l'ingénierie des données, le MLOps et la mise en production.">
+  <section class="sec" style="margin-top:3rem">
+    <h2>ls -t blog/</h2>
+    <div class="runs">
+      {posts.map((p) => (
+        <a class="run" href={`/blog/${p.id}`} style="grid-template-columns:7.5rem 1fr;grid-template-areas:'st nm' '. sm' '. stk'">
+          <span class="mono st dim">{p.data.publishedAt.toISOString().slice(0, 10)}</span>
+          <span class="nm">{p.data.title}</span>
+          <span class="sm">{p.data.summary}</span>
+          <span class="stk">{p.data.tags.map((t) => <span class="chip">{t}</span>)}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

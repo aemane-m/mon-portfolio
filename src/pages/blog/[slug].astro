@@ -1,0 +1,22 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection, render } from "astro:content";
+import { mdxComponents } from "../../components/mdx";
+
+export async function getStaticPaths() {
+  const all = await getCollection("posts", (p) => !p.data.draft);
+  return all.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+<Base title={`${d.title} — Aemane Mouteirou`} description={d.summary} image={d.image} type="article">
+  <article class="case">
+    <p class="mono dim crumb"><a href="/blog">blog/</a>{entry.id}</p>
+    <h1>{d.title}</h1>
+    <p class="mono dim" style="font-size:.82rem">{d.publishedAt.toISOString().slice(0, 10)} · {d.tags.join(" · ")}</p>
+    {d.image && <img class="cover" src={d.image} alt="" width="1600" height="900" fetchpriority="high" decoding="async" />}
+    <div class="prose"><Content components={mdxComponents} /></div>
+  </article>
+</Base>
