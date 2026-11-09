@@ -67,9 +67,43 @@ I then also told Terraform to tag every virtual machine with the same VLAN. The 
 
 Not every machine gets the same treatment. The Kubernetes nodes use **static addresses**, because control-plane nodes must be predictable. Other virtual machines get a **DHCP reservation** on the gateway, which keeps one source of truth for addresses without configuring each machine by hand.
 
-## Limiting what can reach the management tools
+## Isolation: zones and an explicit allow-list
 
-Some services should only be reachable by me. For example, the container-management interface on my Docker host is restricted at the gateway, so that no other device in the Servers VLAN can reach it.
+VLANs separate the networks. What decides who can talk to whom is the **firewall**, and I use UniFi's zone-based model: networks are grouped into **zones**, and traffic between zones is blocked unless a rule allows it.
+
+<Table
+  data={{
+    headers: [
+      { content: "Zone", key: "zone" },
+      { content: "What it holds", key: "holds" }
+    ],
+    rows: [
+      ["Management", "The administration side: the server's remote-management interface and a Mac used for management"],
+      ["Internal", "My trusted networks: the homelab servers and my personal devices"],
+      ["Untrusted", "The devices I do not trust: the IoT network"]
+    ]
+  }}
+/>
+
+The default stance is the one that matters: **everything between zones is blocked, except what I explicitly allow.** Over time I wrote a short list of rules, each named after its purpose:
+
+<Table
+  data={{
+    headers: [
+      { content: "Rule", key: "rule" },
+      { content: "Why it exists", key: "why" }
+    ],
+    rows: [
+      ["My workstation can reach the Management zone", "I administer the network and the servers from one machine, not from everywhere"],
+      ["The first Proxmox node can reach the iLO and one management Mac", "The nightly backup script needs to power the NAS on and reach a backup target — and nothing else on the Servers network needs that access"],
+      ["Internal can reach Untrusted", "I can control or check my IoT devices from my side"],
+      ["The management Mac can reach Internal and Untrusted", "It is the one machine allowed to look at both sides"],
+      ["mDNS is allowed to the gateway", "So that devices on different networks can still discover each other"]
+    ]
+  }}
+/>
+
+Two things I like about this approach. First, **the rules describe intent**: each one is named after what it is for, so six months later I can still tell why it exists. Second, **the management interfaces are not reachable from the whole network**. The server's remote-management port (iLO) can power a machine on and open a console, which is exactly why very few things should be able to talk to it.
 
 <Callout tone="neutral">Isolation is a set of rules, not a label. A VLAN on its own separates broadcast traffic; it is the firewall rules between networks that decide what can actually cross.</Callout>
 
