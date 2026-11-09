@@ -1,0 +1,78 @@
+---
+title: "Building an isolated home network with UniFi: servers, personal and IoT VLANs"
+publishedAt: "2026-11-09"
+type: "article"
+summary: "How I split my home network into separate VLANs — servers, personal devices and IoT — with a UniFi gateway, switch and access point, and what I learnt making a Proxmox homelab live on it."
+tags: ["Networking", "UniFi", "VLAN", "Homelab", "IoT"]
+draft: true
+---
+
+A homelab quickly stops being "a few machines on the home network". Once photos, home automation and backups live on hardware I own, I want to control **who can talk to what**. This article explains how I built my local network around that idea, with UniFi equipment and separate VLANs.
+
+<Callout tone="brand">I am a learner, not a network engineer. I describe what I built and what went wrong, not a reference design.</Callout>
+
+## The hardware
+
+<Table
+  data={{
+    headers: [
+      { content: "Device", key: "dev" },
+      { content: "Role", key: "role" }
+    ],
+    rows: [
+      ["UniFi UXG Fiber", "The gateway: routing between networks, DHCP, DNS, and the firewall"],
+      ["UniFi USW Lite", "The switch that connects the wired devices, including the Proxmox hosts"],
+      ["UniFi U7 Lite", "The Wi-Fi access point"]
+    ]
+  }}
+/>
+
+## Why separate networks
+
+A flat network treats a smart plug, a laptop and a server as equals. They are not. A cheap IoT device that is never updated should not be able to reach the machine that holds my photos. Splitting the network into **VLANs** gives each kind of device its own space, and puts the gateway in the middle, so every crossing between spaces becomes a rule I decide.
+
+## The networks
+
+I use four separate networks, each with its own address range:
+
+<Table
+  data={{
+    headers: [
+      { content: "Network", key: "net" },
+      { content: "What lives there", key: "what" }
+    ],
+    rows: [
+      ["Management", "Administration of the network and the hypervisors"],
+      ["Servers", "The homelab: Proxmox virtual machines, the Kubernetes cluster, Home Assistant, Immich"],
+      ["Personal", "My own and my family's laptops and phones"],
+      ["IoT", "Connected devices of the house"]
+    ]
+  }}
+/>
+
+## What the gateway does for the homelab
+
+The gateway is more than a router for me. It is also the **DNS resolver** (so my services have friendly names), the **DHCP server** (with reservations for the virtual machines that need a stable address), and the peer that my Kubernetes cluster talks to: the cluster announces the address of its entry point to the gateway using BGP, so a service in the cluster is reachable from the rest of the network like any other.
+
+## Putting Proxmox on a VLAN: the mistake that cost me an evening
+
+My Proxmox hosts are plugged into a switch port that already belongs to the Servers VLAN. The VLAN is applied by the switch, and the traffic arrives untagged on the host.
+
+I then also told Terraform to tag every virtual machine with the same VLAN. The result: **no virtual machine received an address**. The VLAN was being applied twice. The rule I now follow is to choose **one** place to tag:
+
+- If the switch port is an *access* port in the VLAN, the virtual machines must **not** carry a tag.
+- A tag on the hypervisor side only makes sense when the bridge is connected to a *trunk*.
+
+## Stable addresses without chaos
+
+Not every machine gets the same treatment. The Kubernetes nodes use **static addresses**, because control-plane nodes must be predictable. Other virtual machines get a **DHCP reservation** on the gateway, which keeps one source of truth for addresses without configuring each machine by hand.
+
+## Limiting what can reach the management tools
+
+Some services should only be reachable by me. For example, the container-management interface on my Docker host is restricted at the gateway, so that no other device in the Servers VLAN can reach it.
+
+<Callout tone="neutral">Isolation is a set of rules, not a label. A VLAN on its own separates broadcast traffic; it is the firewall rules between networks that decide what can actually cross.</Callout>
+
+## What I would improve
+
+I treat the network configuration as the one part of my homelab that is not yet described as code: it lives in the UniFi controller, and my repository depends on it (for example for DNS entries). Bringing it under version control is on my list.
