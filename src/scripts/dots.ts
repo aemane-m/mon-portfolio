@@ -136,7 +136,7 @@ export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatt
   let W = 0, H = 0, A: Layout = get(start), B: Layout = A, f = 0, raf = 0;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-  let ink = "#17150f", acc = "#d98e00", dim = "#6c6657";
+  let ink = "#17150f", acc = "#0d7a4b", dim = "#6c6657";
   const readColors = () => { ink = css("--text") || ink; acc = css("--accent") || acc; dim = css("--dim") || dim; };
 
   const resize = () => {
