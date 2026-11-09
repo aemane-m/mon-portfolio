@@ -28,6 +28,12 @@ For a backup machine that is exactly what I want. The NAS does not need to run a
 
 The server has a CD/DVD drive bay that nobody needs any more. I replaced the drive with an adapter holding a **2.5-inch SSD**. That gives the operating system its own disk, and keeps all four bays free for data.
 
+### Powering the SSD: cut the cable, bridge the power supply
+
+The SSD needs power as well as data, and the optical drive's power connector is not the usual SATA one. In my case it meant a bit of manual work: **I had to cut the optical drive's cable and make a bridge to the server's power supply** to feed the SSD from it. It is the least elegant step of the whole project, and the one that needs the most care.
+
+<Callout tone="critical">Only do this with the server **unplugged** from the mains. Cutting and splicing a power cable is a hardware modification: check every connection twice before powering the machine back on, and do it at your own risk.</Callout>
+
 ### Getting it to boot (the hard part)
 
 This is where it stopped being easy. By default, the Gen8 only boots from its microSD slot or from one of the four main bays — **not** from a drive in the optical bay. Putting the SSD there is not enough.
