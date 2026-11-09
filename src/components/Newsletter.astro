@@ -1,18 +1,20 @@
 ---
+import { langOf, mk } from "../i18n";
 interface Props { compact?: boolean }
 const { compact = false } = Astro.props;
+const tr = mk(langOf(Astro.url));
 const SUBSTACK = "https://aemanedev.substack.com";
 ---
 <section class:list={["news", compact && "compact"]} aria-labelledby="news-title">
   <div class="news-text">
-    <h2 id="news-title">Subscribe to my newsletter</h2>
-    <p>Clear, concrete articles on data engineering, MLOps and automation. I document what I'm learning: orchestration, CI/CD, infrastructure as code.</p>
+    <h2 id="news-title">{tr("Subscribe to my newsletter", "Abonnez-vous à ma newsletter")}</h2>
+    <p>{tr("Clear, concrete articles on data engineering, MLOps and automation. I document what I'm learning: orchestration, CI/CD, infrastructure as code.", "Des articles clairs et concrets sur le data engineering, le MLOps et l'automatisation. Je documente ce que j'apprends : orchestration, CI/CD, infrastructure as code.")}</p>
   </div>
   <form class="news-form" action={`${SUBSTACK}/subscribe`} method="get" target="_blank">
     <input type="hidden" name="utm_source" value="portfolio" />
-    <label class="sr" for="news-email">Email address</label>
-    <input id="news-email" name="email" type="email" placeholder="you@example.com" required autocomplete="email" />
-    <button type="submit" class="btn solid">Subscribe</button>
+    <label class="sr" for="news-email">{tr("Email address", "Adresse e-mail")}</label>
+    <input id="news-email" name="email" type="email" placeholder={tr("you@example.com", "vous@exemple.fr")} required autocomplete="email" />
+    <button type="submit" class="btn solid">{tr("Subscribe", "S'abonner")}</button>
   </form>
 </section>
 <style is:global>

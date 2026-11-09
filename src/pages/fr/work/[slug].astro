@@ -1,0 +1,10 @@
+---
+import Project from "../../../views/Project.astro";
+import { projectsFor } from "../../../lib/content";
+export async function getStaticPaths() {
+  const items = await projectsFor("fr");
+  return items.map(({ entry, fallback }, i) => ({ params: { slug: entry.id }, props: { entry, fallback, prev: items[i + 1]?.entry ?? null, next: items[i - 1]?.entry ?? null } }));
+}
+const { entry, fallback, prev, next } = Astro.props;
+---
+<Project lang="fr" entry={entry} fallback={fallback} prev={prev} next={next} />

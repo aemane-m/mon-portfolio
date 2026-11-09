@@ -1,0 +1,34 @@
+---
+import Base from "../layouts/Base.astro";
+import { getCollection } from "astro:content";
+import { mk, type Lang } from "../i18n";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tr = mk(lang);
+const photos = (await getCollection("photos", (p) => !p.data.draft)).sort((a, b) => +b.data.date - +a.data.date);
+---
+<Base title={tr("Photos — analogue film", "Photos — argentique")} description={tr("Analogue photographs by Aemane Mouteirou: film stock, camera, development and scanning notes.", "Photographies argentiques d'Aemane Mouteirou : pellicule, appareil, développement et notes de numérisation.")}>
+  <div class="wrap page">
+    <p class="eyebrow"><b>Photos</b></p>
+    <h1 class="big">{tr("Developed and scanned ", "Développées et numérisées ")}<em>{tr("by hand.", "à la main.")}</em></h1>
+    <div class="ph-grid">
+      {photos.map((p) => (
+        <figure class="ph">
+          <a href={p.data.image} target="_blank" rel="noopener"><img src={p.data.image} alt={p.data.title} loading="lazy" decoding="async" /></a>
+          <figcaption>
+            <b>{p.data.title}</b>
+            <span class="mono dim">{[p.data.film, p.data.camera, p.data.developer && `${tr("dev", "dév")}: ${p.data.developer}`, p.data.scan && `${tr("scan", "scan")}: ${p.data.scan}`].filter(Boolean).join(" · ")}</span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</Base>
+<style is:global>
+  .ph-grid { columns: 3 300px; column-gap: 1.2rem; }
+  .ph { margin: 0 0 1.4rem; break-inside: avoid; }
+  .ph img { width: 100%; height: auto; display: block; border-radius: 4px; background: var(--panel); }
+  .ph figcaption { display: grid; gap: .1rem; padding-top: .5rem; font-size: .92rem; }
+  .ph figcaption span { font-size: .72rem; }
+</style>

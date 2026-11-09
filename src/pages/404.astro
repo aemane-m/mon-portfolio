@@ -1,10 +1,11 @@
 ---
 import Base from "../layouts/Base.astro";
 ---
-<Base title="Page not found" description="Page not found.">
+<Base title="Page not found · Page introuvable" description="Page not found.">
   <div class="wrap page">
     <p class="eyebrow"><b>404</b></p>
     <h1 class="big">This data point <em>doesn’t exist.</em></h1>
-    <p class="actions" style="display:flex;gap:.8rem"><a class="btn solid" href="/">Back home</a><a class="btn" href="/work">See projects</a></p>
+    <p class="dim" lang="fr">Cette page est introuvable.</p>
+    <p class="actions" style="display:flex;gap:.8rem;flex-wrap:wrap"><a class="btn solid" href="/">Back home</a><a class="btn" href="/work">See projects</a><a class="btn" href="/fr" lang="fr">Accueil (FR)</a></p>
   </div>
 </Base>
