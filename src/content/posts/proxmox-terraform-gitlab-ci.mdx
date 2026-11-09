@@ -38,7 +38,7 @@ Each tool owns one layer. Terraform owns the **virtual machines**: their disks, 
 
 ## One module, five machines
 
-Every virtual machine is created by the same small Terraform **module**, so they all follow the same pattern. The module automatically tags each machine \`managed\` and \`iac\`, then adds tags for its role. In the Proxmox interface, that means I can see at a glance which machines belong to code, and which would be a hand-made exception.
+Every virtual machine is created by the same small Terraform **module**, so they all follow the same pattern. The module automatically tags each machine `managed` and `iac`, then adds tags for its role. In the Proxmox interface, that means I can see at a glance which machines belong to code, and which would be a hand-made exception.
 
 <Table
   data={{
