@@ -49,6 +49,25 @@ The point of this lab is to **learn and get familiar with these tools**. I know 
   }}
 />
 
+## The hardware
+
+The three Proxmox nodes are **HP ProDesk Gen 5 mini PCs, bought second-hand**. They are small, quiet and draw little power.
+
+<Table
+  data={{
+    headers: [
+      { content: "Node", key: "node" },
+      { content: "Memory", key: "ram" },
+      { content: "Storage", key: "disk" }
+    ],
+    rows: [
+      ["Node 1", "32 GB", "1 TB SSD"],
+      ["Node 2", "16 GB", "256 GB SSD"],
+      ["Node 3", "16 GB", "256 GB SSD"]
+    ]
+  }}
+/>
+
 ## How the pieces fit together
 
 ```mermaid
@@ -92,7 +111,7 @@ Backups run from a systemd timer on a Proxmox node every night. The orchestratio
 
 I measure the electricity the lab uses. Measured at the plug, the **whole homelab** draws about **115 W** on average: roughly **3 kWh a day**, or about **90 kWh a month**. It is very steady from one day to the next.
 
-If I started again, I would buy fewer machines and think harder about what each one is for. Electricity use is a real cost and it deserves to be part of the design. The small HP mini PCs I chose already help, since they draw far less than a classic server, but a leaner setup would be better still.
+If I started again, I would buy fewer machines and think harder about what each one is for. Electricity use is a real cost and it deserves to be part of the design. The second-hand HP ProDesk mini PCs I chose already help, since they draw far less than a classic server, but a leaner setup would be better still.
 
 ## Decisions worth explaining
 

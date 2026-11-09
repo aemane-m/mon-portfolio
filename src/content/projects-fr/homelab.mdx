@@ -49,6 +49,25 @@ Le but de ce labo est d'**apprendre et de me familiariser avec ces outils**. Je 
   }}
 />
 
+## Le matériel
+
+Les trois nœuds Proxmox sont des **mini PC HP ProDesk Gen 5, achetés d'occasion**. Ils sont petits, silencieux et consomment peu.
+
+<Table
+  data={{
+    headers: [
+      { content: "Nœud", key: "node" },
+      { content: "Mémoire", key: "ram" },
+      { content: "Stockage", key: "disk" }
+    ],
+    rows: [
+      ["Nœud 1", "32 Go", "SSD de 1 To"],
+      ["Nœud 2", "16 Go", "SSD de 256 Go"],
+      ["Nœud 3", "16 Go", "SSD de 256 Go"]
+    ]
+  }}
+/>
+
 ## Comment les pièces s'articulent
 
 ```mermaid
@@ -92,7 +111,7 @@ Les sauvegardes sont lancées chaque nuit par un minuteur systemd sur un nœud P
 
 Je mesure l'électricité que consomme le labo. Mesuré à la prise, le **homelab entier** consomme en moyenne environ **115 W** : à peu près **3 kWh par jour**, soit environ **90 kWh par mois**. C'est très stable d'un jour à l'autre.
 
-Si je recommençais, j'achèterais moins de machines et je réfléchirais davantage à l'utilité de chacune. La consommation électrique est un vrai coût, et elle mérite de faire partie de la conception. Les petits mini PC HP que j'ai choisis aident déjà, puisqu'ils consomment bien moins qu'un serveur classique, mais une installation plus sobre serait encore mieux.
+Si je recommençais, j'achèterais moins de machines et je réfléchirais davantage à l'utilité de chacune. La consommation électrique est un vrai coût, et elle mérite de faire partie de la conception. Les mini PC HP ProDesk d'occasion que j'ai choisis aident déjà, puisqu'ils consomment bien moins qu'un serveur classique, mais une installation plus sobre serait encore mieux.
 
 ## Des décisions qui méritent une explication
 
