@@ -5,6 +5,7 @@ export const shapes: Record<string, { layout: string; note: string }> = {
   "databricks-data-platform": { layout: "grid", note: "Data laid out layer by layer, from raw to ready to use." },
   "finance-tracker": { layout: "bars", note: "Spending grouped by category — the dashboard’s main chart." },
   "f1-electre": { layout: "tsp", note: "A calendar built one race at a time: each step picks the next stop." },
+  "pacman-ai": { layout: "grid", note: "A maze board: dots to eat, ghosts to avoid." },
   stage: { layout: "bars", note: "Thousands of requests grouped into a handful of themes." },
   homelab: { layout: "cluster", note: "Three machines, each running its own services, all wired together." },
   cinerestore: { layout: "film", note: "Six frames of film, scanned one after another." },
