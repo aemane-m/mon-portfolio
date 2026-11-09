@@ -9,7 +9,7 @@ draft: false
 
 Self-hosting my own data only makes sense if I can restore it. So the first thing I built around my homelab was not a service, but a **backup machine**: a small HP server running TrueNAS, woken up every night to do its job and then put back to sleep.
 
-<Callout tone="brand">I did not invent the hardware part. I followed a guide by McFly (credited below), then built the automation on top. This article is my version of the story.</Callout>
+<Callout tone="brand">I did not invent the hardware part. I followed a written guide and two videos (all credited below), then built the automation on top. This article is my version of the story.</Callout>
 
 ## The machine: HP MicroServer Gen8
 
@@ -39,6 +39,25 @@ The SSD needs power as well as data, and the optical drive's power connector is 
 This is where it stopped being easy. By default, the Gen8 only boots from its microSD slot or from one of the four main bays — **not** from a drive in the optical bay. Putting the SSD there is not enough.
 
 The fix is to declare the SSD to the server's storage controller as a one-disk volume, using HPE's Smart Storage tool, and then mark that volume as the **primary boot volume**. From then on the server boots from the SSD. It took me a few attempts, because every step is done from the firmware screens (through the iLO remote console), and one wrong choice means starting again.
+
+## Upgrading the processor and the memory
+
+A NAS that runs ZFS benefits from a bit more power and from **ECC memory**, which detects and corrects memory errors, the usual recommendation for a ZFS-based machine. So I upgraded the server:
+
+<Table
+  data={{
+    headers: [
+      { content: "Part", key: "part" },
+      { content: "Now", key: "now" }
+    ],
+    rows: [
+      ["Processor", "Intel Xeon E3-1265L v2, 2.50 GHz"],
+      ["Memory", "2 × 8 GB DDR3 ECC"]
+    ]
+  }}
+/>
+
+The Xeon "L" processors are the low-power versions, which suits a machine that is meant to stay quiet and cheap to run.
 
 ## TrueNAS and the storage pool
 
@@ -88,5 +107,10 @@ I also test restores. A backup that has never been restored is only a hope.
 ## Credits
 
 The hardware preparation — iLO, swapping the optical drive for a disk and declaring it bootable — follows McFly's guide, [HP MicroServer Gen8 — Mise en service et installation d'un OS](https://mcflypartages.fr/blog/hp_gen_8_mise_en_place/) on McFlyPartages (in French). It is a clear, practical walkthrough, and I recommend it if you want to do the same.
+
+Two videos also helped me:
+
+- [HP Proliant Microserver Gen8 SSD in Optical bay](https://www.youtube.com/watch?v=co8wuIUpDJc) by No Tech Drama, for the SSD in the optical bay.
+- [Upgrading HP Proliant Gen8 Microserver (Part 1) — Performance](https://youtu.be/-nWmb2GdqHc) by AnChan Tech, for the processor and memory upgrade.
 
 The way this fits with the rest of my lab is described in [Provisioning Proxmox with Terraform and GitLab CI/CD](/blog/proxmox-terraform-gitlab-ci).
