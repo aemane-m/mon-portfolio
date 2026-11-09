@@ -9,6 +9,7 @@ status: "completed"
 kind: "academic"
 stack: ["Java","Spring Boot","Angular","PostgreSQL","Chart.js"]
 summary: "Mon initiation au développement web : une API REST Spring Boot 3 et un frontend Angular pour gérer ses finances personnelles — transactions, catégories, budgets, objectifs, dettes et transactions planifiées."
+link: "https://github.com/aemane-m/Rendu_Finance_Tracker_BackEnd"
 draft: false
 ---
 
@@ -17,6 +18,12 @@ draft: false
 C'était mon initiation au développement web, réalisée pendant mon Master. C'était la première fois que j'assemblais une base de données, une API REST et une interface de navigateur en un produit fonctionnel, en devant les faire s'accorder.
 
 ## Ce que fait l'application
+
+<Media src="/images/projects/finance-tracker/login.jpg" alt="Écran de connexion de Finance Tracker" aspectRatio="16/10" />
+
+<Media src="/images/projects/finance-tracker/signup.jpg" alt="Écran d'inscription de Finance Tracker" aspectRatio="16/10" />
+
+*Captures de l'interface (connexion et inscription). Le back end et sa base de données ont depuis été supprimés, donc les autres écrans ne peuvent plus être montrés en fonctionnement.*
 
 <Table
   data={{
@@ -73,9 +80,26 @@ flowchart LR
 - Comment fonctionnent les **jetons d'authentification** de bout en bout, de la connexion dans le navigateur à la validation côté serveur.
 - Comment gérer les erreurs à un seul endroit avec un gestionnaire d'exceptions global, pour que le frontend reçoive toujours un message clair.
 - À quel point la forme du **modèle de données** conditionne tout le reste, dans l'API comme dans l'interface.
+- **Ne jamais mettre d'identifiants dans le code.** Dans ce projet étudiant, le mot de passe de la base de données était écrit dans un fichier de configuration et poussé sur un dépôt public. C'est acceptable pour un projet scolaire jetable, dont j'ai depuis supprimé la base. C'est à **ne jamais faire en production** : les secrets doivent vivre dans des variables d'environnement ou un gestionnaire de secrets, en dehors du dépôt.
 
 ## État d'avancement
 
 Terminé et rendu en mars 2026. C'était un projet d'apprentissage, pas un produit : sa valeur pour moi a été de voir une fois chaque couche d'une application web, avant de passer au data engineering.
 
-<Callout tone="neutral">Le code du back end n'est pas encore public : bientôt disponible.</Callout>
+<Button
+  variant="primary"
+  label="Voir le back end sur GitHub"
+  href="https://github.com/aemane-m/Rendu_Finance_Tracker_BackEnd"
+  target="_blank"
+  rel="noopener"
+/>
+
+<Button
+  variant="secondary"
+  label="Voir le front end sur GitHub"
+  href="https://github.com/aemane-m/finance-tracker-frontend"
+  target="_blank"
+  rel="noopener"
+/>
+
+<Callout tone="neutral">Une remarque de sécurité : c'est un projet étudiant. La configuration du back end dans le dépôt contient un mot de passe de base de données que j'ai commité par erreur. La base n'existe plus, et dans un vrai projet je ne commiterais jamais un secret (voir la dernière leçon plus haut).</Callout>

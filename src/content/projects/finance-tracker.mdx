@@ -9,6 +9,7 @@ status: "completed"
 kind: "academic"
 stack: ["Java","Spring Boot","Angular","PostgreSQL","Chart.js"]
 summary: "My introduction to web development: a REST API in Spring Boot 3 and an Angular front end for managing personal finances — transactions, categories, budgets, goals, debts and planned transactions."
+link: "https://github.com/aemane-m/Rendu_Finance_Tracker_BackEnd"
 draft: false
 ---
 
@@ -17,6 +18,12 @@ draft: false
 This was my introduction to web development, built during my MSc. It was the first time I put a database, a REST API and a browser interface together as one working product, and had to make them agree with each other.
 
 ## What the app does
+
+<Media src="/images/projects/finance-tracker/login.jpg" alt="Finance Tracker sign-in screen" aspectRatio="16/10" />
+
+<Media src="/images/projects/finance-tracker/signup.jpg" alt="Finance Tracker sign-up screen" aspectRatio="16/10" />
+
+*Interface screenshots (login and sign-up). The back end and its database have since been shut down, so the other screens cannot be shown running.*
 
 <Table
   data={{
@@ -73,9 +80,26 @@ flowchart LR
 - How **authentication tokens** work end to end, from sign-in in the browser to validation on the server.
 - How to handle errors in one place with a global exception handler, so the front end always gets a clear message.
 - How much the shape of the **data model** drives everything else, in the API and in the interface.
+- **Never put credentials in the code.** In this student project the database password was written in a configuration file and pushed to a public repository. That is acceptable for a throwaway school project, whose database I have since deleted. It is something to **never do in production**: secrets belong in environment variables or a secret manager, outside the repository.
 
 ## Status
 
 Completed and delivered in March 2026. It was a learning project, not a product: its value to me was seeing every layer of a web application once, before moving on to data engineering.
 
-<Callout tone="neutral">The back-end code is not public yet: coming soon.</Callout>
+<Button
+  variant="primary"
+  label="View the back end on GitHub"
+  href="https://github.com/aemane-m/Rendu_Finance_Tracker_BackEnd"
+  target="_blank"
+  rel="noopener"
+/>
+
+<Button
+  variant="secondary"
+  label="View the front end on GitHub"
+  href="https://github.com/aemane-m/finance-tracker-frontend"
+  target="_blank"
+  rel="noopener"
+/>
+
+<Callout tone="neutral">A note on security: this is a student project. The back-end configuration in the repository contains a database password that I committed by mistake. The database no longer exists, and in a real project I would never commit a secret (see the last lesson above).</Callout>
