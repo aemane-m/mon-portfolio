@@ -15,15 +15,16 @@ My homelab runs on three Proxmox hosts. I could create the virtual machines by c
 
 The repository is the single source of truth. A change to the infrastructure is a merge request: the pipeline checks it and shows a plan, and only after merging into the main branch does anything actually change.
 
-<CodeBlock
-  codes={[
-    {
-      code: "GitLab CI/CD\n  -> Terraform / OpenTofu -> Proxmox -> Talos, Home Assistant OS and Debian VMs\n  -> Ansible              -> the Docker host (Immich, Portainer, ...)\n  -> talosctl             -> Kubernetes\n  -> Argo CD              -> everything inside the cluster",
-      language: "txt",
-      label: "What drives what"
-    }
-  ]}
-/>
+```mermaid
+flowchart TB
+  G["GitLab CI/CD"]:::accent --> T["Terraform / OpenTofu"]
+  G --> A["Ansible"]
+  G --> TC["talosctl"]
+  T --> P["Proxmox"] --> V["Talos, Home Assistant OS<br/>and Debian VMs"]
+  A --> D["Docker host<br/>Immich, Portainer, ..."]
+  TC --> K["Kubernetes"] --> AC["Argo CD"] --> R["Everything<br/>inside the cluster"]
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+```
 
 Each tool owns one layer. Terraform owns the **virtual machines**: their disks, their network and their sizing. It does not manage what runs inside them — Ansible configures the Docker host, Talos is configured through its own API, and Argo CD takes over inside Kubernetes. Keeping those boundaries clear is what stops the tools from fighting each other.
 
@@ -48,15 +49,20 @@ Every virtual machine is created by the same small Terraform **module**, so they
 
 ## The pipeline
 
-<CodeBlock
-  codes={[
-    {
-      code: "prepare -> validate -> security -> preflight -> plan\n  -> infrastructure -> provisioning -> talos -> bootstrap -> verify",
-      language: "txt",
-      label: "Stages, in order"
-    }
-  ]}
-/>
+```mermaid
+flowchart LR
+  subgraph check["Check — on every merge request"]
+    direction LR
+    PR["prepare"] --> VA["validate"] --> SE["security"] --> PF["preflight"] --> PL["plan"]
+  end
+  subgraph apply["Apply — on the main branch only"]
+    direction LR
+    IN["infrastructure"] --> PV["provisioning"] --> TA["talos"] --> BO["bootstrap"] --> VE["verify"]
+  end
+  PL --> IN
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+  class PL,IN accent
+```
 
 <Table
   data={{

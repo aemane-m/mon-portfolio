@@ -27,6 +27,21 @@ Since May 2026 I have been in work-study at Allianz. My assignment is not one pi
 
 A medallion architecture organises data in layers, each one more trustworthy than the last: **raw** data exactly as it arrived, **cleaned** data that has been checked and standardised, and **business-ready** data shaped for the people who use it. Keeping the layers independent of the infrastructure means the same organisation can survive a change of tooling.
 
+```mermaid
+flowchart LR
+  S1["SAS"] --> X["Export tool"]
+  S2["Azure"] --> X
+  X --> R["Raw"] --> C["Cleaned"] --> B["Business-ready"] --> U["Users and reports"]
+  O["Orchestration"] -.-> R
+  O -.-> C
+  O -.-> B
+  G["Governance: ownership · lineage · access"] -.-> R
+  G -.-> C
+  G -.-> B
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+  class X,O,G accent
+```
+
 ## What I can and can't show
 
 The code, the data and the internal architecture belong to Allianz, so none of them appear on this site. What I can share is the shape of the work and the kind of problems it raises.

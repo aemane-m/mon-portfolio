@@ -7,5 +7,8 @@ export default defineConfig({
   trailingSlash: "never",
   build: { format: "file" },
   integrations: [mdx(), sitemap()],
-  markdown: { shikiConfig: { theme: "tokyo-night" } },
+  markdown: {
+    syntaxHighlight: { type: "shiki", excludeLangs: ["mermaid"] },
+    shikiConfig: { theme: "tokyo-night" },
+  },
 });

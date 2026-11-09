@@ -119,6 +119,29 @@ UniFi shows all of this as a grid of source zone against destination zone, which
 
 This is what I wanted: **I can reach my IoT devices, but they cannot start a conversation with anything of mine.** A compromised smart plug can talk to the Internet and answer me; it cannot scan my servers.
 
+```mermaid
+flowchart LR
+  NET(("Internet"))
+  subgraph INT["Internal zone"]
+    SRV["Servers"]
+    PER["Personal"]
+  end
+  subgraph MGT["Management zone"]
+    UOS["UniFi controller<br/>Mac mini"]
+    ILO["iLO"]
+  end
+  subgraph UNT["Untrusted zone"]
+    IOT["IoT"]
+  end
+  INT -- "allowed" --> UNT
+  UNT -. "replies only" .-> INT
+  INT -- "named rules only" --> MGT
+  MGT -- "blocked by default" --x INT
+  UNT --> NET
+  INT --> NET
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+```
+
 ### The exceptions are named rules
 
 Everything that crosses a blocked boundary is an explicit rule, named after its purpose. There are only a handful:

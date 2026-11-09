@@ -31,6 +31,17 @@ We used **ELECTRE IS**, a multi-criteria method built around *outranking*: optio
 
 The decision is built **incrementally**. Starting from a fixed first race, at each step we compare all the remaining races against the last one chosen, and pick the next.
 
+```mermaid
+flowchart LR
+  A["Fixed first race"]:::accent --> B["Recompute the criteria<br/>against the last race"]
+  B --> C["Compare the remaining races<br/>(ELECTRE IS)"]
+  C --> D["Recommended set"]
+  D --> E["Tie-break rule<br/>logistic margin, then audience"]
+  E --> F["Next race chosen"]
+  F -->|"races left"| B
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+```
+
 ## What we compared
 
 There are **24 Grands Prix** to place, judged on **8 criteria** grouped into three areas:

@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import Newsletter from "../../components/Newsletter.astro";
 import { getCollection, render } from "astro:content";
 import { mdxComponents } from "../../components/mdx";
 
@@ -18,4 +19,5 @@ const d = entry.data;
     {d.image && <img class="cover" src={d.image} alt="" width="1600" height="900" fetchpriority="high" decoding="async" />}
     <div class="prose"><Content components={mdxComponents} /></div>
   </article>
+  <Newsletter compact />
 </Base>

@@ -21,15 +21,13 @@ Data platforms tend to grow around the tool they were first built on. Move from 
 
 The project uses a hexagonal architecture, which keeps the platform-specific parts at the edge:
 
-<CodeBlock
-  codes={[
-    {
-      code: "business logic   (domain + quantitative methods)\n      ↓\napplication      (use cases)\n      ↓\nports            (interfaces)\n      ↓\nadapters         (infrastructure)\n      ↓\nruntime          Databricks  |  self-hosted",
-      language: "txt",
-      label: "Layers, from business logic to runtime"
-    }
-  ]}
-/>
+```mermaid
+flowchart TB
+  B["Business logic<br/>domain + quantitative methods"]:::accent --> AP["Application<br/>use cases"] --> PO["Ports<br/>interfaces"] --> AD["Adapters<br/>infrastructure"]
+  AD --> DB["Databricks<br/>Lakeflow Jobs · Unity Catalog · MLflow"]
+  AD --> SH["Self-hosted<br/>Airflow · Spark · Delta Lake · MinIO"]
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+```
 
 <Table
   data={{

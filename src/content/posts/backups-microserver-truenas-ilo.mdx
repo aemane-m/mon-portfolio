@@ -73,15 +73,25 @@ Proxmox sees it as a storage target. A daily backup job — defined in Terraform
 
 A machine that runs 24 hours a day just to be backed up to for a few minutes wastes power. So the NAS is **off most of the time**, and a small script wakes it up.
 
-<CodeBlock
-  codes={[
-    {
-      code: "01:50  systemd timer on a Proxmox node starts the script\n       -> power on the NAS through iLO\n       -> wait until the file shares are ready\n       -> back up the virtual machines of all three nodes\n       -> back up the Macs with Time Machine\n       -> ask TrueNAS to shut down cleanly",
-      language: "txt",
-      label: "What happens every night"
-    }
-  ]}
-/>
+```mermaid
+sequenceDiagram
+  autonumber
+  participant T as systemd timer (01:50)
+  participant S as Backup script
+  participant I as iLO
+  participant N as TrueNAS
+  participant P as Proxmox nodes
+  participant M as Macs
+  T->>S: start
+  S->>I: power on
+  I->>N: boot
+  S->>N: wait for the file shares
+  S->>P: back up every VM (3 nodes)
+  P->>N: write backups over NFS
+  S->>M: Time Machine backup
+  S->>N: ask for a clean shutdown
+  Note over S,N: On any Proxmox or NAS error,<br/>stop and leave the NAS on
+```
 
 The script lives in my homelab repository and is deployed by the same pipeline as everything else, so nothing is configured by hand on the Proxmox node.
 

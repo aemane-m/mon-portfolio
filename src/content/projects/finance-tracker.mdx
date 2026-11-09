@@ -38,6 +38,17 @@ This was my introduction to web development, built during my MSc. It was the fir
 
 ## How it is built
 
+```mermaid
+flowchart LR
+  U["Browser<br/>Angular + Chart.js"] -->|"REST + JWT"| API["Spring Boot API<br/>controllers · services"]
+  U -->|"sign-in"| AU["Authentication provider"]
+  API -->|"validates the token"| AU
+  API --> DB[("PostgreSQL<br/>JPA / Hibernate")]
+  SC["Scheduler<br/>6 a.m. daily"] --> API
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+  class API accent
+```
+
 <Table
   data={{
     headers: [

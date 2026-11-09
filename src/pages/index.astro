@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import Newsletter from "../components/Newsletter.astro";
 import { getCollection } from "astro:content";
 import { person } from "../data/profile";
 import { shapes as shape } from "../data/shapes";
@@ -152,6 +153,7 @@ const strengths = [
     </div>
     <p class="actions" style="display:flex;gap:.8rem;margin-top:2.5rem"><a class="btn solid" href={`mailto:${person.email}`}>Get in touch</a><a class="btn" href="/about">My background</a></p>
   </section>
+  <Newsletter />
 </Base>
 
 <script>

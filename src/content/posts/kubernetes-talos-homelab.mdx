@@ -44,15 +44,12 @@ Three virtual machines on three Proxmox hosts form the cluster, each with 4 vCPU
 
 The most useful thing the runbook taught me is that a Kubernetes platform is a **dependency chain**. Done in the wrong order, each layer fails in a confusing way.
 
-<CodeBlock
-  codes={[
-    {
-      code: "Terraform -> Proxmox -> 3 Talos VMs -> Kubernetes\n                                         -> Cilium / Gateway API / BGP\n                                         -> Argo CD\n                                         -> Vault + Vault Secrets Operator\n                                         -> CloudNativePG + pooler\n                                         -> applications (Airflow, ...)",
-      language: "txt",
-      label: "The bootstrap chain"
-    }
-  ]}
-/>
+```mermaid
+flowchart TB
+  T["Terraform"]:::accent --> PX["Proxmox"] --> VM["3 Talos VMs"] --> K["Kubernetes"]
+  K --> C["Cilium<br/>Gateway API · BGP"] --> AR["Argo CD"] --> V["Vault + Secrets Operator"] --> DB["CloudNativePG + pooler"] --> AP["Applications<br/>Airflow, ..."]
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+```
 
 Talos is told **not** to install a network plugin, because Cilium has to be installed first and everything else depends on it. Argo CD comes after Cilium, and takes over from there: from that point, Git is the source of truth and manual `kubectl apply` is something I try to avoid.
 

@@ -39,15 +39,14 @@ It is also where I learn. I am teaching myself **Terraform** by using it to crea
 
 ## How the pieces fit together
 
-<CodeBlock
-  codes={[
-    {
-      code: "GitLab CI/CD\n  -> Terraform / OpenTofu -> Proxmox -> Talos, Home Assistant OS and Debian VMs\n  -> Ansible              -> Docker host (Immich, Portainer, BentoPDF)\n  -> talosctl             -> Kubernetes\n  -> Helm                 -> Cilium, then Argo CD\n  -> Argo CD              -> every Kubernetes resource in the repository",
-      language: "txt",
-      label: "Deployment chain (addresses and secrets deliberately left out)"
-    }
-  ]}
-/>
+```mermaid
+flowchart TB
+  G["GitLab CI/CD"]:::accent --> T["Terraform / OpenTofu"] --> P["Proxmox"] --> V["Talos, HAOS and Debian VMs"]
+  G --> A["Ansible"] --> D["Docker host<br/>Immich · Portainer · BentoPDF"]
+  G --> TC["talosctl"] --> K["Kubernetes"] --> AC["Argo CD"] --> R["Cluster resources<br/>from the repository"]
+  V --> NAS["TrueNAS<br/>nightly backups"]
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+```
 
 <Table
   data={{

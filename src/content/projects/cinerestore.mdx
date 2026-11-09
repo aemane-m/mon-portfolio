@@ -23,6 +23,19 @@ It deliberately stops where creative work begins. It prepares a neutral master a
 
 ## Three machines, one program
 
+```mermaid
+flowchart LR
+  F["Film roll"] --> D["Developing machine<br/>ESP32 · temperature probes"]
+  D --> S["Scanner<br/>ESP32 transport + camera"]
+  S --> CR["CineRestore"]:::accent
+  subgraph CR2["Inside the software"]
+    direction LR
+    DE["Decode"] --> NO["Normalise"] --> NG["Negative to positive"] --> RE["Restore"] --> EX["Export master"]
+  end
+  CR --> DE
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+```
+
 <Table
   data={{
     headers: [

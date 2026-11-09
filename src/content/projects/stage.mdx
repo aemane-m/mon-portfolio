@@ -57,6 +57,13 @@ This assignment let me concretely explore **AI applications in a university sett
 The project relies on two complementary environments:
 **n8n** to prototype workflows, then a **Python pipeline** to industrialise the processing.
 
+```mermaid
+flowchart LR
+  T["~9,000 support tickets"] --> A["Anonymise"] --> N["Normalise text"] --> L["Classify by theme<br/>local LLMs (Ollama)"] --> K["~1,900 recurring questions<br/>knowledge base"] --> CB["Chatbot prototype<br/>linked to Moodle tutorials"]
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+  class L accent
+```
+
 <CodeBlock
   codes={[
     {
