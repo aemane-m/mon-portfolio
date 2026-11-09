@@ -28,7 +28,7 @@ export type Experience = { company: string; role: string; period: string; points
 
 export const experience: Record<Lang, Experience[]> = {
   en: [
-    { hash: "e4a7b13", company: "A major financial-services group", role: "Data Engineer — work-study (alternance)", period: "May 2026 → 2027", points: [
+    { hash: "e4a7b13", company: "A major insurance group", role: "Data Engineer — work-study (alternance)", period: "May 2026 → 2027", points: [
       "Setting up a Databricks data platform: a medallion architecture decoupled from the infrastructure, pipeline orchestration and data governance.",
       "Moving workloads from SAS to PySpark, and building a tool that exports data from SAS and Azure straight into Databricks, shaped by constraints specific to the company.",
     ] },
@@ -55,7 +55,7 @@ export const experience: Record<Lang, Experience[]> = {
     ] },
   ],
   fr: [
-    { hash: "e4a7b13", company: "Un grand groupe de services financiers", role: "Data Engineer — alternance", period: "mai 2026 → 2027", points: [
+    { hash: "e4a7b13", company: "Un grand groupe d'assurance", role: "Data Engineer — alternance", period: "mai 2026 → 2027", points: [
       "Mise en place d'une plateforme de données Databricks : architecture en médaillon découplée de l'infrastructure, orchestration des pipelines et gouvernance des données.",
       "Migration de traitements de SAS vers PySpark, et développement d'un outil qui exporte des données de SAS et d'Azure directement vers Databricks, façonné par des contraintes propres à l'entreprise.",
     ] },
