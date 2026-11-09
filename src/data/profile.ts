@@ -24,12 +24,12 @@ export type Experience = { company: string; role: string; period: string; points
 export const experience: Experience[] = [
   {
     hash: "e4a7b13",
-    company: "Work-study placement (company not named)",
+    company: "Allianz",
     role: "Data Engineer — work-study (alternance)",
-    period: "2026 → 2027",
+    period: "May 2026 → 2027",
     points: [
       "Migrating a datamart from SAS to PySpark on Databricks, and working through the technical challenges that come with it.",
-      "Building a tool that exports data from SAS and Azure straight into Databricks, shaped by constraints specific to the company.",
+      "Building a tool that exports data from SAS and Azure straight into Databricks, shaped by constraints specific to Allianz.",
     ],
   },
   {
