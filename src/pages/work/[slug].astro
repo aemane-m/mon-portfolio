@@ -12,46 +12,45 @@ const { Content } = await render(entry);
 const d = entry.data;
 const [cover, ...rest] = d.images;
 const isRepo = d.link?.startsWith("http");
-const kindLabel = { personal: "perso", academic: "académique", internship: "stage" }[d.kind];
+const kind = { personal: "Personal project", academic: "Academic project", internship: "Internship" }[d.kind];
+const when = d.status === "in_progress" ? `Since ${d.publishedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}` : d.publishedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 ---
 <Base title={`${d.title} — Aemane Mouteirou`} description={d.summary} image={cover} type="article">
-  <article class="case">
-    <p class="mono dim crumb"><a href="/work">work/</a>{entry.id}</p>
-    <h1>{d.title}</h1>
+  <article class="wrap page">
+    <p class="eyebrow"><a href="/work" style="text-decoration:none">← Projects</a></p>
+    <h1 class="big" style="font-size:clamp(2rem,4.6vw,3.8rem)">{d.title}</h1>
 
-    <dl class="runhdr mono">
-      {d.impact && <><dt>en clair</dt><dd class="plain">{d.impact}</dd></>}
-      <dt>run_id</dt><dd>{entry.id}</dd>
-      <dt>status</dt><dd><span class:list={["dot", d.status === "in_progress" && "live"]}></span>{d.status === "in_progress" ? "en cours — développement actif" : "terminé"}</dd>
-      <dt>kind</dt><dd>{kindLabel}</dd>
-      <dt>{d.status === "in_progress" ? "début" : "date"}</dt><dd>{d.publishedAt.toISOString().slice(0, 10)}</dd>
-      {d.team && <><dt>team</dt><dd>{d.team.map((m) => m.name).join(", ")}</dd></>}
-      <dt>stack</dt><dd class="chips">{d.stack.map((t) => <span class="chip">{t}</span>)}</dd>
-      {d.link && <><dt>{isRepo ? "repo" : "doc"}</dt><dd><a href={d.link} target={isRepo ? "_blank" : undefined} rel="noopener">{isRepo ? d.link.replace("https://", "") : "rapport (PDF)"}</a></dd></>}
+    {d.impact && <p class="lead2">{d.impact}</p>}
+
+    <dl class="facts">
+      <div><dt>Status</dt><dd><span class="badge" class:list={[d.status === "in_progress" && "live"]}><i></i>{d.status === "in_progress" ? "In progress" : "Completed"}</span></dd></div>
+      <div><dt>Type</dt><dd>{kind}</dd></div>
+      <div><dt>Period</dt><dd>{when}</dd></div>
+      {d.team && <div><dt>Team</dt><dd>{d.team.map((m) => m.name).join(", ")}</dd></div>}
+      {d.link && <div><dt>{isRepo ? "Code" : "Report"}</dt><dd><a href={d.link} target={isRepo ? "_blank" : undefined} rel="noopener">{isRepo ? "View on GitHub" : "Read the PDF"}</a></dd></div>}
     </dl>
+    <p class="tags" style="display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 2.5rem">{d.stack.map((t) => <span class="chip">{t}</span>)}</p>
 
-    {cover && <img class="cover" src={cover} alt={`Aperçu du projet ${d.title}`} width="1600" height="900" fetchpriority="high" decoding="async" />}
+    {cover && <img class="cover" src={cover} alt={`Preview of ${d.title}`} width="1600" height="900" fetchpriority="high" decoding="async" />}
 
     <div class="prose"><Content components={mdxComponents} /></div>
 
     {rest.length > 0 && (
       <section class="gal">
-        <h2 class="mono">artefacts</h2>
-        <div class="gal-grid">{rest.map((src) => <img src={src} alt={`Capture du projet ${d.title}`} loading="lazy" decoding="async" width="800" height="450" />)}</div>
+        <p class="eyebrow"><b>Gallery</b></p>
+        <div class="gal-grid">{rest.map((src) => <img src={src} alt={`Screenshot of ${d.title}`} loading="lazy" decoding="async" width="800" height="450" />)}</div>
       </section>
     )}
   </article>
 </Base>
 
 <style is:global>
-  .case { padding-top: 2.5rem; }
-  .crumb { font-size: .8rem; margin: 0 0 .5rem; } .crumb a { color: var(--dim); text-decoration: none; } .crumb a::after { content: ""; }
-  .case h1 { font-size: clamp(1.4rem, 3vw, 2rem); max-width: 28em; margin: 0 0 1.6rem; text-wrap: balance; }
-  .runhdr { display: grid; grid-template-columns: max-content 1fr; gap: .35rem 1.4rem; margin: 0 0 2rem; padding: 1rem 1.1rem; border: 1px solid var(--line); background: var(--panel); font-size: .84rem; max-width: 720px; }
-  .runhdr dt { color: var(--dim); } .runhdr dt::after { content: ":"; }
-  .runhdr dd { margin: 0; overflow-wrap: anywhere; } .runhdr .chips { display: flex; flex-wrap: wrap; gap: .3rem; }
-  .cover { width: 100%; height: auto; max-height: 520px; aspect-ratio: 16/9; object-fit: cover; border: 1px solid var(--line); margin: 0 0 2.5rem; background: var(--panel); display: block; }
-  .gal { margin-top: 3rem; } .gal h2 { font-size: .95rem; color: var(--dim); font-weight: 500; } .gal h2::before { content: "## "; color: var(--accent); }
-  .gal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-  .gal-grid img { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border: 1px solid var(--line); }
+  .lead2 { font-family: var(--serif); font-size: clamp(1.25rem, 2.2vw, 1.7rem); line-height: 1.35; max-width: 34em; margin: 0 0 2.2rem; color: var(--text); }
+  .facts { display: flex; flex-wrap: wrap; gap: 1.2rem 3rem; margin: 0 0 1.6rem; padding: 1.2rem 0; border-top: 1px solid var(--text); border-bottom: 1px solid var(--line); }
+  .facts dt { font-family: var(--mono); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); }
+  .facts dd { margin: .2rem 0 0; font-weight: 500; }
+  .cover { width: 100%; height: auto; max-height: 560px; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; margin: 0 0 3rem; background: var(--panel); display: block; }
+  .gal { margin-top: 4rem; }
+  .gal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .gal-grid img { width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 6px; }
 </style>

@@ -1,10 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
 ---
-<Base title="404 — introuvable" description="Page introuvable.">
-  <section class="sec" style="margin-top:4rem">
-    <pre class="mono" style="color:var(--err);font-size:.95rem">$ cd {Astro.url.pathname}
-bash: cd: no such file or directory (exit 1)</pre>
-    <p class="mono"><a href="/">cd ~ →</a> <a href="/work">ls work/ →</a></p>
-  </section>
+<Base title="Page not found" description="Page not found.">
+  <div class="wrap page">
+    <p class="eyebrow"><b>404</b></p>
+    <h1 class="big">This data point <em>doesn’t exist.</em></h1>
+    <p class="actions" style="display:flex;gap:.8rem"><a class="btn solid" href="/">Back home</a><a class="btn" href="/work">See projects</a></p>
+  </div>
 </Base>

@@ -1,13 +1,12 @@
 ---
-title: "Architecture et défis du projet Java — TSP académique et algorithme génétique"
+title: "Architecture and challenges of a Java project — academic TSP and genetic algorithm"
 publishedAt: "2025-01-15"
 name: "tsp-genetic"
-impact: "Optimiser des tournées (problème du voyageur de commerce) avec un algorithme génétique, réutilisable pour d'autres problèmes d'optimisation."
+impact: "Optimise delivery rounds (the travelling-salesman problem) with a genetic algorithm that can be reused for other optimisation problems."
 status: "completed"
 kind: "academic"
 stack: ["Java","JavaFX","PostgreSQL","JUnit"]
-summary: "Retour d’expérience sur la conception, la structure et les défis d’un projet universitaire combinant JavaFX, PostgreSQL et un moteur d’algorithme génétique."
-tag: "Magic Portfolio"
+summary: "A retrospective on the design, structure and challenges of a university project combining JavaFX, PostgreSQL and a genetic-algorithm engine."
 images:
   - "/images/projects/tsp-ecosystem/tsp2.jpeg"
 team:
@@ -15,80 +14,73 @@ team:
     avatar: "/images/avatar.jpg"
   - name: "Clara Brehon"
   - name: "Sara Lopez De Varo"
-
 link: "https://github.com/aemane-m/Projet_Algo_Genetic_Java"
-lang: "fr"
 draft: false
-seo:
-  title: "Retour d’expérience — TSP académique en Java"
-  description: "Comment nous avons conçu un projet Java modulaire combinant UI JavaFX, algorithme génétique et base PostgreSQL."
-  canonical: "/blog/architecture-projet-tsp"
-  ogImage: "/images/projects/tsp-ecosystem/tsp2.jpeg"
 ---
 
-## De l’idée au projet
+## From idea to project
 
-<Text align="justify">
-L’objectif de ce projet universitaire était de concevoir une application Java complète : une interface graphique pour gérer un écosystème académique, une base de données relationnelle pour la persistance, et un moteur d’algorithme génétique pour résoudre le problème du voyageur de commerce (TSP). Ce travail nous a confrontés à la complexité d’un vrai projet logiciel, de la structure du code jusqu’à la gestion des données et des tests unitaires.
+<Text>
+The goal of this university project was to build a complete Java application: a graphical interface to manage an academic ecosystem, a relational database for persistence, and a genetic-algorithm engine to solve the travelling-salesman problem (TSP). It confronted us with the complexity of a real software project, from code structure to data management and unit tests.
 </Text>
 
-## Une architecture pensée pour durer
+## An architecture built to last
 
-<Text align="justify">
-Dès le départ, nous avons misé sur une <strong>architecture claire et modulaire</strong>. Le dossier <InlineCode>src</InlineCode> est organisé en plusieurs packages, chacun avec une responsabilité bien définie : interface utilisateur, logique métier, persistance des données, algorithme génétique et tests.
+<Text>
+From the start we bet on a <strong>clear, modular architecture</strong>. The <InlineCode>src</InlineCode> folder is organised in several packages, each with a well-defined responsibility: user interface, business logic, data persistence, genetic algorithm and tests.
 </Text>
 
-<Callout tone="brand">Cette séparation a permis à chaque membre de l’équipe de travailler indépendamment, tout en gardant un code propre et évolutif.</Callout>
+<Callout tone="brand">This separation let each team member work independently while keeping the code clean and easy to evolve.</Callout>
 
-- **application/** : tout ce qui touche à l’interface JavaFX et aux contrôleurs. Des classes comme <InlineCode>ControllerSimulation</InlineCode> ou <InlineCode>MainController</InlineCode> orchestrent la navigation et les interactions utilisateur.
-- **database/** : la couche d’accès aux données, où <InlineCode>ConnexionBDD</InlineCode> et <InlineCode>DatabaseHelper</InlineCode> gèrent la communication avec PostgreSQL.
-- **genetic/** : le cœur du moteur d’algorithme génétique, avec des classes comme <InlineCode>GeneticAlgorithm</InlineCode> ou <InlineCode>MutationOperator</InlineCode> pour modéliser les différentes étapes de la recherche de solutions.
-- **projet/** : les entités du domaine (villes, régions, personnes) et un sous-package <InlineCode>tsp</InlineCode> pour l’adaptation de l’algorithme génétique au problème du voyageur de commerce.
-- **test/** : les tests JUnit5, essentiels pour valider la stabilité du projet.
+- **application/**: everything related to the JavaFX interface and controllers. Classes such as <InlineCode>ControllerSimulation</InlineCode> or <InlineCode>MainController</InlineCode> orchestrate navigation and user interactions.
+- **database/**: the data-access layer, where <InlineCode>ConnexionBDD</InlineCode> and <InlineCode>DatabaseHelper</InlineCode> handle communication with PostgreSQL.
+- **genetic/**: the core of the genetic-algorithm engine, with classes such as <InlineCode>GeneticAlgorithm</InlineCode> or <InlineCode>MutationOperator</InlineCode> modelling the different steps of the search for solutions.
+- **projet/**: the domain entities (cities, regions, people) and a <InlineCode>tsp</InlineCode> sub-package adapting the genetic algorithm to the travelling-salesman problem.
+- **test/**: the JUnit5 tests, essential to validate the project's stability.
 
-## Un moteur d’algorithme génétique modulaire
+## A modular genetic-algorithm engine
 
-<Text align="justify">
-La partie la plus stimulante a sans doute été la conception du moteur génétique. L’idée était de créer un système générique, réutilisable pour d’autres problèmes d’optimisation. Chaque opérateur (sélection, crossover, mutation, élitisme) est défini par une interface et peut être remplacé sans modifier le reste du moteur. Ce choix s’est avéré payant : nous avons pu tester facilement plusieurs stratégies de mutation ou de sélection.
+<Text>
+The most stimulating part was probably designing the genetic engine. The idea was to create a generic system, reusable for other optimisation problems. Each operator (selection, crossover, mutation, elitism) is defined by an interface and can be replaced without touching the rest of the engine. This choice paid off: we could easily test several mutation or selection strategies.
 </Text>
 
-<Callout tone="success">Un moteur générique et flexible, adapté à la résolution du TSP mais réutilisable pour d’autres applications d’optimisation.</Callout>
+<Callout tone="success">A generic, flexible engine, suited to solving the TSP but reusable for other optimisation applications.</Callout>
 
-## Le défi de la base de données
+## The database challenge
 
-<Text align="justify">
-La gestion des données via PostgreSQL a été un autre grand chantier. Les contraintes relationnelles et les erreurs de cohérence ont souvent nécessité des ajustements entre le modèle objet Java et la structure SQL. Les classes de service comme <InlineCode>FetchDataService</InlineCode> ont permis de fluidifier les échanges et de maintenir la synchronisation entre la base et l’application.
+<Text>
+Data management through PostgreSQL was another major workstream. Relational constraints and consistency errors often required adjustments between the Java object model and the SQL structure. Service classes such as <InlineCode>FetchDataService</InlineCode> smoothed the exchanges and kept the database and the application in sync.
 </Text>
 
-<Callout tone="critical">Chaque modification du schéma SQL impliquait une refonte partielle du code Java : un vrai apprentissage sur la dépendance entre persistance et modèle objet.</Callout>
+<Callout tone="critical">Every change to the SQL schema meant a partial rework of the Java code: a real lesson in the dependency between persistence and the object model.</Callout>
 
-## JavaFX : entre plaisir et frustration
+## JavaFX: between pleasure and frustration
 
-<Text align="justify">
-Créer une interface en JavaFX fut à la fois gratifiant et exigeant. Scene Builder nous a aidés à concevoir rapidement les vues, mais connecter ces FXML à la logique métier via les contrôleurs a demandé rigueur et patience. Les interactions dynamiques entre les vues de simulation et l’écosystème ont représenté une part importante du débogage.
+<Text>
+Building a JavaFX interface was both rewarding and demanding. Scene Builder helped us design views quickly, but connecting those FXML files to the business logic through controllers took rigour and patience. Dynamic interactions between the simulation views and the ecosystem accounted for a large share of debugging.
 </Text>
 
-<Callout tone="neutral">Une bonne interface ne suffit pas : il faut une logique claire derrière chaque interaction utilisateur.</Callout>
+<Callout tone="neutral">A good interface isn't enough: every user interaction needs clear logic behind it.</Callout>
 
-## Tests et validation
+## Testing and validation
 
-<Text align="justify">
-Nous avons mis un point d’honneur à tester toutes les couches du projet. Les tests les plus pertinents portaient sur l’algorithme génétique (validité de la population, mutation, croisement), les relations entre entités (Chercheurs et Étudiants), et la cohérence des objets de base comme <InlineCode>Ville</InlineCode>. Grâce à JUnit5, chaque modification majeure passait par une série de validations automatiques.
+<Text>
+We made a point of testing every layer of the project. The most relevant tests covered the genetic algorithm (population validity, mutation, crossover), relationships between entities (Researchers and Students), and the consistency of basic objects such as <InlineCode>Ville</InlineCode> (City). Thanks to JUnit5, every major change went through a series of automatic checks.
 </Text>
 
-<Callout tone="brand">Les tests unitaires nous ont permis de corriger tôt les incohérences et de maintenir un projet robuste jusqu’à la fin.</Callout>
+<Callout tone="brand">Unit tests let us fix inconsistencies early and keep the project robust to the end.</Callout>
 
-## Ce que nous avons appris
+## What we learned
 
-<Text align="justify">
-Ce projet nous a permis d’expérimenter toutes les facettes du développement logiciel moderne : modélisation objet, conception d’algorithmes, gestion de base de données, interfaces utilisateur et tests automatisés. La difficulté a résidé dans la coordination de ces couches, mais c’est précisément ce qui en a fait une expérience formatrice.
+<Text>
+This project let us experience every facet of modern software development: object modelling, algorithm design, database management, user interfaces and automated testing. The difficulty lay in coordinating these layers, which is precisely what made it such a formative experience.
 </Text>
 
-<Callout tone="success">Nous avons appris à concevoir un logiciel complet, du modèle jusqu’à l’expérience utilisateur, en comprenant l’importance de la modularité et du test unitaire.</Callout>
+<Callout tone="success">We learned to design complete software, from the model to the user experience, and understood the importance of modularity and unit testing.</Callout>
 
 <Button
   variant="primary"
-  label="Accéder au dépôt GitHub"
+  label="View the GitHub repository"
   href="https://github.com/aemane-m/Projet_Algo_Genetic_Java"
   target="_blank"
   rel="noopener"

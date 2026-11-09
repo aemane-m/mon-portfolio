@@ -2,90 +2,87 @@
 import Base from "../layouts/Base.astro";
 import { person, experience, education, pipeline, business } from "../data/profile";
 ---
-<Base title="À propos — Aemane Mouteirou" description="Parcours d'Aemane Mouteirou : M1 MIAGE à Dauphine – PSL, stage data/IA au CIP PSL, stack data engineering et MLOps.">
-  <section class="sec" style="margin-top:3rem">
-    <h2>cat about.md</h2>
-    <div class="prose">
-      <p>Étudiant en <strong>M1 MIAGE</strong> à l'Université Paris Dauphine – PSL, je m'intéresse à tout ce qui permet de <strong>prendre de meilleures décisions grâce aux données</strong> : les collecter proprement, les analyser, les modéliser et les rendre lisibles pour ceux qui en ont besoin.</p>
-      <p>Ma formation mêle informatique, bases de données, statistiques et organisation des systèmes d'information : je suis à l'aise avec les équipes techniques comme avec les équipes métier. Je suis ouvert à <strong>tous les secteurs</strong> et à toutes les opportunités data — data engineering, data science / analytics, MLOps.</p>
-      <p>Mon projet personnel en cours, <a href="/work/quant-mlops">Quant-MLOps</a>, me sert de terrain pour apprendre à industrialiser un projet data : orchestration, suivi des expériences, conteneurs et monitoring. Il est en construction, je le documente au fil de l'eau.</p>
+<Base title="About — Aemane Mouteirou" description="Aemane Mouteirou’s background: MSc 1 MIAGE at Paris Dauphine – PSL, data/AI internship at CIP PSL, skills from data collection to production.">
+  <div class="wrap page">
+    <p class="eyebrow"><b>About</b></p>
+    <h1 class="big">Comfortable with technical teams <em>and business teams alike.</em></h1>
+    <div class="two">
+      <div class="prose">
+        <p>I’m an <strong>MSc 1 MIAGE</strong> student at Paris Dauphine – PSL University, interested in everything that helps people <strong>decide better with data</strong>: collecting it cleanly, analysing it, modelling it and making it readable for those who need it.</p>
+        <p>My studies blend computer science, databases, statistics and information systems. I’m looking for a <strong>data engineering or MLOps</strong> role, and I’m open to <strong>every industry</strong>.</p>
+        <p>My ongoing personal project, <a href="/work/quant-mlops">Quant-MLOps</a> (since November 2026), is where I’m learning to industrialise a data project. I document it as I go.</p>
+      </div>
+      <img class="portrait" src={person.avatar} alt={`Portrait of ${person.name}`} width="320" height="320" />
     </div>
-  </section>
 
-  <section class="sec">
-    <h2>avec les équipes métier</h2>
-    <div class="biz">
-      {business.map((b) => <div><h3 class="mono">{b.title}</h3><p>{b.text}</p></div>)}
-    </div>
-  </section>
+    <section class="sec">
+      <p class="eyebrow"><b>Working with business teams</b></p>
+      <div class="roles">
+        {business.map((b, i) => <div><span class="mono n">0{i + 1}</span><h3>{b.title}</h3><p>{b.text}</p></div>)}
+      </div>
+    </section>
 
-  <section class="sec">
-    <h2>git log --oneline experience/</h2>
-    <ol class="log">
-      {experience.map((e) => (
-        <li>
-          <div class="mono head"><span class="hash">{e.hash}</span> <b>{e.role}</b> <span class="dim">@ {e.company}</span></div>
-          <div class="mono dim when">{e.period}</div>
-          <ul>{e.points.map((p) => <li>{p}</li>)}</ul>
-        </li>
-      ))}
-    </ol>
-  </section>
+    <section class="sec">
+      <p class="eyebrow"><b>Experience</b></p>
+      <ol class="tl">
+        {experience.map((e) => (
+          <li>
+            <div class="when mono">{e.period}</div>
+            <div>
+              <h3>{e.role}</h3>
+              <p class="who">{e.company}</p>
+              <ul>{e.points.map((p) => <li>{p}</li>)}</ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
 
-  <section class="sec" id="stack">
-    <h2>stack</h2>
-    <pre class="mono sql"><span class="k">SELECT</span> stage, tool, level <span class="k">FROM</span> stack <span class="k">ORDER BY</span> pipeline_order;</pre>
-    <div class="tw2"><table class="mono">
-      <thead><tr><th>étape</th><th>tool</th><th>level</th></tr></thead>
-      <tbody>
-        {pipeline.flatMap((s) => s.items.map((i, n) => (
-          <tr class={n === 0 ? "first" : ""}>
-            <td class="accent">{n === 0 ? s.plain : ""}</td>
-            <td>{i.name}</td>
-            <td class={i.level === "pratique" ? "okc" : "dim"}>{i.level === "pratique" ? "● pratique" : "○ apprentissage"}</td>
-          </tr>
-        )))}
-      </tbody>
-    </table></div>
-    <p class="mono dim" style="font-size:.78rem">Le niveau « apprentissage » signale ce que j'utilise dans mes projets en cours sans le revendiquer comme maîtrisé en production.</p>
-  </section>
+    <section class="sec" id="stack">
+      <p class="eyebrow"><b>Skills</b> · from raw data to decision</p>
+      <div class="skills">
+        {pipeline.map((s) => (
+          <div>
+            <h3>{s.plain}</h3>
+            <p class="dim">{s.sql}</p>
+            <p class="tags">{s.items.map((i) => <span class={`chip ${i.level === "pratique" ? "strong" : ""}`}>{i.name}{i.level === "apprentissage" ? " · learning" : ""}</span>)}</p>
+          </div>
+        ))}
+      </div>
+      <p class="dim small">Tools marked “learning” are ones I use in my ongoing projects, without presenting them as mastered in production.</p>
+    </section>
 
-  <section class="sec">
-    <h2>formation</h2>
-    <ol class="log">
-      {education.map((e) => (
-        <li>
-          <div class="mono head"><b>{e.title}</b> <span class="dim">@ {e.where}</span></div>
-          <div class="mono dim when">{e.period}</div>
-          <p class="foc">{e.focus}</p>
-        </li>
-      ))}
-    </ol>
-  </section>
-
-  <section class="sec">
-    <h2>contact</h2>
-    <p class="mono"><a href={`mailto:${person.email}`}>{person.email}</a></p>
-  </section>
+    <section class="sec">
+      <p class="eyebrow"><b>Education</b></p>
+      <ol class="tl">
+        {education.map((e) => (
+          <li>
+            <div class="when mono">{e.period}</div>
+            <div><h3>{e.title}</h3><p class="who">{e.where}</p><p class="dim">{e.focus}</p></div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </div>
 </Base>
 
 <style is:global>
-  .biz { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
-  .biz > div { border: 1px solid var(--line); background: var(--panel); padding: 1rem 1.1rem; }
-  .biz h3 { font-size: .9rem; margin: 0 0 .5rem; color: var(--accent); }
-  .biz p { margin: 0; font-size: .92rem; color: var(--dim); }
-  .log { list-style: none; margin: 0; padding: 0 0 0 1.1rem; border-left: 1px dashed var(--line); max-width: 760px; }
-  .log > li { position: relative; padding: 0 0 1.9rem 1rem; }
-  .log > li::before { content: ""; position: absolute; left: -1.5rem; top: .55rem; width: .55rem; height: .55rem; background: var(--bg); border: 2px solid var(--accent); border-radius: 50%; }
-  .log .head { font-size: .92rem; } .log .hash { color: var(--accent); margin-right: .5rem; }
-  .log .when { font-size: .76rem; margin: .1rem 0 .5rem; }
-  .log ul { margin: 0; padding-left: 1.1rem; font-size: .95rem; } .log ul li { margin: .25rem 0; } .log ul li::marker { color: var(--dim); }
-  .log .foc { margin: 0; font-size: .92rem; color: var(--dim); }
-  .sql { margin: 0 0 1rem; padding: .8rem 1rem; background: var(--panel); border: 1px solid var(--line); font-size: .85rem; overflow-x: auto; }
-  .sql .k { color: var(--violet); }
-  .tw2 { overflow-x: auto; border: 1px solid var(--line); max-width: 640px; margin-bottom: .8rem; }
-  .tw2 table { border-collapse: collapse; width: 100%; font-size: .84rem; }
-  .tw2 th { text-align: left; padding: .5rem .9rem; background: var(--panel); color: var(--cyan); font-weight: 500; border-bottom: 1px solid var(--line); }
-  .tw2 td { padding: .35rem .9rem; } .tw2 tr.first td { border-top: 1px solid var(--line); }
-  .okc { color: var(--ok); }
+  .page { padding-top: 4rem; }
+  .big { font-size: clamp(2.4rem, 5.6vw, 4.6rem); max-width: 16em; margin: 1rem 0 3rem; letter-spacing: -0.035em; text-wrap: balance; }
+  .big em { color: var(--accent); font-style: italic; }
+  .two { display: grid; grid-template-columns: 1fr 260px; gap: 3rem; align-items: start; }
+  .portrait { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; filter: grayscale(1) contrast(1.05); border: 3px solid var(--accent); }
+  .tl { list-style: none; margin: 1.5rem 0 0; padding: 0; border-top: 1px solid var(--text); }
+  .tl > li { display: grid; grid-template-columns: 11rem 1fr; gap: 1.5rem; padding: 1.6rem 0; border-bottom: 1px solid var(--line); }
+  .tl .when { font-size: .78rem; color: var(--dim); padding-top: .4rem; }
+  .tl h3 { font-size: 1.5rem; margin: 0; }
+  .tl .who { margin: .15rem 0 .7rem; color: var(--accent); font-weight: 600; font-size: .92rem; }
+  .tl ul { margin: 0; padding-left: 1.1rem; max-width: 46em; } .tl ul li { margin: .3rem 0; } .tl ul li::marker { color: var(--accent); }
+  .tl p { margin: 0; }
+  .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.2rem 2.5rem; margin-top: 1.5rem; }
+  .skills h3 { font-size: 1.6rem; margin: 0; } .skills p { margin: .2rem 0 .7rem; font-size: .92rem; }
+  .skills .tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .chip.strong { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .small { font-size: .85rem; margin-top: 2rem; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } .portrait { max-width: 200px; } .tl > li { grid-template-columns: 1fr; gap: .2rem; } }
 </style>

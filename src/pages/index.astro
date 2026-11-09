@@ -1,106 +1,198 @@
 ---
 import Base from "../layouts/Base.astro";
-import Lineage from "../components/Lineage.astro";
 import { getCollection } from "astro:content";
-import { person, headline, pipeline } from "../data/profile";
+import { person } from "../data/profile";
 
 const projects = (await getCollection("projects", (p) => !p.data.draft)).sort((a, b) => +b.data.publishedAt - +a.data.publishedAt);
-const fmt = (d: Date) => d.toISOString().slice(0, 10);
-const kindLabel = { personal: "perso", academic: "académique", internship: "stage" } as const;
+const shape: Record<string, { layout: string; note: string }> = {
+  "quant-mlops": { layout: "series", note: "A financial time series: each dot is an observation, orange dots are detected signals." },
+  "sgeb-bibliotheque": { layout: "shelves", note: "A bookshelf: each dot is a book, orange ones are on loan." },
+  "tsp-ecosystem-genetic-javafx": { layout: "tsp", note: "A delivery round: linking 42 cities by the shortest route." },
+  "chat-c-ncurses": { layout: "network", note: "One server at the centre, several users connected at the same time." },
+  stage: { layout: "bars", note: "Thousands of requests grouped into a handful of themes." },
+};
+const steps = [
+  { key: "intro", target: 0 },
+  { key: "collect", target: 0 },
+  { key: "clean", target: 1 },
+  { key: "model", target: 2 },
+  { key: "decide", target: 3 },
+];
+const strengths = [
+  { t: "Reliable pipelines", d: "Collecting, cleaning and moving data so it arrives complete, on time and protected — as with the 9,000 anonymised support tickets." },
+  { t: "From prototype to production", d: "Containers, orchestration, experiment tracking and monitoring, so a model becomes a service people can depend on." },
+  { t: "A bridge to the business", d: "I start from the question the team is asking, and explain the result in plain language." },
+];
 ---
-<Base title={`${person.name} — Data & MLOps engineer`} description="Aemane Mouteirou, étudiant en M1 MIAGE à Dauphine – PSL : projets data (collecte, modélisation, MLOps) expliqués simplement, ouvert à tous les secteurs.">
-  <section class="hero">
-    <div class="term" aria-hidden="true">
-      <div class="term-bar"><i></i><i></i><i></i><span class="mono dim">whoami.yml — zsh</span></div>
-      <pre class="mono"><span class="l" style="--i:0"><b class="p">$</b> cat whoami.yml</span>
-<span class="l" style="--i:1"><u>name</u>:     {person.name}</span>
-<span class="l" style="--i:2"><u>role</u>:     {person.role}</span>
-<span class="l" style="--i:3"><u>school</u>:   {person.school}</span>
-<span class="l" style="--i:4"><u>seeking</u>:  [{person.seeking.join(", ")}]
-<span class="l" style="--i:5"><u>sectors</u>:  {person.open}</span></span>
-<span class="l" style="--i:6"><u>status</u>:   <span class="ok"><span class="dot"></span>open_to_work</span></span>
-<span class="l" style="--i:7"><b class="p">$</b> ./explain --short<span class="cur"></span></span></pre>
+<Base title={`${person.name} — from data to decisions`} description="Aemane Mouteirou, MSc 1 MIAGE student at Paris Dauphine – PSL: collecting, cleaning, modelling and putting data to work, in any industry. Projects explained simply.">
+  <section class="story wrap" id="story">
+    <div class="stage" aria-hidden="true">
+      <canvas id="story-canvas"></canvas>
+      <p class="mono legend">1 dot ≈ 30 requests · illustrative diagram of my internship project</p>
     </div>
-    <h1>{headline}</h1>
-    <p class="cta mono">
-      <a href="/work">ls work/ →</a>
-      <a href="/about">cat about.md →</a>
-      <button type="button" class="linklike" onclick="document.getElementById('open-palette').click()">/ cmd</button>
-    </p>
-  </section>
 
-  <section class="sec lin-sec">
-    <h2>lineage — quel projet utilise quel outil</h2>
-    <Lineage />
-  </section>
+    <div class="steps">
+      <article class="step" data-target="0">
+        <p class="eyebrow">{person.name} · <b>MSc 1 MIAGE</b>, Dauphine – PSL</p>
+        <h1>From raw data to <em>reliable decisions.</em></h1>
+        <p class="lead">I care about the whole journey of data: collecting it, cleaning it, modelling it, then making it useful to the people who decide — in any industry.</p>
+        <p class="actions"><a class="btn solid" href="#projets">See my projects</a><a class="btn" href="/about">My background</a></p>
+        <p class="hint mono">↓ scroll — each step transforms the dots</p>
+      </article>
 
-  <section class="sec">
-    <h2>runs — historique des projets</h2>
-    <div class="runs">
-      {projects.map((p) => (
-        <a class="run" href={`/work/${p.id}`}>
-          <span class="mono st"><span class:list={["dot", p.data.status === "in_progress" && "live"]}></span>{p.data.status === "in_progress" ? "en cours" : "terminé"}</span>
-          <span class="nm">{p.data.name ?? p.id}</span>
-          <span class="sm">{p.data.impact ?? p.data.summary}</span>
-          <span class="meta mono dim">{kindLabel[p.data.kind]} · {fmt(p.data.publishedAt)}</span>
-          <span class="stk">{p.data.stack.slice(0, 6).map((t) => <span class="chip">{t}</span>)}</span>
-        </a>
-      ))}
+      <article class="step" data-target="0">
+        <p class="eyebrow"><b>01</b> · Collect</p>
+        <h2>9,000 support requests, all mixed up.</h2>
+        <p>At Dauphine – PSL’s Centre for Educational Innovation, I pulled about 9,000 Moodle support tickets: free-text messages, duplicates, personal data.</p>
+        <p class="tags"><span class="chip">Python</span><span class="chip">Crisp API</span><span class="chip">multi-threading</span></p>
+      </article>
+
+      <article class="step" data-target="1">
+        <p class="eyebrow"><b>02</b> · Clean</p>
+        <h2>Protect people, discard the noise.</h2>
+        <p>Before any analysis: anonymise the messages, remove duplicates, normalise the text. Noisy points leave the screen, the rest lines up into a reliable dataset.</p>
+        <p class="tags"><span class="chip">Pandas</span><span class="chip">SpaCy</span><span class="chip">Regex</span></p>
+      </article>
+
+      <article class="step" data-target="2">
+        <p class="eyebrow"><b>03</b> · Model</p>
+        <h2>Let themes emerge.</h2>
+        <p>Language models run locally classify each request by theme, without the data ever leaving the university. The dots group themselves.</p>
+        <p class="tags"><span class="chip">Ollama</span><span class="chip">local LLMs</span><span class="chip">classification</span></p>
+      </article>
+
+      <article class="step" data-target="3">
+        <p class="eyebrow"><b>04</b> · Decide</p>
+        <h2>1,900 questions that keep coming back.</h2>
+        <p>Result: a base of recurring questions and a chatbot prototype linked to Moodle tutorials — a way to lighten the support load and guide users.</p>
+        <p class="note">The same sequence applies to finance, healthcare, logistics, retail… It’s what I want to keep doing.</p>
+        <p class="actions"><a class="btn" href="/work/stage">Read the project →</a></p>
+      </article>
     </div>
   </section>
 
-  <section class="sec">
-    <h2>pipeline — de la donnée brute à la décision</h2>
-    <ol class="pipe mono">
-      {pipeline.map((s) => (
-        <li>
-          <span class="accent">{s.plain}</span>
-          <span class="dim">{s.items.map((i) => i.name).join(" · ")}</span>
-        </li>
-      ))}
-    </ol>
-    <p class="mono dim small">● en pratique · ○ en apprentissage — détail sur <a href="/about#stack">/about</a>.</p>
+  <section class="wrap sec proj" id="projets">
+    <p class="eyebrow"><b>Projects</b> · hover a project to see its shape</p>
+    <h2>Five projects, five shapes of data.</h2>
+    <div class="proj-grid">
+      <ul class="proj-list">
+        {projects.map((p, i) => (
+          <li>
+            <a href={`/work/${p.id}`} data-layout={shape[p.id]?.layout} data-note={shape[p.id]?.note} data-first={i === 0 ? "1" : undefined}>
+              <span class="badge" class:list={[p.data.status === "in_progress" && "live"]}><i></i>{p.data.status === "in_progress" ? "In progress · since Nov 2026" : "Completed"}</span>
+              <span class="pn">{p.data.title.split(/ [—:] /)[0]}</span>
+              <span class="pi">{p.data.impact ?? p.data.summary}</span>
+              <span class="tags">{p.data.stack.slice(0, 5).map((t) => <span class="chip">{t}</span>)}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="proj-stage" aria-hidden="true">
+        <canvas id="proj-canvas"></canvas>
+        <p class="mono legend" id="proj-note"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap sec">
+    <p class="eyebrow"><b>What I’m looking for</b></p>
+    <h2>A data engineering or MLOps role, <em>in any industry.</em></h2>
+    <p class="lead" style="max-width:34em;margin:0 0 2.5rem">I want to build the data foundations that teams actually rely on. My experience already spans education, banking and finance — and I’m happy to learn a new domain.</p>
+    <div class="roles">
+      {strengths.map((r, i) => <div><span class="mono n">0{i + 1}</span><h3>{r.t}</h3><p>{r.d}</p></div>)}
+    </div>
+    <p class="actions" style="display:flex;gap:.8rem;margin-top:2.5rem"><a class="btn solid" href={`mailto:${person.email}`}>Get in touch</a><a class="btn" href="/about">My background</a></p>
   </section>
 </Base>
 
-<style is:global>
-  .hero { padding: 3.5rem 0 0; }
-  .term { border: 1px solid var(--line); background: var(--panel); max-width: 640px; }
-  .term-bar { display: flex; align-items: center; gap: .4rem; padding: .5rem .8rem; border-bottom: 1px solid var(--line); font-size: .72rem; }
-  .term-bar i { width: .6rem; height: .6rem; border-radius: 50%; background: var(--line); }
-  .term-bar span { margin-left: .6rem; }
-  .term pre { margin: 0; padding: 1rem 1.1rem; font-size: .88rem; line-height: 1.85; min-height: 14.5em; overflow-x: auto; }
-  .term u { text-decoration: none; color: var(--cyan); }
-  .term .p { color: var(--accent); }
-  .term .ok { color: var(--ok); }
-  .term .l { opacity: 0; animation: show .01s forwards; animation-delay: calc(var(--i) * .22s + .15s); }
-  .cur { display: inline-block; width: .6em; height: 1.05em; background: var(--accent); vertical-align: text-bottom; margin-left: .25em; animation: blink 1.1s steps(1) infinite; }
-  @keyframes show { to { opacity: 1; } } @keyframes blink { 50% { opacity: 0; } }
-  .hero h1 { font-size: clamp(1.5rem, 3.4vw, 2.3rem); max-width: 22em; margin: 2.2rem 0 1.2rem; font-weight: 600; text-wrap: balance; }
-  .cta { display: flex; flex-wrap: wrap; gap: .5rem 1.6rem; font-size: .92rem; margin: 0; }
-  .cta a { text-decoration: none; }
-  .linklike { font: inherit; background: none; border: 0; padding: 0; color: var(--dim); cursor: pointer; }
-  .linklike:hover { color: var(--accent); }
+<script>
+  import { createDots } from "../scripts/dots";
+  const layouts = ["scatter", "grid", "clusters", "bars"] as const;
 
-  .runs { border-top: 1px solid var(--line); }
-  .run { display: grid; grid-template-columns: 7.5rem 11rem 1fr; grid-template-areas: "st nm sm" ". meta stk"; gap: .2rem 1rem; padding: 1.05rem .6rem; border-bottom: 1px solid var(--line); color: var(--text); text-decoration: none; }
-  .run:hover { background: var(--panel); }
-  .run:hover .nm { color: var(--accent); }
-  .run .st { grid-area: st; font-size: .8rem; color: var(--dim); }
-  .run .nm { grid-area: nm; font-family: var(--mono); font-weight: 600; }
-  .run .sm { grid-area: sm; font-size: .92rem; color: var(--dim); }
-  .run .meta { grid-area: meta; font-size: .74rem; }
-  .run .stk { grid-area: stk; display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .2rem; }
-  @media (max-width: 720px) {
-    .run { grid-template-columns: 1fr; grid-template-areas: "st" "nm" "sm" "meta" "stk"; }
+  // — Story : le scroll pilote la transformation des points
+  const sc = document.getElementById("story-canvas") as HTMLCanvasElement;
+  const steps = [...document.querySelectorAll<HTMLElement>(".step")];
+  if (sc && steps.length) {
+    const dots = createDots(sc, "scatter");
+    const update = () => {
+      const mid = innerHeight * 0.5;
+      const c = steps.map((s) => { const r = s.getBoundingClientRect(); return r.top + r.height / 2; });
+      let tt = Number(steps[0].dataset.target);
+      if (mid >= c[c.length - 1]) tt = Number(steps[steps.length - 1].dataset.target);
+      else for (let i = 0; i < c.length - 1; i++) {
+        if (mid >= c[i] && mid < c[i + 1]) {
+          const f = (mid - c[i]) / (c[i + 1] - c[i]), a = Number(steps[i].dataset.target), b = Number(steps[i + 1].dataset.target);
+          tt = a + (b - a) * Math.min(1, Math.max(0, (f - 0.2) / 0.6)); break;
+        }
+      }
+      const k = Math.min(2, Math.floor(tt));
+      dots.blend(layouts[k], layouts[k + 1], tt - k);
+    };
+    addEventListener("scroll", update, { passive: true }); addEventListener("resize", update); update();
   }
 
-  @media (max-width: 720px) { .lin-sec { display: none; } }
-  .term pre { white-space: pre-wrap; overflow-wrap: anywhere; }
-  .pipe { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border: 1px solid var(--line); counter-reset: s; }
-  .pipe li { display: grid; grid-template-columns: 7rem 1fr; gap: 1rem; padding: .7rem 1rem; border-bottom: 1px solid var(--line); font-size: .86rem; counter-increment: s; }
-  .pipe li:last-child { border-bottom: 0; }
-  .pipe li::before { content: none; }
-  .small { font-size: .78rem; margin-top: .8rem; }
-  @media (max-width: 560px) { .pipe li { grid-template-columns: 1fr; gap: .1rem; } }
+  // — Projets : chaque projet a sa forme
+  const pc = document.getElementById("proj-canvas") as HTMLCanvasElement;
+  const note = document.getElementById("proj-note");
+  if (pc) {
+    const dots = createDots(pc, "scatter");
+    const links = [...document.querySelectorAll<HTMLAnchorElement>(".proj-list a")];
+    const show = (a: HTMLAnchorElement) => {
+      links.forEach((l) => l.classList.toggle("on", l === a));
+      if (a.dataset.layout) dots.to(a.dataset.layout as any, 900);
+      if (note) note.textContent = a.dataset.note ?? "";
+    };
+    links.forEach((a) => { a.addEventListener("mouseenter", () => show(a)); a.addEventListener("focus", () => show(a)); });
+    const first = links[0]; if (first) show(first);
+  }
+</script>
+
+<style is:global>
+  .story { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; }
+  .stage { position: sticky; top: 64px; height: calc(100vh - 64px); order: 2; display: flex; flex-direction: column; justify-content: center; }
+  .stage canvas { width: 100%; height: min(78vh, 640px); display: block; }
+  .legend { font-size: .7rem; color: var(--dim); text-align: center; margin: .6rem 0 0; min-height: 2.4em; }
+  .steps { order: 1; }
+  .step { min-height: 92vh; display: flex; flex-direction: column; justify-content: center; max-width: 520px; padding: 4rem 0; }
+  .step:first-child { min-height: calc(100vh - 64px); }
+  .step h1 { font-size: clamp(2.8rem, 6.4vw, 5.6rem); margin: 1rem 0 1.6rem; letter-spacing: -0.035em; text-wrap: balance; }
+  .step h1 em { color: var(--accent); font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; }
+  .step h2 { font-size: clamp(2rem, 4vw, 3.1rem); margin: .8rem 0 1.2rem; text-wrap: balance; }
+  .step p { margin: 0 0 1.1rem; }
+  .lead { font-size: 1.25rem; line-height: 1.5; max-width: 30em; }
+  .actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: .8rem !important; }
+  .hint { font-size: .75rem; color: var(--dim); margin-top: 3rem !important; }
+  .tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .note { font-family: var(--serif); font-style: italic; font-size: 1.15rem; color: var(--dim); border-left: 3px solid var(--accent); padding-left: 1rem; }
+
+  .proj-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 3rem; align-items: start; }
+  .proj-list { list-style: none; margin: 0; padding: 0; }
+  .proj-list a { display: grid; gap: .55rem; padding: 1.6rem 0; border-top: 1px solid var(--line); text-decoration: none; transition: padding .25s; }
+  .proj-list li:last-child a { border-bottom: 1px solid var(--line); }
+  .proj-list a:hover, .proj-list a.on { padding-left: 1rem; }
+  .proj-list .pn { font-family: var(--serif); font-size: clamp(1.7rem, 3.2vw, 2.5rem); line-height: 1.05; letter-spacing: -0.02em; }
+  .proj-list a.on .pn, .proj-list a:hover .pn { color: var(--accent); }
+  .proj-list .pi { color: var(--dim); max-width: 36em; font-size: .98rem; }
+  .proj-list .badge { justify-self: start; }
+  .proj-stage { position: sticky; top: 100px; }
+  .proj-stage canvas { width: 100%; aspect-ratio: 1; display: block; }
+
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); border-top: 1px solid var(--text); }
+  .roles > div { padding: 1.6rem 1.6rem 2rem 0; border-bottom: 1px solid var(--line); }
+  .roles .n { color: var(--accent); font-size: .8rem; }
+  .sec > h2 em { color: var(--accent); font-style: italic; }
+  .roles h3 { font-size: 1.7rem; margin: .5rem 0 .6rem; }
+  .roles p { margin: 0; color: var(--dim); max-width: 26em; }
+
+  @media (max-width: 900px) {
+    .story { display: block; padding: 0; }
+    .stage { top: 64px; height: 42vh; order: 0; background: var(--bg); z-index: 5; padding: .5rem 1rem 0; border-bottom: 1px solid var(--line); }
+    .stage canvas { height: 34vh; }
+    .stage .legend { margin: 0; font-size: .62rem; min-height: 0; }
+    .steps { padding: 0 1.5rem; }
+    .step { min-height: 70vh; padding: 2rem 0; }
+    .step:first-child { min-height: 70vh; }
+    .proj-grid { display: block; }
+    .proj-stage { display: none; }
+  }
 </style>

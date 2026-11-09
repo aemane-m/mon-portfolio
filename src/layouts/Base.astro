@@ -1,7 +1,5 @@
 ---
 import "../styles/global.css";
-import { getCollection } from "astro:content";
-import { execSync } from "node:child_process";
 import { person, social } from "../data/profile";
 
 interface Props { title: string; description: string; image?: string; type?: "website" | "article"; }
@@ -10,34 +8,15 @@ const { title, description, image = "/images/avatar.jpg", type = "website" } = A
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const canonical = new URL(path === "/" ? "/" : path, Astro.site).href;
 const og = new URL(image, Astro.site).href;
-
-let sha = process.env.CF_PAGES_COMMIT_SHA?.slice(0, 7) ?? "";
-if (!sha) { try { sha = execSync("git rev-parse --short HEAD").toString().trim(); } catch { sha = "dev"; } }
-const built = new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC";
-
-const projects = (await getCollection("projects", (p) => !p.data.draft)).sort((a, b) => +b.data.publishedAt - +a.data.publishedAt);
-const posts = (await getCollection("posts", (p) => !p.data.draft)).sort((a, b) => +b.data.publishedAt - +a.data.publishedAt);
-
-const commands = [
-  { label: "cd ~", hint: "accueil", href: "/" },
-  { label: "cat about.md", hint: "parcours, expérience, stack", href: "/about" },
-  { label: "ls work/", hint: "tous les projets", href: "/work" },
-  ...projects.map((p) => ({ label: `open work/${p.id}`, hint: p.data.name ?? p.id, href: `/work/${p.id}` })),
-  { label: "ls blog/", hint: "articles", href: "/blog" },
-  ...posts.map((p) => ({ label: `open blog/${p.id}`, hint: p.data.title, href: `/blog/${p.id}` })),
-  ...social.map((s) => ({ label: `open ${s.name}`, hint: s.href.replace("mailto:", ""), href: s.href })),
-  { label: "theme --toggle", hint: "clair / sombre", action: "theme" },
-];
-
-const nav = [{ href: "/about", label: "about" }, { href: "/work", label: "work" }, { href: "/blog", label: "blog" }];
+const nav = [{ href: "/about", label: "About" }, { href: "/work", label: "Projects" }, { href: "/blog", label: "Writing" }];
 const ld = {
   "@context": "https://schema.org", "@type": "Person", name: person.name, jobTitle: person.role,
   url: Astro.site?.href, email: person.email, sameAs: social.filter((s) => s.href.startsWith("http")).map((s) => s.href),
-  alumniOf: "Université Paris Dauphine – PSL",
+  alumniOf: "Paris Dauphine University – PSL",
 };
 ---
 <!doctype html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -45,126 +24,52 @@ const ld = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#f4efe5" />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={og} />
-    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary" />
-    <script is:inline>
-      try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
-    </script>
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   </head>
   <body>
-    <a class="skip" href="#main">Aller au contenu</a>
-    <header class="bar">
-      <div class="wrap bar-in">
-        <a class="brand" href="/" aria-label="Accueil"><span class="dot live"></span>{person.handle}@portfolio<span class="dim">:~</span></a>
-        <nav aria-label="Navigation principale">
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="top">
+      <div class="wrap top-in">
+        <a class="brand" href="/" aria-label="Home"><i></i>Aemane Mouteirou</a>
+        <nav aria-label="Main navigation">
           {nav.map((n) => <a href={n.href} aria-current={path.startsWith(n.href) ? "page" : undefined}>{n.label}</a>)}
+          <a class="cta" href={`mailto:${person.email}`}>Get in touch</a>
         </nav>
-        <button class="kbd" id="open-palette" type="button" aria-label="Ouvrir la palette de commandes"><kbd>/</kbd> cmd</button>
       </div>
     </header>
-
-    <main id="main" class="wrap"><slot /></main>
-
+    <main id="main"><slot /></main>
     <footer class="foot">
-      <div class="wrap foot-in mono">
-        <span><span class="dot"></span>build <b>{sha}</b> · {built}</span>
-        <span class="dim">astro · 0 framework JS · hébergé sur Cloudflare Pages</span>
-        <span>
-          {social.map((s, i) => <>{i > 0 && " · "}<a href={s.href} rel="noopener">{s.name}</a></>)}
-        </span>
+      <div class="wrap foot-in">
+        <p class="foot-big">Let’s talk about your data.</p>
+        <div>
+          <a href={`mailto:${person.email}`}>{person.email}</a><br />
+          {social.filter((s) => s.href.startsWith("http")).map((s, i) => <>{i > 0 && " · "}<a href={s.href} rel="noopener">{s.name}</a></>)}
+        </div>
       </div>
     </footer>
-
-    <dialog id="palette" aria-label="Palette de commandes">
-      <div class="p-row"><span class="mono accent">$</span>
-        <input id="p-input" type="text" placeholder="tape une commande… (ls, open, cat, theme)" autocomplete="off" spellcheck="false" aria-label="Commande" />
-      </div>
-      <ul id="p-list" role="listbox"></ul>
-      <div class="p-foot mono dim">↑↓ naviguer · ⏎ exécuter · esc fermer</div>
-    </dialog>
-    <script id="cmds" type="application/json" set:html={JSON.stringify(commands)} />
-
-    <script>
-      type Cmd = { label: string; hint: string; href?: string; action?: string };
-      const cmds: Cmd[] = JSON.parse(document.getElementById("cmds")!.textContent!);
-      const dlg = document.getElementById("palette") as HTMLDialogElement;
-      const input = document.getElementById("p-input") as HTMLInputElement;
-      const list = document.getElementById("p-list")!;
-      let sel = 0, shown: Cmd[] = [];
-
-      const toggleTheme = () => {
-        const cur = document.documentElement.dataset.theme ??
-          (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
-        const next = cur === "light" ? "dark" : "light";
-        document.documentElement.dataset.theme = next;
-        try { localStorage.setItem("theme", next); } catch {}
-      };
-      const run = (c: Cmd) => { dlg.close(); c.action === "theme" ? toggleTheme() : c.href && (location.href = c.href); };
-      const render = () => {
-        const q = input.value.toLowerCase().trim();
-        shown = cmds.filter((c) => !q || (c.label + " " + c.hint).toLowerCase().includes(q));
-        sel = Math.min(sel, Math.max(shown.length - 1, 0));
-        list.innerHTML = "";
-        shown.forEach((c, i) => {
-          const li = document.createElement("li");
-          li.setAttribute("role", "option");
-          li.setAttribute("aria-selected", String(i === sel));
-          li.innerHTML = `<span class="mono"></span><span class="dim"></span>`;
-          (li.children[0] as HTMLElement).textContent = c.label;
-          (li.children[1] as HTMLElement).textContent = c.hint;
-          li.onclick = () => run(c);
-          list.appendChild(li);
-        });
-        list.children[sel]?.scrollIntoView({ block: "nearest" });
-      };
-      const open = () => { input.value = ""; sel = 0; dlg.showModal(); render(); input.focus(); };
-
-      document.getElementById("open-palette")!.onclick = open;
-      document.addEventListener("keydown", (e) => {
-        const typing = /INPUT|TEXTAREA/.test((e.target as HTMLElement).tagName);
-        if ((e.key === "/" && !typing && !dlg.open) || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k")) { e.preventDefault(); open(); }
-      });
-      input.addEventListener("input", () => { sel = 0; render(); });
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowDown") { e.preventDefault(); sel = Math.min(sel + 1, shown.length - 1); render(); }
-        else if (e.key === "ArrowUp") { e.preventDefault(); sel = Math.max(sel - 1, 0); render(); }
-        else if (e.key === "Enter" && shown[sel]) run(shown[sel]);
-      });
-      dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
-    </script>
-
     <style is:global>
-      .bar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-      .bar-in { display: flex; align-items: center; gap: 1.5rem; height: 52px; font-family: var(--mono); font-size: .85rem; }
-      .brand { color: var(--text); text-decoration: none; margin-right: auto; white-space: nowrap; }
-      .bar nav { display: flex; gap: 1.1rem; }
-      .bar nav a { color: var(--dim); text-decoration: none; }
-      .bar nav a:hover, .bar nav a[aria-current] { color: var(--accent); }
-      .bar nav a[aria-current]::before { content: "> "; }
-      .kbd { font: inherit; background: none; color: var(--dim); border: 1px solid var(--line); padding: .2rem .55rem; cursor: pointer; }
-      .kbd:hover { color: var(--accent); border-color: var(--accent); }
-      kbd { font-family: var(--mono); color: var(--accent); }
-      .accent { color: var(--accent); }
-      .foot { margin-top: 6rem; border-top: 1px solid var(--line); padding: 1.25rem 0 2.5rem; font-size: .76rem; }
-      .foot-in { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; justify-content: space-between; }
-      #palette { margin: 12vh auto 0; width: min(640px, 92vw); padding: 0; background: var(--panel); color: var(--text); border: 1px solid var(--accent); box-shadow: 0 20px 60px #0009; }
-      #palette::backdrop { background: #0008; }
-      .p-row { display: flex; gap: .6rem; padding: .85rem 1rem; border-bottom: 1px solid var(--line); font-family: var(--mono); }
-      #p-input { flex: 1; background: none; border: 0; color: var(--text); font: inherit; outline: none; }
-      #p-list { list-style: none; margin: 0; padding: .3rem; max-height: 46vh; overflow-y: auto; }
-      #p-list li { display: flex; justify-content: space-between; gap: 1rem; padding: .45rem .7rem; cursor: pointer; font-size: .85rem; }
-      #p-list li span:last-child { text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      #p-list li[aria-selected="true"] { background: var(--accent); color: var(--bg); }
-      #p-list li[aria-selected="true"] .dim { color: inherit; opacity: .75; }
-      .p-foot { padding: .5rem 1rem; border-top: 1px solid var(--line); font-size: .72rem; }
-      @media (max-width: 560px) { .bar-in { gap: .8rem; } .brand { font-size: .78rem; } .kbd { display: none; } }
+      .top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(10px); }
+      .top-in { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+      .brand { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: .6rem; }
+      .brand i { width: .7rem; height: .7rem; border-radius: 50%; background: var(--accent); }
+      .top nav { display: flex; align-items: center; gap: 1.6rem; font-size: .92rem; }
+      .top nav a { text-decoration: none; }
+      .top nav a:hover, .top nav a[aria-current] { color: var(--accent); }
+      .top nav .cta { background: var(--text); color: var(--bg); padding: .45rem 1rem; border-radius: 999px; font-weight: 600; }
+      .top nav .cta:hover { background: var(--accent); color: var(--accent-ink); }
+      .foot { margin-top: 9rem; background: var(--text); color: var(--bg); padding: 4.5rem 0 3.5rem; }
+      .foot a { color: var(--bg); text-decoration-color: var(--accent); }
+      .foot-in { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between; align-items: flex-end; }
+      .foot-big { font-family: var(--serif); font-size: clamp(2.2rem, 6vw, 4.5rem); margin: 0; line-height: 1; letter-spacing: -0.03em; }
+      @media (max-width: 640px) { .top nav a:not(.cta) { display: none; } }
     </style>
   </body>
 </html>

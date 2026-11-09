@@ -2,23 +2,30 @@
 import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
 const projects = (await getCollection("projects", (p) => !p.data.draft)).sort((a, b) => +b.data.publishedAt - +a.data.publishedAt);
-const fmt = (d: Date) => d.toISOString().slice(0, 10);
 ---
-<Base title="Projets — Aemane Mouteirou" description="Projets data engineering, MLOps et développement : pipelines Airflow/Kafka, MLflow, FastAPI, Docker, Java, C.">
-  <section class="sec" style="margin-top:3rem">
-    <h2>ls -la work/</h2>
-    <p class="mono dim small2">{projects.length} projets · tri : date décroissante</p>
-    <div class="runs">
+<Base title="Projects — Aemane Mouteirou" description="Data projects by Aemane Mouteirou: AI processing of thousands of tickets, MLOps orchestration, optimisation, data management — explained simply.">
+  <div class="wrap page">
+    <p class="eyebrow"><b>Projects</b></p>
+    <h1 class="big">What I’ve built, <em>explained simply.</em></h1>
+    <div class="cards">
       {projects.map((p) => (
-        <a class="run" href={`/work/${p.id}`}>
-          <span class="mono st"><span class:list={["dot", p.data.status === "in_progress" && "live"]}></span>{p.data.status === "in_progress" ? "en cours" : "terminé"}</span>
-          <span class="nm">{p.data.name ?? p.id}</span>
-          <span class="sm"><b style="color:var(--text);font-weight:600">{p.data.title}</b><br />{p.data.impact ?? p.data.summary}</span>
-          <span class="meta mono dim">{fmt(p.data.publishedAt)}</span>
-          <span class="stk">{p.data.stack.map((t) => <span class="chip">{t}</span>)}</span>
+        <a class="card" href={`/work/${p.id}`}>
+          {p.data.images[0] && <img src={p.data.images[0]} alt="" loading="lazy" decoding="async" width="800" height="450" />}
+          <span class="badge" class:list={[p.data.status === "in_progress" && "live"]}><i></i>{p.data.status === "in_progress" ? "In progress" : "Completed"}</span>
+          <h2>{p.data.title.split(/ [—:] /)[0]}</h2>
+          <p class="pi">{p.data.impact ?? p.data.summary}</p>
+          <span class="tags">{p.data.stack.slice(0, 5).map((t) => <span class="chip">{t}</span>)}</span>
         </a>
       ))}
     </div>
-  </section>
+  </div>
 </Base>
-<style is:global>.small2 { font-size: .8rem; margin: -.4rem 0 1.2rem; }</style>
+<style is:global>
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 2.4rem 2rem; }
+  .card { display: grid; gap: .7rem; align-content: start; text-decoration: none; }
+  .card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 6px; background: var(--panel); transition: transform .3s, filter .3s; filter: grayscale(.85) contrast(1.05); }
+  .card:hover img { filter: none; transform: translateY(-4px); }
+  .card h2 { font-size: 2rem; margin: .2rem 0 0; } .card:hover h2 { color: var(--accent); }
+  .card .pi { margin: 0; color: var(--dim); font-size: .96rem; }
+  .card .badge { justify-self: start; } .card .tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+</style>

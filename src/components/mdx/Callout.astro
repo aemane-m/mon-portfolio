@@ -1,11 +1,9 @@
 ---
 const { tone = "neutral" } = Astro.props;
-const label = { brand: "note", neutral: "info", success: "ok", critical: "warn" }[tone as string] ?? "info";
 ---
-<aside class={`callout ${tone}`}><span class="tag">[{label}]</span><div><slot /></div></aside>
+<aside class={`callout ${tone}`}><div><slot /></div></aside>
 <style>
-  .callout { display:flex; gap:.75rem; margin:1.5rem 0; padding:.9rem 1rem; border:1px solid var(--line); border-left:3px solid var(--c); background:var(--panel); font-size:.95rem; --c:var(--dim); }
-  .callout :global(p){ margin:0 }
-  .tag { font-family:var(--mono); color:var(--c); flex:none; }
-  .brand{--c:var(--accent)} .success{--c:var(--ok)} .critical{--c:var(--err)} .neutral{--c:var(--cyan)}
+  .callout { margin: 1.8rem 0; padding: 1rem 1.3rem; border-left: 4px solid var(--c); background: var(--panel); font-size: .98rem; --c: var(--dim); border-radius: 0 6px 6px 0; }
+  .callout :global(p) { margin: 0; }
+  .brand { --c: var(--accent); } .success { --c: var(--ok); } .critical { --c: var(--err); } .neutral { --c: var(--cyan); }
 </style>
