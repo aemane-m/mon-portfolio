@@ -28,8 +28,8 @@ export const experience: Experience[] = [
     role: "Data Engineer — work-study (alternance)",
     period: "May 2026 → 2027",
     points: [
-      "Migrating a datamart from SAS to PySpark on Databricks, and working through the technical challenges that come with it.",
-      "Building a tool that exports data from SAS and Azure straight into Databricks, shaped by constraints specific to Allianz.",
+      "Setting up a Databricks data platform: a medallion architecture decoupled from the infrastructure, pipeline orchestration and data governance.",
+      "Moving workloads from SAS to PySpark, and building a tool that exports data from SAS and Azure straight into Databricks, shaped by constraints specific to Allianz.",
     ],
   },
   {
