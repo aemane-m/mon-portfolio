@@ -39,6 +39,7 @@ export const Footer = () => {
                   href={item.link}
                   icon={item.icon}
                   tooltip={item.name}
+                  aria-label={item.name}
                   size="s"
                   variant="ghost"
                 />
