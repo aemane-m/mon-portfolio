@@ -75,7 +75,7 @@ Both are available on the 2.4 and 5 GHz bands and use WPA2. The point is that a 
 
 ## What the gateway does for the homelab
 
-The gateway is more than a router for me. It is also the **DNS resolver** (so my services have friendly names), the **DHCP server** (with reservations for the virtual machines that need a stable address), and the peer that my Kubernetes cluster talks to: the cluster announces the address of its entry point to the gateway using BGP, so a service in the cluster is reachable from the rest of the network like any other.
+The gateway is more than a router for me. It is also the **DNS resolver** (so my services have friendly names), the **DHCP server** (with reservations, so every service keeps a fixed address), and the peer that my Kubernetes cluster talks to: the cluster announces the address of its entry point to the gateway using BGP, so a service in the cluster is reachable from the rest of the network like any other.
 
 ## Putting Proxmox on a VLAN: the mistake that cost me an evening
 
@@ -88,7 +88,7 @@ I then also told Terraform to tag every virtual machine with the same VLAN. The 
 
 ## Stable addresses without chaos
 
-Not every machine gets the same treatment. The Kubernetes nodes use **static addresses**, because control-plane nodes must be predictable. Other virtual machines get a **DHCP reservation** on the gateway, which keeps one source of truth for addresses without configuring each machine by hand.
+**Every service has a fixed IP address**, so nothing moves under my feet. The Kubernetes nodes use **static addresses**, because control-plane nodes must be predictable. The other machines get a **DHCP reservation** on the gateway: the address never changes, and there is still one source of truth without configuring each machine by hand.
 
 ## Isolation: zones and an explicit allow-list
 

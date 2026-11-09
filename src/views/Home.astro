@@ -143,7 +143,6 @@ const strengths = [
       <div class="vit-ctl" hidden>
         <button type="button" class="vit-b" data-act="prev" aria-label={tr("Previous project", "Projet précédent")}>‹</button>
         <button type="button" class="vit-b" data-act="next" aria-label={tr("Next project", "Projet suivant")}>›</button>
-        <button type="button" class="vit-b" data-act="pause" aria-label={tr("Pause", "Pause")} aria-pressed="false">❚❚</button>
         <span class="vit-bar" aria-hidden="true"><i></i></span>
         <span class="mono vit-count" aria-live="off"></span>
       </div>
@@ -194,12 +193,11 @@ const strengths = [
   const pc = document.getElementById("proj-canvas") as HTMLCanvasElement;
   const note = document.getElementById("proj-note");
   if (vit && pc) {
-    const dots = createDots(pc, "scatter");
+    const dots = createDots(pc, "scatter", { mesh: true });
     const cards = [...vit.querySelectorAll<HTMLElement>(".pv")];
     const tabs = [...vit.querySelectorAll<HTMLButtonElement>(".vit-tab")];
     const ctl = vit.querySelector<HTMLElement>(".vit-ctl")!;
     const count = vit.querySelector<HTMLElement>(".vit-count")!;
-    const pauseBtn = vit.querySelector<HTMLButtonElement>('[data-act="pause"]')!;
     const DELAY = 7000;
     const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let i = 0, paused = still, hover = false, timer = 0;
@@ -224,7 +222,6 @@ const strengths = [
     tabs.forEach((t) => t.addEventListener("click", () => { const k = cards.findIndex((c) => c.dataset.room === t.dataset.room); if (k >= 0) go(k); }));
     vit.querySelector('[data-act="prev"]')!.addEventListener("click", () => go(i - 1));
     vit.querySelector('[data-act="next"]')!.addEventListener("click", () => go(i + 1));
-    pauseBtn.addEventListener("click", () => { paused = !paused; pauseBtn.setAttribute("aria-pressed", String(paused)); pauseBtn.textContent = paused ? "▶" : "❚❚"; arm(); });
     const body = vit.querySelector(".vit-body")!;
     body.addEventListener("mouseenter", () => { hover = true; arm(); });
     body.addEventListener("mouseleave", () => { hover = false; arm(); });
@@ -232,7 +229,6 @@ const strengths = [
     body.addEventListener("focusout", () => { hover = false; arm(); });
     // ne tourne que lorsque la section est visible
     new IntersectionObserver((e) => { hover = !e[0].isIntersecting; arm(); }).observe(vit);
-    pauseBtn.textContent = paused ? "▶" : "❚❚"; pauseBtn.setAttribute("aria-pressed", String(paused));
     go(0);
   }
 </script>

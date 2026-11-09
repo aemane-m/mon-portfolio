@@ -75,7 +75,7 @@ Les deux sont disponibles sur les bandes 2,4 et 5 GHz et utilisent WPA2. L'inté
 
 ## Ce que fait la passerelle pour le homelab
 
-La passerelle est plus qu'un routeur pour moi. C'est aussi le **résolveur DNS** (pour que mes services aient des noms lisibles), le **serveur DHCP** (avec des réservations pour les machines virtuelles qui ont besoin d'une adresse stable), et l'interlocuteur de mon cluster Kubernetes : le cluster annonce l'adresse de son point d'entrée à la passerelle en BGP, donc un service du cluster est joignable depuis le reste du réseau comme n'importe quel autre.
+La passerelle est plus qu'un routeur pour moi. C'est aussi le **résolveur DNS** (pour que mes services aient des noms lisibles), le **serveur DHCP** (avec des réservations, pour que chaque service garde une adresse fixe), et l'interlocuteur de mon cluster Kubernetes : le cluster annonce l'adresse de son point d'entrée à la passerelle en BGP, donc un service du cluster est joignable depuis le reste du réseau comme n'importe quel autre.
 
 ## Mettre Proxmox sur un VLAN : l'erreur qui m'a coûté une soirée
 
@@ -88,7 +88,7 @@ J'ai ensuite aussi demandé à Terraform de taguer chaque machine virtuelle avec
 
 ## Des adresses stables sans chaos
 
-Toutes les machines ne reçoivent pas le même traitement. Les nœuds Kubernetes utilisent des **adresses statiques**, parce que les nœuds control-plane doivent être prévisibles. Les autres machines virtuelles reçoivent une **réservation DHCP** sur la passerelle, ce qui garde une seule source de vérité pour les adresses sans configurer chaque machine à la main.
+**Chaque service a une adresse IP fixe**, pour que rien ne bouge sous mes pieds. Les nœuds Kubernetes utilisent des **adresses statiques**, parce que les nœuds control-plane doivent être prévisibles. Les autres machines reçoivent une **réservation DHCP** sur la passerelle : l'adresse ne change jamais, et il reste une seule source de vérité sans configurer chaque machine à la main.
 
 ## Isolation : des zones et une liste d'autorisations explicite
 

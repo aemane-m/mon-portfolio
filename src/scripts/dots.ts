@@ -131,9 +131,9 @@ export const layoutPoints = (n: LayoutName) => get(n);
 const get = (n: LayoutName) => { if (!cache.has(n)) cache.set(n, build(n)); return cache.get(n)!; };
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatter") {
+export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatter", opts: { mesh?: boolean } = {}) {
   const ctx = canvas.getContext("2d")!;
-  let W = 0, H = 0, A: Layout = get(start), B: Layout = A, f = 0, raf = 0;
+  let W = 0, H = 0, A: Layout = get(start), B: Layout = A, f = 0, raf = 0, mx = -1, my = -1, praf = 0;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   let ink = "#17150f", acc = "#0d7a4b", dim = "#6c6657";
@@ -157,6 +157,10 @@ export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatt
     ctx.clearRect(0, 0, W, H);
     const S = Math.min(W, H), ox = (W - S) / 2, oy = (H - S) / 2, px = (x: number) => ox + x * S, py = (y: number) => oy + y * S;
     const pts = Array.from({ length: N }, (_, i) => mix(i));
+    if (opts.mesh && mx >= 0) { // la souris écarte les points voisins
+      const R = 0.16;
+      for (const p of pts) { const dx = p.x - mx, dy = p.y - my, d = Math.hypot(dx, dy); if (d < R && d > 0.0001) { const k = (1 - d / R) ** 2 * 0.07; p.x += (dx / d) * k; p.y += (dy / d) * k; } }
+    }
     const e = ease(f);
     const links = (L: Layout, alpha: number) => {
       if (!L.links || alpha < 0.02) return;
@@ -164,6 +168,11 @@ export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatt
       L.links.forEach(([i, j]) => { ctx.moveTo(px(pts[i].x), py(pts[i].y)); ctx.lineTo(px(pts[j].x), py(pts[j].y)); }); ctx.stroke();
     };
     links(A, 1 - e); links(B, e);
+    if (opts.mesh) { // maillage : relie les points proches, comme une constellation
+      const T = 0.075; ctx.strokeStyle = ink; ctx.lineWidth = 0.8; ctx.beginPath();
+      for (let i = 0; i < N; i++) { const a = pts[i]; if (a.a < 0.3) continue; for (let j = i + 1; j < N; j++) { const b = pts[j]; if (b.a < 0.3) continue; const dx = a.x - b.x; if (dx > T || dx < -T) continue; const dy = a.y - b.y; if (dx * dx + dy * dy < T * T) { ctx.moveTo(px(a.x), py(a.y)); ctx.lineTo(px(b.x), py(b.y)); } } }
+      ctx.globalAlpha = 0.16; ctx.stroke();
+    }
     const unit = Math.max(2.2, S / 150);
     for (const p of pts) {
       const r = unit * p.r; if (p.a < 0.02 || r < 0.3) continue;
@@ -180,6 +189,10 @@ export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatt
 
   const snapshot = (): Layout => { const L = blank(); for (let i = 0; i < N; i++) { const p = mix(i); L.x[i] = p.x; L.y[i] = p.y; L.a[i] = p.a; L.r[i] = p.r; L.acc[i] = p.c; } return L; };
 
+  if (opts.mesh && !reduce) {
+    const at = (e: PointerEvent) => { const b = canvas.getBoundingClientRect(), S = Math.min(b.width, b.height); mx = (e.clientX - b.left - (b.width - S) / 2) / S; my = (e.clientY - b.top - (b.height - S) / 2) / S; cancelAnimationFrame(praf); praf = requestAnimationFrame(draw); };
+    canvas.addEventListener("pointermove", at); canvas.addEventListener("pointerleave", () => { mx = -1; cancelAnimationFrame(praf); praf = requestAnimationFrame(draw); });
+  }
   new ResizeObserver(resize).observe(canvas);
   addEventListener("themechange", () => draw());
   return {
