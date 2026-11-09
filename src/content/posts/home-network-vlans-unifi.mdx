@@ -39,16 +39,28 @@ I use four separate networks, each with its own address range:
   data={{
     headers: [
       { content: "Network", key: "net" },
+      { content: "VLAN", key: "vlan" },
       { content: "What lives there", key: "what" }
     ],
     rows: [
-      ["Management", "Administration of the network and the hypervisors"],
-      ["Servers", "The homelab: Proxmox virtual machines, the Kubernetes cluster, Home Assistant, Immich"],
-      ["Personal", "My own and my family's laptops and phones"],
-      ["IoT", "Connected devices of the house"]
+      ["Management", "1", "Administration of the network and the hypervisors"],
+      ["Servers", "3", "The homelab: Proxmox virtual machines, the Kubernetes cluster, Home Assistant, Immich"],
+      ["Personal", "4", "My own and my family's laptops and phones"],
+      ["IoT", "5", "Connected devices of the house"]
     ]
   }}
 />
+
+All four are routed by the gateway, which is also their DHCP server.
+
+## Wi-Fi: one access point, two networks
+
+A single access point serves the whole house, but it does not put everyone on the same network. I broadcast **two separate Wi-Fi networks (SSIDs)**:
+
+- one for my **personal devices**, mapped to the Personal VLAN;
+- one for the **connected devices**, mapped to the IoT VLAN.
+
+Both are available on the 2.4 and 5 GHz bands and use WPA2. The point is that a device ends up in the right network **simply by the Wi-Fi it joins**: a smart plug that I connect to the IoT network can never land next to my laptop. There is no configuration on the devices themselves, and no way to forget a step.
 
 ## What the gateway does for the homelab
 
