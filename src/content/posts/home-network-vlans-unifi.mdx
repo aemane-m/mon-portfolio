@@ -121,7 +121,7 @@ UniFi shows all of this as a grid of source zone against destination zone, which
     ],
     rows: [
       ["Internal", "Everything", "—"],
-      ["IoT (Untrusted)", "The Internet and the gateway (for DHCP and DNS). It can only *reply* to connections that Internal opened", "Internal, Management and the VPN: blocked. The matrix also blocks traffic between IoT devices themselves"],
+      ["IoT (Untrusted)", "The Internet and the gateway (for DHCP and DNS). It can only reply to connections that Internal opened", "Internal, Management and the VPN: blocked. The matrix also blocks traffic between IoT devices themselves"],
       ["Management", "The Internet and the gateway", "Internal and IoT: blocked by default, except for a handful of named rules"]
     ]
   }}
@@ -149,7 +149,7 @@ flowchart LR
   MGT -- "blocked by default" --x INT
   UNT --> NET
   INT --> NET
-  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+  classDef accent fill:#e8a000,color:#17150f,stroke:none
 ```
 
 ### The exceptions are named rules

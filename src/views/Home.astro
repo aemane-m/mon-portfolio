@@ -210,7 +210,7 @@ const strengths = [
   .step { min-height: 92vh; display: flex; flex-direction: column; justify-content: center; max-width: 520px; padding: 4rem 0; }
   .step:first-child { min-height: calc(100vh - 64px); }
   .step h1 { font-size: clamp(2.8rem, 6.4vw, 5.6rem); margin: 1rem 0 1.6rem; letter-spacing: -0.035em; text-wrap: balance; }
-  .step h1 em { color: var(--accent); font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; }
+  .step h1 em { color: var(--accent-display); font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; }
   .step h2 { font-size: clamp(2rem, 4vw, 3.1rem); margin: .8rem 0 1.2rem; text-wrap: balance; }
   .step p { margin: 0 0 1.1rem; }
   .lead { font-size: 1.25rem; line-height: 1.5; max-width: 30em; }
@@ -230,21 +230,21 @@ const strengths = [
   .act .k.project { background: var(--accent); } .act .k.photo { background: none; border: 2px solid var(--text); }
   .feed { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--text); }
   .feed a { display: grid; grid-template-columns: 13rem 1fr; grid-template-areas: "m t" "m x"; gap: .15rem 1.5rem; padding: 1.2rem 0; border-bottom: 1px solid var(--line); text-decoration: none; }
-  .feed a:hover .f-title { color: var(--accent); }
+  .feed a:hover .f-title { color: var(--accent-display); }
   .f-meta { grid-area: m; font-size: .72rem; color: var(--dim); display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; }
-  .f-kind { color: var(--text); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; } .f-kind.project { color: var(--accent); }
+  .f-kind { color: var(--text); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; } .f-kind.project { color: var(--accent-text); }
   .f-title { grid-area: t; font-family: var(--serif); font-size: clamp(1.3rem, 2.4vw, 1.8rem); line-height: 1.15; }
   .f-text { grid-area: x; color: var(--dim); font-size: .95rem; max-width: 46em; }
   @media (max-width: 640px) { .feed a { grid-template-columns: 1fr; grid-template-areas: "m" "t" "x"; } .f-meta { flex-direction: row; align-items: center; } }
   .room { margin-bottom: 3rem; }
-  .room-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem 1rem; font-family: var(--mono); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin: 0 0 .4rem; color: var(--accent); }
+  .room-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem 1rem; font-family: var(--mono); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin: 0 0 .4rem; color: var(--accent-text); }
   .room-h small { font-family: var(--sans); text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--dim); font-size: .88rem; }
   .proj-list { list-style: none; margin: 0; padding: 0; }
   .proj-list a { display: grid; gap: .55rem; padding: 1.6rem 0; border-top: 1px solid var(--line); text-decoration: none; transition: padding .25s; }
   .proj-list li:last-child a { border-bottom: 1px solid var(--line); }
   .proj-list a:hover, .proj-list a.on { padding-left: 1rem; }
   .proj-list .pn { font-family: var(--serif); font-size: clamp(1.7rem, 3.2vw, 2.5rem); line-height: 1.05; letter-spacing: -0.02em; }
-  .proj-list a.on .pn, .proj-list a:hover .pn { color: var(--accent); }
+  .proj-list a.on .pn, .proj-list a:hover .pn { color: var(--accent-display); }
   .proj-list .pi { color: var(--dim); max-width: 36em; font-size: .98rem; }
   .proj-list .badge { justify-self: start; }
   .proj-stage { position: sticky; top: 100px; }
@@ -252,8 +252,8 @@ const strengths = [
 
   .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); border-top: 1px solid var(--text); }
   .roles > div { padding: 1.6rem 1.6rem 2rem 0; border-bottom: 1px solid var(--line); }
-  .roles .n { color: var(--accent); font-size: .8rem; }
-  .sec > h2 em { color: var(--accent); font-style: italic; }
+  .roles .n { color: var(--accent-text); font-size: .8rem; }
+  .sec > h2 em { color: var(--accent-display); font-style: italic; }
   .roles h3 { font-size: 1.7rem; margin: .5rem 0 .6rem; }
   .roles p { margin: 0; color: var(--dim); max-width: 26em; }
 

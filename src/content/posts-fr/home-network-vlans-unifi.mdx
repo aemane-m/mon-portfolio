@@ -121,7 +121,7 @@ UniFi présente tout cela sous forme d'une grille zone source contre zone destin
     ],
     rows: [
       ["Internal", "Tout", "—"],
-      ["IoT (Untrusted)", "Internet et la passerelle (pour le DHCP et le DNS). Il ne peut que *répondre* aux connexions ouvertes par Internal", "Internal, Management et le VPN : bloqués. La matrice bloque aussi le trafic entre les appareils IoT eux-mêmes"],
+      ["IoT (Untrusted)", "Internet et la passerelle (pour le DHCP et le DNS). Il ne peut que répondre aux connexions ouvertes par Internal", "Internal, Management et le VPN : bloqués. La matrice bloque aussi le trafic entre les appareils IoT eux-mêmes"],
       ["Management", "Internet et la passerelle", "Internal et IoT : bloqués par défaut, sauf une poignée de règles nommées"]
     ]
   }}
@@ -149,7 +149,7 @@ flowchart LR
   MGT -- "bloqué par défaut" --x INT
   UNT --> NET
   INT --> NET
-  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+  classDef accent fill:#e8a000,color:#17150f,stroke:none
 ```
 
 ### Les exceptions sont des règles nommées

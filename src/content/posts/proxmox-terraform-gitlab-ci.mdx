@@ -33,7 +33,7 @@ flowchart TB
   T --> P["Proxmox"] --> V["Talos, Home Assistant OS<br/>and Debian VMs"]
   A --> D["Docker host<br/>Immich, Portainer, ..."]
   TC --> K["Kubernetes"] --> AC["Argo CD"] --> R["Everything<br/>inside the cluster"]
-  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+  classDef accent fill:#e8a000,color:#17150f,stroke:none
 ```
 
 Each tool owns one layer. Terraform owns the **virtual machines**: their disks, their network and their sizing. It does not manage what runs inside them — Ansible configures the Docker host, Talos is configured through its own API, and Argo CD takes over inside Kubernetes. Keeping those boundaries clear is what stops the tools from fighting each other.
@@ -92,7 +92,7 @@ flowchart LR
     IN["infrastructure"] --> PV["provisioning"] --> TA["talos"] --> BO["bootstrap"] --> VE["verify"]
   end
   PL --> IN
-  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+  classDef accent fill:#e8a000,color:#17150f,stroke:none
   class PL,IN accent
 ```
 
@@ -139,7 +139,7 @@ The pipeline stops at the first failure: no later stage runs until the previous 
       ["Terraform could not find the Proxmox provider", "Every module must declare the provider it uses, not just the root one."],
       ["No VM had a network address", "I tagged the VLAN twice, on the switch port and on the VM. Pick one."],
       ["Talos would not boot", "The default virtual CPU is too old. The host CPU type fixes it, with a trade-off on live migration."],
-      ["State confusion", "Terraform's outputs are the addresses I *asked for*, not the addresses the machines actually have."]
+      ["State confusion", "Terraform's outputs are the addresses I asked for, not the addresses the machines actually have."]
     ]
   }}
 />

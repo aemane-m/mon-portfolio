@@ -97,9 +97,9 @@ const next = [...others].sort((a, b) => score(b) - score(a) || gap(a) - gap(b))[
   .rn-card { display: grid; gap: .5rem; margin-top: 1rem; padding: 1.6rem 1.8rem; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); text-decoration: none; transition: border-color .2s, transform .2s; }
   .rn-card:hover { border-color: var(--accent); transform: translateY(-2px); }
   .rn-title { font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.1rem); line-height: 1.1; letter-spacing: -0.02em; }
-  .rn-card:hover .rn-title { color: var(--accent); }
+  .rn-card:hover .rn-title { color: var(--accent-display); }
   .rn-sum { color: var(--dim); max-width: 40em; }
-  .rn-go { font-size: .8rem; color: var(--accent); margin-top: .3rem; }
+  .rn-go { font-size: .8rem; color: var(--accent-text); margin-top: .3rem; }
   .rn-all { font-size: .8rem; margin: 1.2rem 0 0; }
   .rn-all a { color: inherit; text-decoration: none; }
 

@@ -5,7 +5,7 @@ const label = langOf(Astro.url) === "fr" ? "En bref" : "In short";
 <aside class="tldr"><p class="tldr-h mono">{label}</p><div class="tldr-b"><slot /></div></aside>
 <style>
   .tldr { margin: 0 0 2.4rem; padding: 1.1rem 1.4rem; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 10px 10px 0; background: var(--panel); }
-  .tldr-h { margin: 0 0 .5rem; font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); }
+  .tldr-h { margin: 0 0 .5rem; font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent-text); }
   .tldr-b :global(ul) { margin: 0; padding-left: 1.1rem; }
   .tldr-b :global(li) { margin: .3rem 0; }
   .tldr-b :global(p) { margin: 0; }

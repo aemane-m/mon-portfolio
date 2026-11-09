@@ -65,7 +65,7 @@ The most useful thing the runbook taught me is that a Kubernetes platform is a *
 flowchart TB
   T["Terraform"]:::accent --> PX["Proxmox"] --> VM["3 Talos VMs"] --> K["Kubernetes"]
   K --> C["Cilium<br/>Gateway API · BGP"] --> AR["Argo CD"] --> V["Vault + Secrets Operator"] --> DB["CloudNativePG + pooler"] --> AP["Applications<br/>Airflow, ..."]
-  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+  classDef accent fill:#e8a000,color:#17150f,stroke:none
 ```
 
 Talos is told **not** to install a network plugin, because Cilium has to be installed first and everything else depends on it. In the node configuration, that is two lines:

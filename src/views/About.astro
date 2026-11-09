@@ -86,15 +86,15 @@ const skills = pipeline(lang);
 <style is:global>
   .page { padding-top: 4rem; }
   .big { font-size: clamp(2.4rem, 5.6vw, 4.6rem); max-width: 16em; margin: 1rem 0 3rem; letter-spacing: -0.035em; text-wrap: balance; }
-  .big em { color: var(--accent); font-style: italic; }
+  .big em { color: var(--accent-display); font-style: italic; }
   .two { display: grid; grid-template-columns: 1fr 260px; gap: 3rem; align-items: start; }
   .portrait { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; filter: grayscale(1) contrast(1.05); border: 3px solid var(--accent); }
   .tl { list-style: none; margin: 1.5rem 0 0; padding: 0; border-top: 1px solid var(--text); }
   .tl > li { display: grid; grid-template-columns: 11rem 1fr; gap: 1.5rem; padding: 1.6rem 0; border-bottom: 1px solid var(--line); }
   .tl .when { font-size: .78rem; color: var(--dim); padding-top: .4rem; }
   .tl h3 { font-size: 1.5rem; margin: 0; }
-  .tl .who { margin: .15rem 0 .7rem; color: var(--accent); font-weight: 600; font-size: .92rem; }
-  .tl ul { margin: 0; padding-left: 1.1rem; max-width: 46em; } .tl ul li { margin: .3rem 0; } .tl ul li::marker { color: var(--accent); }
+  .tl .who { margin: .15rem 0 .7rem; color: var(--accent-text); font-weight: 600; font-size: .92rem; }
+  .tl ul { margin: 0; padding-left: 1.1rem; max-width: 46em; } .tl ul li { margin: .3rem 0; } .tl ul li::marker { color: var(--accent-text); }
   .tl p { margin: 0; }
   .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.2rem 2.5rem; margin-top: 1.5rem; }
   .skills h3 { font-size: 1.6rem; margin: 0; } .skills p { margin: .2rem 0 .7rem; font-size: .92rem; }

@@ -65,7 +65,7 @@ La chose la plus utile que m'a apprise le runbook, c'est qu'une plateforme Kuber
 flowchart TB
   T["Terraform"]:::accent --> PX["Proxmox"] --> VM["3 VM Talos"] --> K["Kubernetes"]
   K --> C["Cilium<br/>Gateway API · BGP"] --> AR["Argo CD"] --> V["Vault + Secrets Operator"] --> DB["CloudNativePG + pooler"] --> AP["Applications<br/>Airflow, ..."]
-  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+  classDef accent fill:#e8a000,color:#17150f,stroke:none
 ```
 
 On dit à Talos de **ne pas** installer de plugin réseau, parce que Cilium doit être installé en premier et que tout le reste en dépend. Dans la configuration du nœud, cela tient en deux lignes :

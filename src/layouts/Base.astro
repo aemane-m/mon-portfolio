@@ -80,7 +80,6 @@ const rssHref = lang === "fr" ? "/fr/rss.xml" : "/rss.xml";
     <script is:inline>
       try { var t = localStorage.getItem("theme"); if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; } catch (e) {}
     </script>
-    {import.meta.env.DEV && <script is:inline set:html={"(function(){try{\nvar P={vermilion:[\"#ff4a1c\",\"#ff5b2e\",\"#fff\",\"#fff\"],cobalt:[\"#2347ff\",\"#8197ff\",\"#fff\",\"#12100d\"],forest:[\"#0d7a4b\",\"#4be3a0\",\"#fff\",\"#12100d\"],violet:[\"#6a3df5\",\"#b49bff\",\"#fff\",\"#12100d\"],teal:[\"#00828a\",\"#3fd9d0\",\"#fff\",\"#12100d\"],raspberry:[\"#d1215f\",\"#ff6b9c\",\"#fff\",\"#12100d\"],amber:[\"#d98e00\",\"#ffc23d\",\"#17150f\",\"#17150f\"]};\nvar order=Object.keys(P);\nfunction cur(){return localStorage.getItem(\"palette\")||\"vermilion\";}\nfunction apply(n){\n  var old=document.getElementById(\"pal-style\"); if(old) old.remove();\n  var c=P[n]; if(!c) return;\n  var st=document.createElement(\"style\"); st.id=\"pal-style\";\n  st.textContent=\":root{--accent:\"+c[0]+\" !important;--accent-ink:\"+c[2]+\" !important}:root[data-theme=dark]{--accent:\"+c[1]+\" !important;--accent-ink:\"+c[3]+\" !important}@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--accent:\"+c[1]+\" !important;--accent-ink:\"+c[3]+\" !important}}\";\n  document.head.appendChild(st);\n  dispatchEvent(new Event(\"themechange\"));\n}\nvar q=new URLSearchParams(location.search).get(\"palette\"); if(q&&P[q]) localStorage.setItem(\"palette\",q);\napply(cur());\nfunction ui(){\n  if(document.getElementById(\"pal-box\")) return;\n  var box=document.createElement(\"div\"); box.id=\"pal-box\";\n  box.style.cssText=\"position:fixed;right:14px;bottom:14px;z-index:99999;display:flex;gap:8px;align-items:center;padding:9px 12px;border-radius:999px;background:rgba(20,18,14,.93);box-shadow:0 6px 24px rgba(0,0,0,.35);font:600 11px ui-monospace,Menlo,monospace;color:#f1ece0\";\n  var label=document.createElement(\"span\"); label.style.cssText=\"min-width:64px;opacity:.85\"; box.appendChild(label);\n  function mark(){ label.textContent=cur(); [].forEach.call(box.querySelectorAll(\"button\"),function(b){ var on=b.title===cur(); b.style.borderColor=on?\"#fff\":\"transparent\"; b.style.transform=on?\"scale(1.18)\":\"none\"; }); }\n  order.forEach(function(n){\n    var b=document.createElement(\"button\"); b.type=\"button\"; b.title=n; b.setAttribute(\"aria-label\",\"Accent \"+n);\n    b.style.cssText=\"width:22px;height:22px;border-radius:50%;border:2px solid transparent;background:\"+P[n][0]+\";cursor:pointer;padding:0;transition:transform .12s\";\n    b.onclick=function(){ localStorage.setItem(\"palette\",n); apply(n); mark(); };\n    box.appendChild(b);\n  });\n  document.body.appendChild(box); mark();\n}\nif(document.body) ui(); else addEventListener(\"DOMContentLoaded\",ui);\n}catch(e){}})();"} />}
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -182,9 +181,9 @@ const rssHref = lang === "fr" ? "/fr/rss.xml" : "/rss.xml";
       .mdiagram { margin: 2rem 0; padding: 1.2rem; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); overflow-x: auto; display: flex; justify-content: center; }
       .mdiagram svg { max-width: 100%; height: auto; }
       .lang { font-family: var(--mono); font-size: .78rem; font-weight: 600; letter-spacing: .06em; padding: .3rem .55rem; border: 1px solid var(--line); border-radius: 999px; color: var(--text); text-decoration: none; }
-      .lang:hover { border-color: var(--accent); color: var(--accent); }
+      .lang:hover { border-color: var(--accent); color: var(--accent-text); }
       .theme { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--text); cursor: pointer; }
-      .theme:hover { border-color: var(--accent); color: var(--accent); }
+      .theme:hover { border-color: var(--accent); color: var(--accent-text); }
       .theme .i-sun { display: none; }
       :root[data-theme="dark"] .theme .i-sun { display: block; } :root[data-theme="dark"] .theme .i-moon { display: none; }
       @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .theme .i-sun { display: block; } :root:not([data-theme="light"]) .theme .i-moon { display: none; } }
@@ -194,7 +193,7 @@ const rssHref = lang === "fr" ? "/fr/rss.xml" : "/rss.xml";
       .brand i { width: .7rem; height: .7rem; border-radius: 50%; background: var(--accent); }
       .top nav { display: flex; align-items: center; gap: 1.6rem; font-size: .92rem; }
       .top nav a { text-decoration: none; }
-      .top nav a:hover, .top nav a[aria-current] { color: var(--accent); }
+      .top nav a:hover, .top nav a[aria-current] { color: var(--accent-text); }
       .top nav .cta { background: var(--text); color: var(--bg); padding: .45rem 1rem; border-radius: 999px; font-weight: 600; }
       .top nav .cta:hover { background: var(--accent); color: var(--accent-ink); }
       .foot { margin-top: 9rem; background: var(--inv-bg); color: var(--inv-fg); padding: 4.5rem 0 3.5rem; }
@@ -216,7 +215,22 @@ const rssHref = lang === "fr" ? "/fr/rss.xml" : "/rss.xml";
       (function () {
         try {
           var m = atob(t).split("").reverse().join("");
-          document.querySelectorAll("[data-mail]").forEach(function (a) { a.setAttribute("href", "mailto:" + m); a.removeAttribute("rel"); a.removeAttribute("target"); });
+          var fr = document.documentElement.lang === "fr";
+          function toast(copied) {
+            var old = document.getElementById("mail-toast"); if (old) old.remove();
+            var d = document.createElement("div"); d.id = "mail-toast"; d.setAttribute("role", "status");
+            d.style.cssText = "position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:99998;max-width:92vw;padding:.75rem 1.1rem;border-radius:12px;background:#17150f;color:#f4efe5;font:500 14px/1.4 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.35);text-align:center";
+            d.textContent = (copied ? (fr ? "Adresse copiée : " : "Address copied: ") : (fr ? "Mon adresse : " : "My address: ")) + m;
+            document.body.appendChild(d); setTimeout(function () { d.remove(); }, 7000);
+          }
+          document.querySelectorAll("[data-mail]").forEach(function (a) {
+            a.setAttribute("href", "mailto:" + m); a.removeAttribute("rel"); a.removeAttribute("target");
+            // Sans application de messagerie, mailto: ne fait rien : on copie l'adresse et on l'affiche.
+            a.addEventListener("click", function () {
+              if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(m).then(function () { toast(true); }, function () { toast(false); });
+              else toast(false);
+            });
+          });
           document.querySelectorAll("[data-reveal]").forEach(function (b) {
             b.addEventListener("click", function () { var a = document.createElement("a"); a.href = "mailto:" + m; a.textContent = m; b.replaceWith(a); });
           });
