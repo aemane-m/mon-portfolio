@@ -4,7 +4,8 @@ import Newsletter from "../components/Newsletter.astro";
 import { render, type CollectionEntry } from "astro:content";
 import { mdxComponents } from "../components/mdx";
 import { mk, lp, dateLocale, type Lang } from "../i18n";
-import { postsFor } from "../lib/content";
+import { postsFor, projectsFor } from "../lib/content";
+import { articleProject } from "../data/related";
 
 interface Props { lang: Lang; entry: CollectionEntry<"posts">; fallback?: boolean }
 const { lang, entry, fallback = false } = Astro.props;
@@ -19,9 +20,11 @@ const fmt = (x: Date) => x.toLocaleDateString(dateLocale(lang), { month: "long",
 const others = (await postsFor(lang)).map((x) => x.entry).filter((p) => p.id !== entry.id);
 const score = (p: (typeof others)[number]) => p.data.tags.filter((t) => d.tags.includes(t)).length;
 const gap = (p: (typeof others)[number]) => Math.abs(+p.data.publishedAt - +d.publishedAt);
+const projId = articleProject[entry.id];
+const proj = projId ? (await projectsFor(lang)).map((x) => x.entry).find((p) => p.id === projId) : undefined;
 const next = [...others].sort((a, b) => score(b) - score(a) || gap(a) - gap(b))[0];
 ---
-<Base title={`${d.title} — Aemane Mouteirou`} description={d.summary} image={d.image} type="article">
+<Base title={d.seoTitle ?? d.title} description={d.seoDescription ?? d.summary} image={d.image} type="article" kind="article" published={d.publishedAt} keywords={d.tags} crumbs={[{ name: "Journal", href: l("/blog") }, { name: d.title, href: l(`/blog/${entry.id}`) }]}>
   <div class="progress" aria-hidden="true"><i id="bar"></i></div>
   <div class="wrap page">
     <p class="eyebrow"><a href={l("/blog")} style="text-decoration:none">← Journal</a> · {fmt(d.publishedAt)}</p>
@@ -40,6 +43,10 @@ const next = [...others].sort((a, b) => score(b) - score(a) || gap(a) - gap(b))[
         </aside>
       )}
     </div>
+
+    {proj && (
+      <p class="part mono">{tr("Part of the project", "Fait partie du projet")} <a href={l(`/work/${proj.id}`)}>{proj.data.title.split(/ [—:] /)[0]}</a> — {proj.data.impact ?? proj.data.summary}</p>
+    )}
 
     {next && (
       <aside class="read-next" aria-labelledby="rn">
@@ -85,6 +92,7 @@ const next = [...others].sort((a, b) => score(b) - score(a) || gap(a) - gap(b))[
   .toc a:hover { color: var(--text); }
   .toc a.on { color: var(--text); border-left-color: var(--accent); font-weight: 600; }
 
+  .part { margin: 3.5rem 0 0; max-width: 760px; font-size: .82rem; line-height: 1.6; color: var(--dim); } .part a { color: var(--text); font-weight: 600; }
   .read-next { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--text); max-width: 760px; }
   .rn-card { display: grid; gap: .5rem; margin-top: 1rem; padding: 1.6rem 1.8rem; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); text-decoration: none; transition: border-color .2s, transform .2s; }
   .rn-card:hover { border-color: var(--accent); transform: translateY(-2px); }

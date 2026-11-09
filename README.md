@@ -47,3 +47,11 @@ npm run og           # generates the missing ones into public/og/<lang>/ (needs 
 ```
 
 Commit the generated images. A page without one falls back to the portrait.
+
+## SEO
+
+- Titles are kept to 60 characters and descriptions to 155 automatically (`src/lib/seo.ts`). For a project or article you can set `seoTitle` and `seoDescription` in the frontmatter to word them for search engines; otherwise the title and summary are used and trimmed.
+- Structured data: `WebSite` on the home page, `BlogPosting` on articles, `CreativeWork` on projects, `BreadcrumbList` on every content page.
+- RSS feeds: `/rss.xml` (English) and `/fr/rss.xml` (French). The sitemap carries the publication date of each project and article.
+- Icons: `npm run icons` regenerates the PNG icons from `public/favicon.svg`.
+- Cross-links between a project and its articles are declared in `src/data/related.ts`.

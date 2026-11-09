@@ -5,9 +5,17 @@ import { getCollection } from "astro:content";
 import { person, social } from "../data/profile";
 import { langOf, mk, lp, altPath, cleanPath } from "../i18n";
 import { existsSync } from "node:fs";
+import { fitTitle, fitDesc } from "../lib/seo";
 
-interface Props { title: string; description: string; image?: string; type?: "website" | "article"; }
-const { title, description, image = "/images/avatar.jpg", type = "website" } = Astro.props;
+interface Props {
+  title: string; description: string; image?: string; type?: "website" | "article";
+  /** Données structurées : "article" (BlogPosting) ou "project" (CreativeWork) */
+  kind?: "article" | "project"; published?: Date; keywords?: string[];
+  crumbs?: { name: string; href: string }[];
+}
+const { title: rawTitle, description: rawDesc, image = "/images/avatar.jpg", type = "website", kind, published, keywords = [], crumbs = [] } = Astro.props;
+const title = fitTitle(rawTitle);
+const description = fitDesc(rawDesc);
 
 const lang = langOf(Astro.url);
 const tr = mk(lang);
@@ -25,11 +33,30 @@ const hasOg = existsSync(`${process.cwd()}/public${ogFile}`);
 const og = new URL(hasOg ? ogFile : image, Astro.site).href;
 const hasPhotos = (await getCollection("photos", (p) => !p.data.draft)).length > 0;
 const nav = [{ href: "/about", label: tr("About", "À propos") }, { href: "/work", label: tr("Projects", "Projets") }, { href: "/blog", label: tr("Journal", "Journal") }, ...(hasPhotos ? [{ href: "/photos", label: "Photos" }] : [])];
-const ld = {
-  "@context": "https://schema.org", "@type": "Person", name: person.name, jobTitle: person.role,
-  url: Astro.site?.href, email: person.email, sameAs: social.filter((s) => s.href.startsWith("http")).map((s) => s.href),
+const siteHref = Astro.site!.href.replace(/\/$/, "");
+const abs = (h: string) => (h.startsWith("http") ? h : siteHref + (h === "/" ? "/" : h));
+const personNode = {
+  "@type": "Person", "@id": `${siteHref}/#person`, name: person.name, jobTitle: person.role, url: `${siteHref}/`,
+  sameAs: social.filter((x) => x.href.startsWith("http")).map((x) => x.href),
   alumniOf: tr("Paris Dauphine University – PSL", "Université Paris Dauphine – PSL"),
 };
+const graph: Record<string, unknown>[] = [personNode];
+if (path === "/") graph.push({ "@type": "WebSite", "@id": `${siteHref}/#website`, url: `${siteHref}/`, name: "Aemane Mouteirou", inLanguage: lang, publisher: { "@id": `${siteHref}/#person` } });
+if (kind) graph.push({
+  "@type": kind === "article" ? "BlogPosting" : "CreativeWork", "@id": `${canonical}#main`,
+  headline: rawTitle.replace(/ — Aemane Mouteirou$/, ""), name: rawTitle.replace(/ — Aemane Mouteirou$/, ""), description,
+  url: canonical, mainEntityOfPage: canonical, inLanguage: lang, image: [og],
+  ...(published ? { datePublished: published.toISOString(), dateModified: published.toISOString() } : {}),
+  ...(keywords.length ? { keywords: keywords.join(", ") } : {}),
+  author: { "@id": `${siteHref}/#person` }, publisher: { "@id": `${siteHref}/#person` },
+});
+if (crumbs.length) graph.push({
+  "@type": "BreadcrumbList",
+  itemListElement: [{ name: tr("Home", "Accueil"), href: lp(lang, "/") }, ...crumbs].map((c, i) => ({ "@type": "ListItem", position: i + 1, name: c.name, item: abs(c.href) })),
+});
+const ld = { "@context": "https://schema.org", "@graph": graph };
+const noindex = rawPath === "/404";
+const rssHref = lang === "fr" ? "/fr/rss.xml" : "/rss.xml";
 ---
 <!doctype html>
 <html lang={lang}>
@@ -43,6 +70,10 @@ const ld = {
     <link rel="alternate" hreflang="fr" href={frUrl} />
     <link rel="alternate" hreflang="x-default" href={enUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="alternate" type="application/rss+xml" title={tr("Journal — Aemane Mouteirou", "Journal — Aemane Mouteirou")} href={rssHref} />
+    <meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large"} />
     <meta name="theme-color" content="#f4efe5" />
     <link rel="preload" as="font" type="font/woff2" href={frauncesUrl} crossorigin />
     <script is:inline>

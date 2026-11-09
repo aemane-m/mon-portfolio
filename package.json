@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "new": "node scripts/new.mjs",
     "diagrams": "node scripts/diagrams.mjs",
-    "og": "node scripts/og.mjs"
+    "og": "node scripts/og.mjs",
+    "icons": "node scripts/icons.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.12",

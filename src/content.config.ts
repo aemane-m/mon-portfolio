@@ -7,6 +7,8 @@ const team = z.array(z.object({ name: z.string(), avatar: z.string().optional(),
 const projectSchema = z.object({
   title: z.string(),
   summary: z.string(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
   publishedAt: z.coerce.date(),
   name: z.string().optional(),
   room: z.enum(["data", "infra", "darkroom", "foundations"]).default("foundations"),
@@ -24,6 +26,8 @@ const projectSchema = z.object({
 const postSchema = z.object({
   title: z.string(),
   summary: z.string(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
   publishedAt: z.coerce.date(),
   type: z.enum(["note", "article"]).default("article"),
   tags: z.array(z.string()).default([]),

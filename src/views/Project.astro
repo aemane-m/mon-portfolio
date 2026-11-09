@@ -4,6 +4,8 @@ import { render, type CollectionEntry } from "astro:content";
 import { mdxComponents } from "../components/mdx";
 import { shapes, roomLabel } from "../data/shapes";
 import { mk, lp, dateLocale, type Lang } from "../i18n";
+import { postsFor } from "../lib/content";
+import { projectArticles } from "../data/related";
 
 interface Props { lang: Lang; entry: CollectionEntry<"projects">; fallback?: boolean; prev: CollectionEntry<"projects"> | null; next: CollectionEntry<"projects"> | null }
 const { lang, entry, fallback = false, prev, next } = Astro.props;
@@ -22,8 +24,10 @@ const when = d.status === "in_progress" ? `${tr("Since", "Depuis")} ${fmt(d.publ
 const shape = shapes[entry.id] ?? { layout: "scatter", note: "", fr: "" };
 const note = lang === "fr" ? shape.fr : shape.note;
 const room = roomLabel[lang][d.room];
+const relatedIds = projectArticles[entry.id] ?? [];
+const related = relatedIds.length ? (await postsFor(lang)).map((x) => x.entry).filter((p) => relatedIds.includes(p.id)) : [];
 ---
-<Base title={`${d.title} — Aemane Mouteirou`} description={d.summary} image={cover} type="article">
+<Base title={d.seoTitle ?? d.title} description={d.seoDescription ?? d.summary} image={cover} type="article" kind="project" published={d.publishedAt} keywords={d.stack} crumbs={[{ name: tr("Projects", "Projets"), href: l("/work") }, { name, href: l(`/work/${entry.id}`) }]}>
   <div class="progress" aria-hidden="true"><i id="bar"></i></div>
 
   <header class="wrap ph">
@@ -75,6 +79,13 @@ const room = roomLabel[lang][d.room];
       )}
 
       <div class="prose story-body"><Content components={mdxComponents} /></div>
+
+      {related.length > 0 && (
+        <section class="rel">
+          <p class="eyebrow"><b>{tr("Written up in the journal", "Raconté dans le journal")}</b></p>
+          <ul>{related.map((p) => <li><a href={l(`/blog/${p.id}`)}>{p.data.title}</a><span class="dim">{p.data.summary}</span></li>)}</ul>
+        </section>
+      )}
 
       {rest.length > 0 && (
         <section class="gal">
@@ -151,6 +162,7 @@ const room = roomLabel[lang][d.room];
   .story-body h2::before { content: counter(sec, decimal-leading-zero); font-family: var(--mono); font-size: .75rem; color: var(--accent); letter-spacing: .06em; font-weight: 500; transform: translateY(-.35em); }
   .story-body h2:first-child { margin-top: 0; }
 
+  .rel { margin-top: 4rem; max-width: 700px; } .rel ul { list-style: none; margin: .8rem 0 0; padding: 0; } .rel li { display: grid; gap: .15rem; padding: .9rem 0; border-top: 1px solid var(--line); } .rel a { font-family: var(--serif); font-size: 1.25rem; line-height: 1.2; } .rel .dim { font-size: .88rem; }
   .upd { margin: 0 0 3rem; max-width: 700px; }
   .upd ol { list-style: none; margin: .8rem 0 0; padding: 0; border-left: 2px solid var(--accent); }
   .upd li { display: grid; grid-template-columns: 8.5rem 1fr; gap: 1rem; padding: .5rem 0 .5rem 1rem; }
