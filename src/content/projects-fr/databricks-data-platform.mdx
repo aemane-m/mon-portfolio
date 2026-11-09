@@ -28,6 +28,8 @@ Depuis mai 2026, je suis en alternance dans un grand groupe de services financie
 
 Une architecture en médaillon organise les données en couches, chacune plus fiable que la précédente : les données **brutes**, exactement comme elles sont arrivées ; les données **nettoyées**, vérifiées et standardisées ; et les données **prêtes pour le métier**, façonnées pour ceux qui les utilisent. Garder les couches indépendantes de l'infrastructure permet à la même organisation de survivre à un changement d'outillage.
 
+C'est un modèle, pas un dogme. Chaque équipe peut ajouter ou retirer des couches selon ses besoins : une équipe aux sources simples et propres n'a pas forcément besoin d'une couche nettoyée distincte, alors qu'une autre ajoutera une étape de plus pour un jeu de données sensible ou très partagé. Ce qui compte, c'est que chaque couche ait un rôle clair, pas leur nombre.
+
 ```mermaid
 flowchart LR
   S1["SAS"] --> X["Outil d'export"]

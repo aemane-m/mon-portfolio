@@ -1,7 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import ShapeThumb from "../components/ShapeThumb.astro";
-import { shapes, roomLabel, roomBlurb } from "../data/shapes";
+import { roomLabel, roomBlurb } from "../data/shapes";
 import { mk, lp, dateLocale, type Lang } from "../i18n";
 import { projectsFor } from "../lib/content";
 
@@ -28,11 +27,9 @@ const allText = tr("Everything, newest first.", "Tout, du plus récent au plus a
 
     <ul class="plist">
       {projects.map((p) => {
-        const shape = shapes[p.id]?.layout ?? "scatter";
         return (
           <li data-room={p.data.room}>
             <a href={l(`/work/${p.id}`)}>
-              <span class="pl-thumb"><ShapeThumb layout={shape} /></span>
               <span class="pl-main">
                 <span class="pl-top">
                   <span class="pl-room mono">{rooms.find((r) => r.key === p.data.room)?.title}</span>
@@ -80,10 +77,8 @@ const allText = tr("Everything, newest first.", "Tout, du plus récent au plus a
 
   .plist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--text); }
   .plist li[hidden] { display: none; }
-  .plist a { display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 1.8rem; align-items: start; padding: 1.6rem .4rem; border-bottom: 1px solid var(--line); text-decoration: none; transition: background .2s; }
+  .plist a { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.8rem; align-items: start; padding: 1.6rem .4rem; border-bottom: 1px solid var(--line); text-decoration: none; transition: background .2s; }
   .plist a:hover { background: var(--panel); }
-  .pl-thumb { display: block; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; width: 112px; height: 112px; overflow: hidden; }
-  .plist a:hover .pl-thumb { border-color: var(--accent); }
   .pl-main { display: grid; gap: .35rem; min-width: 0; }
   .pl-top { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
   .pl-room { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent-text); }
@@ -93,9 +88,8 @@ const allText = tr("Everything, newest first.", "Tout, du plus récent au plus a
   .pl-stack { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .3rem; }
   .pl-date { font-size: .74rem; color: var(--dim); padding-top: .4rem; white-space: nowrap; }
   @media (max-width: 720px) {
-    .plist a { grid-template-columns: 72px minmax(0, 1fr); gap: 1rem; }
-    .pl-thumb { width: 72px; height: 72px; } .pl-thumb svg { width: 72px; height: 72px; }
-    .pl-date { grid-column: 2; padding-top: 0; }
+    .plist a { grid-template-columns: minmax(0, 1fr); gap: .6rem; }
+    .pl-date { grid-row: 1; padding-top: 0; }
     .filters { top: 56px; }
   }
 </style>

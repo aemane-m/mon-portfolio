@@ -28,6 +28,8 @@ Since May 2026 I have been in work-study at a financial-services group. My assig
 
 A medallion architecture organises data in layers, each one more trustworthy than the last: **raw** data exactly as it arrived, **cleaned** data that has been checked and standardised, and **business-ready** data shaped for the people who use it. Keeping the layers independent of the infrastructure means the same organisation can survive a change of tooling.
 
+This is a pattern, not a dogma. Teams add or drop layers according to what they need: a team with simple, clean sources may not need a separate cleaned layer, while another may add one more step for a sensitive or heavily shared dataset. What matters is that each layer has a clear purpose, not how many there are.
+
 ```mermaid
 flowchart LR
   S1["SAS"] --> X["Export tool"]
