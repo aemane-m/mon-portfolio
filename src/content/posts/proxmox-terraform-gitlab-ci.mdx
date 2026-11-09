@@ -7,6 +7,14 @@ tags: ["Terraform", "Proxmox", "GitLab CI", "Infrastructure as code"]
 draft: false
 ---
 
+<Tldr>
+
+- **The problem:** virtual machines created by hand cannot be rebuilt.
+- **What I built:** a GitLab pipeline that checks, plans and applies Terraform on Proxmox, with one module that creates every VM.
+- **What I learnt:** pin your versions, tag a VLAN in one place only, and run the pipeline from inside the network.
+
+</Tldr>
+
 My homelab runs on three Proxmox hosts. I could create the virtual machines by clicking through the web interface, and for a while I did. Then I wanted to be able to rebuild everything from a repository — so I am **learning Terraform**, and I use a GitLab pipeline to run it.
 
 <Callout tone="brand">This is a learner's account. The setup works, but the most valuable part is the list of things I got wrong first.</Callout>
@@ -46,6 +54,28 @@ Every virtual machine is created by the same small Terraform **module**, so they
     ]
   }}
 />
+
+Here is the core of that module. Note the tags, which are added to every machine, and the description that tells anyone opening the machine in Proxmox that it is not meant to be edited by hand:
+
+```hcl
+resource "proxmox_virtual_environment_vm" "this" {
+  name        = var.name
+  node_name   = var.node_name
+  vm_id       = var.vm_id
+  description = "Managed exclusively by Terraform"
+  tags        = concat(["managed", "iac"], var.tags)
+
+  cpu {
+    cores = var.cores
+    type  = var.cpu_type
+  }
+
+  memory {
+    dedicated = var.memory_mb
+  }
+  # ... disks, network and cloud-init follow
+}
+```
 
 ## The pipeline
 
@@ -115,6 +145,12 @@ The pipeline stops at the first failure: no later stage runs until the previous 
 ## A small thing I like: backups that look after themselves
 
 A scheduled job on one Proxmox node powers on my TrueNAS machine through its management controller, waits for the file shares, backs up the VMs of all three nodes, starts a Time Machine backup for my Mac, and then asks the NAS to shut down cleanly. If something fails, it stops and **leaves the NAS on**, rather than cutting power mid-task. I designed the failure case first. The full story, with the hardware, is in [Backups I can trust: a HP MicroServer, iLO and TrueNAS](/blog/backups-microserver-truenas-ilo).
+
+## What I would improve
+
+- **Describe the network as code too.** The DNS entries my cluster depends on live in the UniFi controller, not in the repository. They are a manual dependency that should be declared somewhere reviewable.
+- **Protect the Terraform state.** It lives in GitLab. If it were lost, the recovery plan is to import the existing resources or accept a rebuild from empty. A regular export of the state would make that much less painful.
+- **Keep the Talos secrets outside Git, but safe.** They must stay identical for the whole life of the cluster, and they are stored as a protected CI file. Losing them means a new cluster.
 
 ## Where it stands
 

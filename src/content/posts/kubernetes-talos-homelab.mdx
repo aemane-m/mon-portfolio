@@ -7,6 +7,14 @@ tags: ["Kubernetes", "Talos", "GitOps", "Airflow", "Longhorn"]
 draft: false
 ---
 
+<Tldr>
+
+- **What it is:** a three-node Talos cluster running Cilium, Argo CD, Vault, PostgreSQL, Longhorn, Airflow and Kafka.
+- **What broke:** mostly **ordering** problems, not bugs: each layer depends on the one before it.
+- **Takeaway:** a platform is a dependency chain, and writing every incident down is half the work.
+
+</Tldr>
+
 I run a small Kubernetes cluster at home, next to the rest of my homelab. It is where I try the tools I meet in data engineering — an orchestrator, a message broker, a database operator, object storage — on infrastructure I fully control. This article is a tour of how it is put together, and, more usefully, of what went wrong while I built it.
 
 <Callout tone="brand">I am still learning. Everything below comes from my own deployment notes: the failures are real, and so are the fixes.</Callout>
@@ -51,7 +59,18 @@ flowchart TB
   classDef accent fill:#ff4a1c,color:#fff,stroke:none
 ```
 
-Talos is told **not** to install a network plugin, because Cilium has to be installed first and everything else depends on it. Argo CD comes after Cilium, and takes over from there: from that point, Git is the source of truth and manual `kubectl apply` is something I try to avoid.
+Talos is told **not** to install a network plugin, because Cilium has to be installed first and everything else depends on it. In the node configuration, that is two lines:
+
+```yaml
+cluster:
+  network:
+    cni:
+      name: none
+  proxy:
+    disabled: true
+```
+
+ Argo CD comes after Cilium, and takes over from there: from that point, Git is the source of truth and manual `kubectl apply` is something I try to avoid.
 
 ## Storage: small decisions, written down
 
@@ -84,6 +103,14 @@ The raw capacity is about 450 GB, and the budget of declared volumes stays well 
 />
 
 The last one is my favourite, because it is not a bug in any tool. A database role reads its password **once**, when it is created. Changing the secret later does not change the role. The only safe order is: generate the password, store it in Vault, let the operator create the Kubernetes secret, *then* create the database. When I got it wrong, fixing it meant aligning the role by hand and restarting the pooler to clear its cached credentials.
+
+## What it costs to run
+
+A homelab has a running cost, and I measure it. On the plug that feeds my lab, the average draw is about **115 W**, which is about **3 kWh a day**, so roughly **90 kWh a month**. For the first nine days of November 2026 the daily average was 2.98 kWh, and the daily maximum 3.1 kWh. The consumption is very steady, which is what you would expect from machines that are always on.
+
+## What I would improve
+
+Longhorn replicas are not backups. The next step is to point Longhorn at a backup target on my TrueNAS machine, with the credentials stored as an encrypted secret and never in Git, so that the data in the cluster is backed up outside the cluster.
 
 ## Rules I now follow
 

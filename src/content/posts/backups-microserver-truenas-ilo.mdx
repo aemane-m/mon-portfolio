@@ -7,6 +7,14 @@ tags: ["Backups", "TrueNAS", "HP MicroServer", "iLO", "Homelab"]
 draft: false
 ---
 
+<Tldr>
+
+- **What:** a second-hand HP MicroServer Gen8 turned into a backup NAS running TrueNAS, woken every night at 1:50 a.m.
+- **Key ideas:** iLO lets me power it on remotely, and the script leaves the NAS on if anything goes wrong.
+- **Missing:** an off-site copy.
+
+</Tldr>
+
 Self-hosting my own data only makes sense if I can restore it. So the first thing I built around my homelab was not a service, but a **backup machine**: a small HP server running TrueNAS, woken up every night to do its job and then put back to sleep.
 
 <Callout tone="brand">I did not invent the hardware part. I followed a written guide and two videos (all credited below), then built the automation on top. This article is my version of the story.</Callout>
@@ -67,7 +75,24 @@ With the OS disk sorted, I installed **TrueNAS SCALE** and set up the storage po
 - a **dedicated user and group** that own that dataset;
 - an **NFS share** restricted to the addresses of my three Proxmox nodes only.
 
-Proxmox sees it as a storage target. A daily backup job — defined in Terraform, like the rest of my infrastructure — backs up every virtual machine in snapshot mode, compressed, and keeps the last 7 backups plus 4 weekly and 6 monthly ones.
+Proxmox sees it as a storage target. A daily backup job, defined in Terraform like the rest of my infrastructure, backs up every virtual machine in snapshot mode, compressed, and keeps the last 7 backups plus 4 weekly and 6 monthly ones:
+
+```hcl
+resource "proxmox_backup_job" "truenas_daily" {
+  schedule = "*-*-* 02:00"
+  all      = true
+  mode     = "snapshot"
+  compress = "zstd"
+
+  prune_backups = {
+    "keep-last"    = "7"
+    "keep-weekly"  = "4"
+    "keep-monthly" = "6"
+  }
+}
+```
+
+When the 1:50 script is in charge, this built-in job is switched off, so a backup does not run twice.
 
 ## The 1:50 a.m. script
 
@@ -93,7 +118,16 @@ sequenceDiagram
   Note over S,N: On any Proxmox or NAS error,<br/>stop and leave the NAS on
 ```
 
-The script lives in my homelab repository and is deployed by the same pipeline as everything else, so nothing is configured by hand on the Proxmox node.
+The script lives in my homelab repository and is deployed by the same pipeline as everything else, so nothing is configured by hand on the Proxmox node. The schedule itself is a small systemd timer:
+
+```ini
+[Timer]
+OnCalendar=*-*-* 01:50:00
+Persistent=true
+Unit=nas-backup-orchestrator.service
+```
+
+\`Persistent=true\` means that if the Proxmox node was off at 1:50, the job runs as soon as it comes back, instead of being silently skipped.
 
 ### Designing for failure
 

@@ -76,6 +76,10 @@ Backups run from a systemd timer on a Proxmox node every night. The orchestratio
 
 <Callout tone="success">A small detail I like: the failure mode is designed first. The script is built so that an error never causes an unsafe shutdown.</Callout>
 
+## What it costs to run
+
+I measure the electricity the lab uses. At the plug that feeds it, the average draw is about **115 W**: roughly **3 kWh a day**, or about **90 kWh a month**. The consumption is very steady, as you would expect from machines that are always on.
+
 ## Decisions worth explaining
 
 - **Pinned provider version.** The Proxmox provider is pinned to an exact release, because infrastructure code that silently changes behaviour is worse than code that is a little out of date.

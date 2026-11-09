@@ -7,6 +7,14 @@ tags: ["Networking", "UniFi", "VLAN", "Homelab", "IoT"]
 draft: false
 ---
 
+<Tldr>
+
+- **What:** four VLANs on UniFi (Management, Servers, Personal, IoT), grouped into three firewall zones.
+- **The result:** I can reach my IoT devices, but they cannot start a conversation with my machines.
+- **The lesson:** tag a VLAN in one place only, and give every firewall rule a name that says why it exists.
+
+</Tldr>
+
 A homelab quickly stops being "a few machines on the home network". Once photos, home automation and backups live on hardware I own, I want to control **who can talk to what**. This article explains how I built my local network around that idea, with UniFi equipment and separate VLANs.
 
 <Callout tone="brand">I am a learner, not a network engineer. I describe what I built and what went wrong, not a reference design.</Callout>
