@@ -89,7 +89,7 @@ The pipeline stops at the first failure: no later stage runs until the previous 
 
 ## A small thing I like: backups that look after themselves
 
-A scheduled job on one Proxmox node powers on my TrueNAS machine through its management controller, waits for the file shares, backs up the VMs of all three nodes, starts a Time Machine backup for my Mac, and then asks the NAS to shut down cleanly. If something fails, it stops and **leaves the NAS on**, rather than cutting power mid-task. I designed the failure case first.
+A scheduled job on one Proxmox node powers on my TrueNAS machine through its management controller, waits for the file shares, backs up the VMs of all three nodes, starts a Time Machine backup for my Mac, and then asks the NAS to shut down cleanly. If something fails, it stops and **leaves the NAS on**, rather than cutting power mid-task. I designed the failure case first. The full story, with the hardware, is in [Backups I can trust: a HP MicroServer, iLO and TrueNAS](/blog/backups-microserver-truenas-ilo).
 
 ## Where it stands
 
