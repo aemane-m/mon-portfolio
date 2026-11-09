@@ -12,12 +12,8 @@ const label = langOf(Astro.url) === "fr" ? "Schéma" : "Diagram";
 </figure>
 <style is:global>
   .mdiagram .d-light, .mdiagram .d-dark { width: 100%; justify-content: center; }
-  .mdiagram .d-light { display: flex; }
-  .mdiagram .d-dark { display: none; }
-  :root[data-theme="dark"] .mdiagram .d-light { display: none; }
-  :root[data-theme="dark"] .mdiagram .d-dark { display: flex; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .mdiagram .d-light { display: none; }
-    :root:not([data-theme="light"]) .mdiagram .d-dark { display: flex; }
-  }
+  .mdiagram .d-light { display: none; }
+  .mdiagram .d-dark { display: flex; }
+  :root[data-theme="light"] .mdiagram .d-light { display: flex; }
+  :root[data-theme="light"] .mdiagram .d-dark { display: none; }
 </style>

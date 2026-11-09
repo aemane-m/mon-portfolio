@@ -33,7 +33,7 @@ flowchart TB
   T --> P["Proxmox"] --> V["VM Talos, Home Assistant OS<br/>et Debian"]
   A --> D["Hôte Docker<br/>Immich, Portainer, ..."]
   TC --> K["Kubernetes"] --> AC["Argo CD"] --> R["Tout ce qui est<br/>dans le cluster"]
-  classDef accent fill:#2fbf86,color:#0a1f15,stroke:none
+  classDef accent fill:#ff5500,color:#0b0b0b,stroke:none
 ```
 
 Chaque outil possède une couche. Terraform possède les **machines virtuelles** : leurs disques, leur réseau et leur dimensionnement. Il ne gère pas ce qui tourne à l'intérieur — Ansible configure l'hôte Docker, Talos se configure via sa propre API, et Argo CD prend le relais dans Kubernetes. Garder ces frontières claires est ce qui évite que les outils se battent entre eux.
@@ -92,7 +92,7 @@ flowchart LR
     IN["infrastructure"] --> PV["provisioning"] --> TA["talos"] --> BO["bootstrap"] --> VE["verify"]
   end
   PL --> IN
-  classDef accent fill:#2fbf86,color:#0a1f15,stroke:none
+  classDef accent fill:#ff5500,color:#0b0b0b,stroke:none
   class PL,IN accent
 ```
 

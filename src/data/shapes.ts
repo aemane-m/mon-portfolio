@@ -9,7 +9,7 @@ export const shapes: Record<string, { layout: string; note: string; fr: string }
   homelab: { layout: "cluster", note: "Three machines, each running its own services, all wired together.", fr: "Trois machines, chacune avec ses services, toutes reliées entre elles." },
   cinerestore: { layout: "film", note: "Six frames of film, scanned one after another.", fr: "Six photogrammes de pellicule, numérisés l'un après l'autre." },
   labphoto: { layout: "shelves", note: "A gallery wall: many photographers, many photos, one place to update them.", fr: "Un mur de galerie : beaucoup de photographes, beaucoup de photos, un seul endroit pour les mettre à jour." },
-  "sgeb-bibliotheque": { layout: "shelves", note: "A bookshelf: each dot is a book, green ones are on loan.", fr: "Une étagère : chaque point est un livre, en vert ceux qui sont empruntés." },
+  "sgeb-bibliotheque": { layout: "shelves", note: "A bookshelf: each dot is a book, orange ones are on loan.", fr: "Une étagère : chaque point est un livre, en orange ceux qui sont empruntés." },
   "tsp-ecosystem-genetic-javafx": { layout: "tsp", note: "A delivery round: linking 42 cities by the shortest route.", fr: "Une tournée : relier 42 villes par le chemin le plus court." },
   "chat-c-ncurses": { layout: "network", note: "One server at the centre, several users connected at the same time.", fr: "Un serveur au centre, plusieurs utilisateurs connectés en même temps." },
 };

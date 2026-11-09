@@ -39,7 +39,7 @@ flowchart TB
   B["Business logic<br/>domain + quantitative methods"]:::accent --> AP["Application<br/>use cases"] --> PO["Ports<br/>interfaces"] --> AD["Adapters<br/>infrastructure"]
   AD --> DB["Databricks<br/>Lakeflow Jobs · Unity Catalog · MLflow"]
   AD --> SH["Self-hosted<br/>Airflow · Spark · Delta Lake · MinIO"]
-  classDef accent fill:#2fbf86,color:#0a1f15,stroke:none
+  classDef accent fill:#ff5500,color:#0b0b0b,stroke:none
 ```
 
 <Table
@@ -66,7 +66,7 @@ From raw market data to a monitored model, in six steps:
 ```mermaid
 flowchart LR
   I["1 Ingest<br/>market data"] --> P["2 Prepare<br/>clean + store"] --> F["3 Features<br/>reusable, versioned"] --> T["4 Backtest<br/>Sharpe, drawdown"]:::accent --> M["5 Promote<br/>validated model"] --> O["6 Monitor<br/>latency, drift"]
-  classDef accent fill:#2fbf86,color:#0a1f15,stroke:none
+  classDef accent fill:#ff5500,color:#0b0b0b,stroke:none
 ```
 
 <Table

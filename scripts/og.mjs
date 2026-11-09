@@ -44,10 +44,10 @@ function dots(layout, size) {
   const L = layoutPoints(layout), pad = 20, S = size - pad * 2, unit = size / 70;
   let out = "";
   const links = (L.links ?? []).filter(([a, b]) => L.a[a] > 0.3 && L.a[b] > 0.3);
-  if (links.length) out += `<path d="${links.map(([a, b]) => `M${pad + L.x[a] * S} ${pad + L.y[a] * S}L${pad + L.x[b] * S} ${pad + L.y[b] * S}`).join("")}" stroke="#17150f" stroke-opacity=".3" stroke-width="1.2" fill="none"/>`;
+  if (links.length) out += `<path d="${links.map(([a, b]) => `M${pad + L.x[a] * S} ${pad + L.y[a] * S}L${pad + L.x[b] * S} ${pad + L.y[b] * S}`).join("")}" stroke="#f2f2f2" stroke-opacity=".3" stroke-width="1.2" fill="none"/>`;
   for (let i = 0; i < L.x.length; i++) {
     if (L.a[i] < 0.3 || L.x[i] < -0.02 || L.x[i] > 1.02) continue;
-    out += `<circle cx="${(pad + L.x[i] * S).toFixed(1)}" cy="${(pad + L.y[i] * S).toFixed(1)}" r="${(unit * L.r[i]).toFixed(1)}" fill="${L.acc[i] > 0.5 ? "#0d7a4b" : "#17150f"}" fill-opacity="${Math.min(1, L.a[i] + 0.1).toFixed(2)}"/>`;
+    out += `<circle cx="${(pad + L.x[i] * S).toFixed(1)}" cy="${(pad + L.y[i] * S).toFixed(1)}" r="${(unit * L.r[i]).toFixed(1)}" fill="${L.acc[i] > 0.5 ? "#ff5500" : "#f2f2f2"}" fill-opacity="${Math.min(1, L.a[i] + 0.1).toFixed(2)}"/>`;
   }
   return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${out}</svg>`;
 }
@@ -55,13 +55,13 @@ const html = (j) => {
   const long = j.title.length > 34, size = j.sub ? (j.title.length > 18 ? 96 : 128) : long ? 62 : 84;
   return `<!doctype html><meta charset="utf-8"><style>
   @font-face{font-family:F;src:url(data:font/woff2;base64,${font}) format("woff2");font-weight:100 900}
-  *{box-sizing:border-box;margin:0} body{width:1200px;height:630px;background:#f4efe5;color:#17150f;font-family:F,Georgia,serif;position:relative;overflow:hidden}
+  *{box-sizing:border-box;margin:0} body{width:1200px;height:630px;background:#0b0b0b;color:#f2f2f2;font-family:F,Georgia,serif;position:relative;overflow:hidden}
   .t{position:absolute;left:72px;top:150px;width:640px}
-  .e{position:absolute;left:72px;top:64px;font:600 22px ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:#0d7a4b}
+  .e{position:absolute;left:72px;top:64px;font:600 22px ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:#ff5500}
   h1{font-weight:500;font-size:${size}px;line-height:1.02;letter-spacing:-.03em}
-  .s{margin-top:26px;font-size:34px;line-height:1.2;color:#6c6657}
-  .u{position:absolute;left:72px;bottom:58px;font:500 24px ui-monospace,Menlo,monospace;color:#6c6657}
-  .d{position:absolute;right:56px;top:95px} .b{position:absolute;right:72px;bottom:58px;width:26px;height:26px;border-radius:50%;background:#0d7a4b}
+  .s{margin-top:26px;font-size:34px;line-height:1.2;color:#9c9c9c}
+  .u{position:absolute;left:72px;bottom:58px;font:500 24px ui-monospace,Menlo,monospace;color:#9c9c9c}
+  .d{position:absolute;right:56px;top:95px} .b{position:absolute;right:72px;bottom:58px;width:26px;height:26px;border-radius:50%;background:#ff5500}
   </style><div class="e">${esc(j.eyebrow)}</div><div class="t"><h1>${esc(j.title)}</h1>${j.sub ? `<p class="s">${esc(j.sub)}</p>` : ""}</div><div class="d">${dots(j.layout, 440)}</div><div class="u">aemanemouteirou.com</div><div class="b"></div>`;
 };
 

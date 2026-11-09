@@ -4,28 +4,20 @@
   --serif: "Fraunces Variable", Georgia, "Times New Roman", serif;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  /* Défaut : noir franc + orange vif (le clair reste disponible via le bouton de thème) */
+  --bg: #0b0b0b; --panel: #161616; --line: #2a2a2a; --text: #f2f2f2; --dim: #9c9c9c;
+  --accent: #ff5500; --accent-ink: #0b0b0b; --accent-text: #ff6a1f; --accent-display: #ff5500;
+  --cyan: #8db4e0; --ok: #6fcf7a; --err: #ff7a70; --violet: #b79cff;
+  --inv-bg: #161616; --inv-fg: #f2f2f2;
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
   --bg: #f4efe5; --panel: #ebe4d4; --line: #d8d0bd; --text: #17150f; --dim: #6c6657;
-  --accent: #0d7a4b; --accent-ink: #ffffff;
-  --accent-text: #0b6e43; --accent-display: #0d7a4b; /* vert un peu plus foncé pour le petit texte : contraste ≥ 4,8:1 sur crème */
+  --accent: #ff5500; --accent-ink: #0b0b0b;
+  --accent-text: #c43d00; --accent-display: #e64a00; /* orange plus foncé pour le texte : contraste ≥ 4,5:1 sur crème */
   --cyan: #23405f; --ok: #2f7a3a; --err: #b3261e; --violet: #5b3fa0;
   --inv-bg: #17150f; --inv-fg: #f4efe5;
   color-scheme: light;
-}
-:root[data-theme="dark"] {
-  --bg: #12100d; --panel: #1b1812; --line: #302b22; --text: #f1ece0; --dim: #9e9684;
-  --accent: #4be3a0; --accent-ink: #12100d; --accent-text: #4be3a0; --accent-display: #4be3a0;
-  --cyan: #8db4e0; --ok: #6fcf7a; --err: #ff7a70; --violet: #b79cff;
-  --inv-bg: #1d1a13; --inv-fg: #f1ece0;
-  color-scheme: dark;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #12100d; --panel: #1b1812; --line: #302b22; --text: #f1ece0; --dim: #9e9684;
-    --accent: #4be3a0; --accent-ink: #12100d; --accent-text: #4be3a0; --accent-display: #4be3a0;
-    --cyan: #8db4e0; --ok: #6fcf7a; --err: #ff7a70; --violet: #b79cff;
-    --inv-bg: #1d1a13; --inv-fg: #f1ece0;
-    color-scheme: dark;
-  }
 }
 
 * { box-sizing: border-box; }
