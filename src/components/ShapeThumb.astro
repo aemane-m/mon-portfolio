@@ -1,0 +1,20 @@
+---
+import { layoutPoints, type LayoutName } from "../scripts/dots";
+interface Props { layout: string; size?: number }
+const { layout, size = 112 } = Astro.props;
+const L = layoutPoints(layout as LayoutName);
+const pad = 10, S = size - pad * 2;
+const X = (v: number) => (pad + v * S).toFixed(1), Y = (v: number) => (pad + v * S).toFixed(1);
+const idx = L.x.map((_, i) => i).filter((i) => L.a[i] > 0.3 && L.x[i] > -0.02 && L.x[i] < 1.02);
+const links = (L.links ?? []).filter(([a, b]) => L.a[a] > 0.3 && L.a[b] > 0.3);
+const unit = Math.max(1.1, size / 78);
+---
+<svg class="thumb" viewBox={`0 0 ${size} ${size}`} width={size} height={size} aria-hidden="true" focusable="false">
+  {links.length > 0 && <path class="th-l" d={links.map(([a, b]) => `M${X(L.x[a])},${Y(L.y[a])}L${X(L.x[b])},${Y(L.y[b])}`).join("")} />}
+  {idx.map((i) => <circle class={L.acc[i] > 0.5 ? "th-a" : "th-i"} cx={X(L.x[i])} cy={Y(L.y[i])} r={(unit * L.r[i]).toFixed(2)} />)}
+</svg>
+<style is:global>
+  .thumb { display: block; }
+  .th-i { fill: var(--text); } .th-a { fill: var(--accent); }
+  .th-l { stroke: var(--text); stroke-opacity: .35; stroke-width: .7; fill: none; }
+</style>

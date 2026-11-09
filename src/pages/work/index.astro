@@ -1,6 +1,9 @@
 ---
 import Base from "../../layouts/Base.astro";
+import ShapeThumb from "../../components/ShapeThumb.astro";
 import { getCollection } from "astro:content";
+import { shapes } from "../../data/shapes";
+
 const rooms = [
   { key: "data", title: "Data", blurb: "Pipelines, platforms and the questions behind them." },
   { key: "infra", title: "Infrastructure", blurb: "A home datacentre, run the way a team would run production." },
@@ -8,41 +11,87 @@ const rooms = [
   { key: "foundations", title: "Foundations", blurb: "University projects where I learnt the craft." },
 ] as const;
 const projects = (await getCollection("projects", (p) => !p.data.draft)).sort((a, b) => +b.data.publishedAt - +a.data.publishedAt);
+const count = (k: string) => projects.filter((p) => p.data.room === k).length;
+const year = (d: Date) => d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
 ---
-<Base title="Projects — Aemane Mouteirou" description="Data projects by Aemane Mouteirou: AI processing of thousands of tickets, MLOps orchestration, optimisation, data management — explained simply.">
+<Base title="Projects — Aemane Mouteirou" description="Data, infrastructure and film projects by Aemane Mouteirou — from a SAS-to-PySpark migration to a Kubernetes homelab and film-scanning machines.">
   <div class="wrap page">
-    <p class="eyebrow"><b>Projects</b></p>
+    <p class="eyebrow"><b>Projects</b> · {projects.length} and counting</p>
     <h1 class="big">What I’ve built, <em>explained simply.</em></h1>
-    {rooms.map((room) => {
-      const items = projects.filter((p) => p.data.room === room.key);
-      return items.length > 0 && (
-        <section class="room2">
-          <h2 class="room2-h"><span>{room.title}</span><small>{room.blurb}</small></h2>
-          <div class="cards">
-            {items.map((p) => (
-              <a class="card" href={`/work/${p.id}`}>
-                {p.data.images[0] && <img src={p.data.images[0]} alt="" loading="lazy" decoding="async" width="800" height="450" />}
-                <span class="badge" class:list={[p.data.status === "in_progress" && "live"]}><i></i>{p.data.status === "in_progress" ? "In progress" : "Completed"}</span>
-                <h3>{p.data.title.split(/ [—:] /)[0]}</h3>
-                <p class="pi">{p.data.impact ?? p.data.summary}</p>
-                <span class="tags">{p.data.stack.slice(0, 5).map((t) => <span class="chip">{t}</span>)}</span>
-              </a>
-            ))}
-          </div>
-        </section>
-      );
-    })}
+
+    <div class="filters" role="group" aria-label="Filter projects by room">
+      <button type="button" data-room="all" aria-pressed="true">All <small>{projects.length}</small></button>
+      {rooms.map((r) => count(r.key) > 0 && <button type="button" data-room={r.key} aria-pressed="false">{r.title} <small>{count(r.key)}</small></button>)}
+    </div>
+    <p class="filter-blurb dim" id="blurb">Everything, newest first.</p>
+
+    <ul class="plist">
+      {projects.map((p) => {
+        const shape = shapes[p.id]?.layout ?? "scatter";
+        return (
+          <li data-room={p.data.room}>
+            <a href={`/work/${p.id}`}>
+              <span class="pl-thumb"><ShapeThumb layout={shape} /></span>
+              <span class="pl-main">
+                <span class="pl-top">
+                  <span class="pl-room mono">{rooms.find((r) => r.key === p.data.room)?.title}</span>
+                  <span class="badge" class:list={[p.data.status === "in_progress" && "live"]}><i></i>{p.data.status === "in_progress" ? "In progress" : "Completed"}</span>
+                </span>
+                <span class="pl-name">{p.data.title.split(/ [—:] /)[0]}</span>
+                <span class="pl-impact">{p.data.impact ?? p.data.summary}</span>
+                <span class="pl-stack">{p.data.stack.slice(0, 6).map((t) => <span class="chip">{t}</span>)}</span>
+              </span>
+              <span class="pl-date mono">{year(p.data.publishedAt)}</span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
   </div>
 </Base>
+
+<script define:vars={{ blurbs: Object.fromEntries(rooms.map((r) => [r.key, r.blurb])) }}>
+  const btns = [...document.querySelectorAll(".filters button")];
+  const rows = [...document.querySelectorAll(".plist li")];
+  const blurb = document.getElementById("blurb");
+  const apply = (room) => {
+    btns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.room === room)));
+    rows.forEach((li) => { li.hidden = room !== "all" && li.dataset.room !== room; });
+    blurb.textContent = room === "all" ? "Everything, newest first." : blurbs[room];
+    history.replaceState(null, "", room === "all" ? location.pathname : `#${room}`);
+  };
+  btns.forEach((b) => b.addEventListener("click", () => apply(b.dataset.room)));
+  const start = location.hash.slice(1);
+  if (btns.some((b) => b.dataset.room === start)) apply(start);
+</script>
+
 <style is:global>
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 2.4rem 2rem; }
-  .card { display: grid; gap: .7rem; align-content: start; text-decoration: none; }
-  .card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 6px; background: var(--panel); transition: transform .3s, filter .3s; filter: grayscale(.85) contrast(1.05); }
-  .card:hover img { filter: none; transform: translateY(-4px); }
-  .card h3 { font-size: 2rem; margin: .2rem 0 0; } .card:hover h3 { color: var(--accent); }
-  .room2 { margin-top: 3.5rem; }
-  .room2-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem 1rem; font-family: var(--mono); font-size: .85rem; text-transform: uppercase; letter-spacing: .08em; margin: 0 0 1.4rem; color: var(--accent); padding-bottom: .6rem; border-bottom: 1px solid var(--text); }
-  .room2-h small { font-family: var(--sans); text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--dim); font-size: .92rem; }
-  .card .pi { margin: 0; color: var(--dim); font-size: .96rem; }
-  .card .badge { justify-self: start; } .card .tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .filters { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 .8rem; position: sticky; top: 64px; z-index: 10; padding: .8rem 0; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); }
+  .filters button { font: inherit; font-size: .88rem; font-weight: 600; padding: .45rem .95rem; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--text); cursor: pointer; }
+  .filters button small { font-family: var(--mono); font-weight: 400; color: var(--dim); margin-left: .25rem; }
+  .filters button:hover { border-color: var(--text); }
+  .filters button[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .filters button[aria-pressed="true"] small { color: inherit; opacity: .7; }
+  .filter-blurb { margin: 0 0 1.4rem; font-size: .95rem; }
+
+  .plist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--text); }
+  .plist li[hidden] { display: none; }
+  .plist a { display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 1.8rem; align-items: start; padding: 1.6rem .4rem; border-bottom: 1px solid var(--line); text-decoration: none; transition: background .2s; }
+  .plist a:hover { background: var(--panel); }
+  .pl-thumb { display: block; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; width: 112px; height: 112px; overflow: hidden; }
+  .plist a:hover .pl-thumb { border-color: var(--accent); }
+  .pl-main { display: grid; gap: .35rem; min-width: 0; }
+  .pl-top { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+  .pl-room { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); }
+  .pl-name { font-family: var(--serif); font-size: clamp(1.7rem, 3vw, 2.3rem); line-height: 1.05; letter-spacing: -0.02em; }
+  .plist a:hover .pl-name { color: var(--accent); }
+  .pl-impact { color: var(--dim); font-size: .98rem; max-width: 46em; }
+  .pl-stack { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .3rem; }
+  .pl-date { font-size: .74rem; color: var(--dim); padding-top: .4rem; white-space: nowrap; }
+  @media (max-width: 720px) {
+    .plist a { grid-template-columns: 72px minmax(0, 1fr); gap: 1rem; }
+    .pl-thumb { width: 72px; height: 72px; } .pl-thumb svg { width: 72px; height: 72px; }
+    .pl-date { grid-column: 2; padding-top: 0; }
+    .filters { top: 56px; }
+  }
 </style>

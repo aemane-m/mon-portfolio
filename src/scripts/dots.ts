@@ -126,6 +126,8 @@ function build(name: LayoutName): Layout {
 }
 
 const cache = new Map<LayoutName, Layout>();
+/** Données brutes d'une disposition (utilisées aussi côté serveur pour les miniatures SVG). */
+export const layoutPoints = (n: LayoutName) => get(n);
 const get = (n: LayoutName) => { if (!cache.has(n)) cache.set(n, build(n)); return cache.get(n)!; };
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
