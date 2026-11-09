@@ -134,7 +134,8 @@ export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatt
   let W = 0, H = 0, A: Layout = get(start), B: Layout = A, f = 0, raf = 0;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-  const ink = css("--text") || "#17150f", acc = css("--accent") || "#ff4a1c", dim = css("--dim") || "#6c6657";
+  let ink = "#17150f", acc = "#ff4a1c", dim = "#6c6657";
+  const readColors = () => { ink = css("--text") || ink; acc = css("--accent") || acc; dim = css("--dim") || dim; };
 
   const resize = () => {
     const dpr = Math.min(devicePixelRatio || 1, 2), b = canvas.getBoundingClientRect();
@@ -150,6 +151,7 @@ export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatt
   }
 
   function draw() {
+    readColors();
     ctx.clearRect(0, 0, W, H);
     const S = Math.min(W, H), ox = (W - S) / 2, oy = (H - S) / 2, px = (x: number) => ox + x * S, py = (y: number) => oy + y * S;
     const pts = Array.from({ length: N }, (_, i) => mix(i));
@@ -177,6 +179,7 @@ export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatt
   const snapshot = (): Layout => { const L = blank(); for (let i = 0; i < N; i++) { const p = mix(i); L.x[i] = p.x; L.y[i] = p.y; L.a[i] = p.a; L.r[i] = p.r; L.acc[i] = p.c; } return L; };
 
   new ResizeObserver(resize).observe(canvas);
+  addEventListener("themechange", () => draw());
   return {
     /** progression pilotée par le scroll : mélange A→B à f ∈ [0,1] */
     blend(a: LayoutName, b: LayoutName, t: number) { A = get(a); B = get(b); f = reduce ? Math.round(t) : t; draw(); },
