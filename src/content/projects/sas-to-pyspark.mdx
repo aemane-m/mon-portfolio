@@ -1,0 +1,51 @@
+---
+title: "SAS to PySpark — migrating a datamart to Databricks"
+publishedAt: "2026-09-01"
+name: "sas-to-pyspark"
+room: "data"
+impact: "Moving a business datamart from SAS to PySpark on Databricks, and building the export tool that brings SAS and Azure data across."
+status: "in_progress"
+kind: "workstudy"
+stack: ["SAS","PySpark","Databricks","Azure","Python"]
+summary: "My work-study assignment: migrating a datamart from SAS to PySpark on Databricks, and building a tool that exports data from SAS and Azure directly into Databricks."
+draft: false
+---
+
+## What I'm working on
+
+This year I am in work-study, and my assignment has two parts:
+
+- **Migrating a datamart from SAS to PySpark**, running on Databricks.
+- **Building an export tool** that moves data from SAS and Azure *directly* into Databricks.
+
+<Callout tone="brand">The export tool exists because of constraints specific to the company. It only makes sense in that context, which is also why I describe it here at a high level rather than in detail.</Callout>
+
+## What I can and can't show
+
+The code, the data and the internal architecture belong to the company, so none of them appear on this site. What I can share is the shape of the work and the kind of problems it raises.
+
+## Why a migration like this is hard
+
+Moving a datamart from SAS to PySpark is not a translation exercise. These are the families of problem that typically come with it:
+
+<Table
+  data={{
+    headers: [
+      { content: "Area", key: "area" },
+      { content: "Why it needs care", key: "why" }
+    ],
+    rows: [
+      ["Different semantics", "SAS and Spark do not treat missing values, dates, sorting and row-by-row processing in the same way, so a literal rewrite can silently change results."],
+      ["Proving equivalence", "The new datamart has to produce the same numbers as the old one, which means systematic reconciliation between the two."],
+      ["Getting data across", "Data has to leave its source systems reliably and land in the new platform, under the company's security and network constraints."],
+      ["Performance and cost", "Code that was fast in SAS can be slow or expensive when distributed; it has to be rethought for Spark."],
+      ["Keeping the business running", "Teams keep using the datamart during the move, so the switch has to be gradual and reversible."]
+    ]
+  }}
+/>
+
+## Why it matters to me
+
+This is the first time my work runs inside a real organisation with real constraints: legacy systems, data that people depend on, and a platform change that has to be invisible to the people who use the result. It is exactly the kind of data engineering I want to do after my Master's.
+
+*Details of the challenges I actually solved belong in a conversation, not on a public page.*

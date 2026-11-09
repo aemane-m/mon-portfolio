@@ -12,7 +12,7 @@ const { Content } = await render(entry);
 const d = entry.data;
 const [cover, ...rest] = d.images;
 const isRepo = d.link?.startsWith("http");
-const kind = { personal: "Personal project", academic: "Academic project", internship: "Internship" }[d.kind];
+const kind = { personal: "Personal project", academic: "Academic project", internship: "Internship", workstudy: "Work-study" }[d.kind];
 const when = d.status === "in_progress" ? `Since ${d.publishedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" })}` : d.publishedAt.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 ---
 <Base title={`${d.title} — Aemane Mouteirou`} description={d.summary} image={cover} type="article">

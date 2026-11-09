@@ -1,5 +1,5 @@
 // Moteur de points : ~300 points qui passent d'une disposition à l'autre.
-export type LayoutName = "scatter" | "grid" | "clusters" | "bars" | "tsp" | "shelves" | "network" | "series";
+export type LayoutName = "scatter" | "grid" | "clusters" | "bars" | "tsp" | "shelves" | "network" | "series" | "cluster" | "film";
 type Layout = { x: number[]; y: number[]; a: number[]; r: number[]; acc: number[]; links?: [number, number][]; linkAlpha?: number; labels?: { x: number; y: number; t: string }[] };
 
 const N = 300;
@@ -78,6 +78,37 @@ function build(name: LayoutName): Layout {
         else { [L.x[i], L.y[i]] = base[i]; L.a[i] = 0.1; }
       }
       L.links = Array.from({ length: CL }, (_, i) => [0, i + 1] as [number, number]); L.linkAlpha = 0.45;
+      break;
+    }
+    case "cluster": {
+      // 3 nœuds de cluster, chacun entouré de ses pods, reliés entre eux.
+      const nodes = [[0.5, 0.2], [0.2, 0.74], [0.8, 0.74]];
+      const PER = 22, hubs = [0, 1, 2];
+      let k = 3;
+      for (let h = 0; h < 3; h++) { L.x[h] = nodes[h][0]; L.y[h] = nodes[h][1]; L.r[h] = 3.2; L.acc[h] = 1; L.a[h] = 1; }
+      const links: [number, number][] = [[0, 1], [1, 2], [2, 0]];
+      for (let h = 0; h < 3; h++) for (let j = 0; j < PER; j++, k++) {
+        const t = (j / PER) * Math.PI * 2 + h, rad = 0.1 + (j % 2) * 0.035;
+        L.x[k] = nodes[h][0] + Math.cos(t) * rad; L.y[k] = nodes[h][1] + Math.sin(t) * rad; L.a[k] = 0.95; L.r[k] = 1.1;
+        links.push([hubs[h], k]);
+      }
+      for (; k < N; k++) { [L.x[k], L.y[k]] = base[k]; L.a[k] = 0.08; }
+      L.links = links; L.linkAlpha = 0.28;
+      break;
+    }
+    case "film": {
+      // Six photogrammes (2 x 3) dessinés par leur contour ; un balayage de scan en orange.
+      const fw = 0.25, fh = 0.17; let k = 0;
+      for (let row = 0; row < 3; row++) for (let col = 0; col < 2; col++) {
+        const x0 = 0.15 + col * 0.37, y0 = 0.1 + row * 0.28, per = 44;
+        for (let j = 0; j < per && k < N; j++, k++) {
+          const t = j / per, side = Math.floor(t * 4), u = t * 4 - side;
+          const [px, py] = side === 0 ? [u, 0] : side === 1 ? [1, u] : side === 2 ? [1 - u, 1] : [0, 1 - u];
+          L.x[k] = x0 + px * fw; L.y[k] = y0 + py * fh; L.a[k] = 0.9; L.r[k] = 0.9;
+          L.acc[k] = row === 1 && col === 0 && (j % 4 === 0) ? 1 : 0;
+        }
+      }
+      for (; k < N; k++) { L.x[k] = 0.5 + (k % 2 ? 0.43 : -0.43); L.y[k] = 0.05 + ((k * 13) % 90) / 100; L.a[k] = 0.35; L.r[k] = 0.6; }
       break;
     }
     case "series": {

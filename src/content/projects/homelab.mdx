@@ -1,0 +1,73 @@
+---
+title: "Homelab as code — Proxmox, Talos Kubernetes and GitOps"
+publishedAt: "2026-08-27"
+name: "homelab"
+room: "infra"
+impact: "A three-node home datacentre that can be rebuilt from Git alone: virtual machines, Kubernetes, backups and applications are all declared as code."
+status: "in_progress"
+kind: "personal"
+stack: ["Proxmox","Talos","Kubernetes","Terraform","Ansible","Argo CD","Cilium","GitLab CI","Docker","UniFi"]
+summary: "Infrastructure-as-code for a personal homelab: Terraform/OpenTofu drives Proxmox, Talos runs Kubernetes, Argo CD reconciles the cluster from Git, and a GitLab pipeline validates every change."
+draft: false
+---
+
+## The idea
+
+Git is the single source of truth. If the hardware died tomorrow, the logical layer — virtual machines, cluster, services — could be rebuilt from the repository. No secret, Terraform state, kubeconfig or generated Talos file is ever committed.
+
+<Callout tone="brand">The goal is not a pile of services. It is a platform where every change is reviewed, planned and applied the same way a team would ship production infrastructure.</Callout>
+
+## How the pieces fit together
+
+<CodeBlock
+  codes={[
+    {
+      code: "GitLab CI/CD\n  -> Terraform / OpenTofu -> Proxmox -> Talos, Home Assistant OS and Debian VMs\n  -> Ansible              -> Docker host (Immich, Portainer, BentoPDF)\n  -> talosctl             -> Kubernetes\n  -> Helm                 -> Cilium, then Argo CD\n  -> Argo CD              -> every Kubernetes resource in the repository",
+      language: "txt",
+      label: "Deployment chain (addresses and secrets deliberately left out)"
+    }
+  ]}
+/>
+
+<Table
+  data={{
+    headers: [
+      { content: "Layer", key: "layer" },
+      { content: "Technology", key: "tech" },
+      { content: "What it does", key: "role" }
+    ],
+    rows: [
+      ["Network", "UniFi gateway", "Routing, DHCP, DNS and VLANs for the whole lab"],
+      ["Virtualisation", "Proxmox VE, three nodes", "Hosts the Talos control-plane/worker VMs, Home Assistant and a Docker VM"],
+      ["Provisioning", "Terraform / OpenTofu (bpg/proxmox, version pinned)", "Creates and owns the virtual machines"],
+      ["Kubernetes", "Talos Linux, Cilium", "Immutable, API-managed nodes; Cilium for networking and the Gateway"],
+      ["GitOps", "Argo CD", "Continuously reconciles the cluster from the repository"],
+      ["Platform services", "Longhorn, CloudNativePG, Vault, observability", "Storage, databases, secrets and monitoring"],
+      ["Data workloads", "Airflow, MLflow, Feast, FastAPI", "The same MLOps stack as my Quant-MLOps project, running on the cluster"],
+      ["Configuration", "Ansible", "Configures the Docker host and the Proxmox backup tooling"],
+      ["CI/CD", "GitLab CI with a local runner", "Validates every merge request and produces a plan; apply is a deliberate step"],
+      ["Remote access", "Tailscale", "Private access to cluster applications through the Cilium Gateway"]
+    ]
+  }}
+/>
+
+## Backups that look after themselves
+
+Backups run from a systemd timer on a Proxmox node every night. The orchestration script powers on the NAS through its management controller, waits for the file shares, backs up every node's VMs, triggers a Time Machine backup, and then asks the NAS to shut down cleanly. If a Proxmox or NAS error occurs it stops and **leaves the NAS on** rather than cutting power in the middle of something. If the Mac target is asleep it retries for a minute, logs a warning and carries on.
+
+<Callout tone="success">A small detail I like: the failure mode is designed first. The script is built so that an error never causes an unsafe shutdown.</Callout>
+
+## Decisions worth explaining
+
+- **Pinned provider version.** The Proxmox provider is pinned to an exact release, because infrastructure code that silently changes behaviour is worse than code that is a little out of date.
+- **CPU type `host` on the Talos VMs.** Talos needs a modern x86-64 level, so the VMs use the host CPU. The trade-off is that live migration between different CPUs is off the table, so VM placement is fixed and documented.
+- **Local disks for VMs, Longhorn only for Kubernetes volumes.** No shared Proxmox storage and no Ceph — a deliberately small design for a small cluster.
+- **Humans stay in the loop for risky steps.** Bootstrapping Talos and GitOps are protected manual actions; everything else flows through merge requests.
+
+## Documentation as a deliverable
+
+The repository carries a deployment journal that records the choices, the incidents and how each one was solved, plus a runbook to rebuild Kubernetes from Cilium to Vault, CloudNativePG and Airflow, and a disaster-recovery note. Writing these down is part of the work, not an afterthought.
+
+## Status
+
+Ongoing: this is a lab I keep running and improving, so the repository changes regularly. It is a personal environment, not a production service — which is exactly why it is a good place to practise production habits.
