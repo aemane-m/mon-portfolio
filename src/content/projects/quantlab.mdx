@@ -1,26 +1,38 @@
 ---
-title: "QuantLab — one research platform, Databricks or self-hosted"
-seoTitle: "QuantLab: one research platform, Databricks or self-hosted"
+title: "QuantLab — a quantitative research platform, on Databricks or self-hosted"
+seoTitle: "QuantLab: quantitative research platform, MLOps, portable"
+seoDescription: "QuantLab, formerly Quant-MLOps: reproducible quantitative-finance research with Airflow, MLflow and Spark, running on Databricks or self-hosted."
 publishedAt: "2026-09-22"
 name: "quantlab"
 room: "data"
-impact: "A quantitative-finance research platform designed so the same business logic runs on Databricks or on infrastructure you host yourself — no lock-in."
+impact: "A personal platform to make quantitative-finance research reproducible and traceable, built so the same business logic runs on Databricks or on infrastructure I host myself. Under construction."
 status: "in_progress"
 kind: "personal"
-stack: ["Python","Databricks","Spark","Delta Lake","MLflow","Airflow","Docker"]
-summary: "A portable quantitative research platform: identical domain and Spark code, with Databricks (Lakeflow Jobs, Unity Catalog, managed MLflow) or a self-hosted stack (Airflow, Spark, Delta Lake, MLflow, MinIO) plugged in through adapters."
-draft: false
+stack: ["Python","Databricks","Spark","Delta Lake","MLflow","Airflow","Feast","FastAPI","Docker"]
+summary: "QuantLab, the new version of my Quant-MLOps project: a quantitative-finance platform that tracks every backtest and model, with the same domain and Spark code running on Databricks or on a self-hosted stack."
+images:
+  - "/images/projects/quant-mlops/cover.jpeg"
+team:
+  - name: "Aemane Mouteirou"
+    role: "MSc 2 MIAGE student, Paris Dauphine – PSL"
+    avatar: "/images/avatar.jpg"
 ---
 
-## The problem it tackles
+<Callout tone="neutral">QuantLab is the new version of a project I first called **Quant-MLOps**. It keeps the original goal and rebuilds the platform around a second one: portability.</Callout>
 
-Data platforms tend to grow around the tool they were first built on. Move from one platform to another and the business logic — the part that actually matters — has to be rewritten. QuantLab asks a different question: **what if the logic never knew which platform it was running on?**
+## Two problems, one project
+
+**Research that cannot be reproduced.** In quantitative finance, research often lives in isolated scripts: a backtest is run, a number is noted, and a month later nobody can say exactly which data and parameters produced it. Models that look good in research rarely make it to production, and once there, little tells you whether they drift.
+
+**Platforms that lock you in.** A data platform tends to grow around the tool it was first built on. Move to another one and the business logic, the part that matters, has to be rewritten.
+
+QuantLab answers both. Every run is tracked so results are **comparable and trustworthy**, and the logic never knows which platform it is running on.
 
 <Callout tone="brand">The same code runs on Databricks and on a self-hosted stack. Only a thin layer of adapters changes.</Callout>
 
 ## How it is built
 
-The project uses a hexagonal architecture, which keeps the platform-specific parts at the edge:
+The project uses a hexagonal architecture, which keeps everything platform-specific at the edge:
 
 ```mermaid
 flowchart TB
@@ -47,6 +59,34 @@ flowchart TB
   }}
 />
 
+## The research flow
+
+From raw market data to a monitored model, in six steps:
+
+```mermaid
+flowchart LR
+  I["1 Ingest<br/>market data"] --> P["2 Prepare<br/>clean + store"] --> F["3 Features<br/>reusable, versioned"] --> T["4 Backtest<br/>Sharpe, drawdown"]:::accent --> M["5 Promote<br/>validated model"] --> O["6 Monitor<br/>latency, drift"]
+  classDef accent fill:#2fbf86,color:#0a1f15,stroke:none
+```
+
+<Table
+  data={{
+    headers: [
+      { content: "Step", key: "step" },
+      { content: "What happens", key: "what" },
+      { content: "Tooling", key: "tool" }
+    ],
+    rows: [
+      ["Ingest", "Collect market data and trigger the pipelines on a schedule", "Airflow (or Lakeflow Jobs)"],
+      ["Prepare", "Clean the data and store it as time series in open formats", "Parquet, Delta Lake, TimescaleDB"],
+      ["Features", "Compute features once, and reuse them for training and for serving", "Feast"],
+      ["Backtest", "Run Markowitz, Black-Litterman and Risk Parity strategies; log Sharpe ratio, maximum drawdown and turnover", "scikit-learn, PyPortfolioOpt, statsmodels, MLflow"],
+      ["Promote", "Move a validated model from staging to production and serve it", "MLflow registry, FastAPI"],
+      ["Monitor", "Watch latency, data drift and live performance", "Prometheus, Grafana"]
+    ]
+  }}
+/>
+
 ## The rules that keep it portable
 
 - No Databricks-specific imports in the domain, application, quantitative or Spark code.
@@ -56,8 +96,23 @@ flowchart TB
 
 ## Why I built it
 
-I work with Databricks, and I also run a Kubernetes homelab with Airflow, MLflow and object storage. QuantLab is where those two worlds meet: it is a way to learn what is genuinely platform-specific and what is not, and to keep my own work from being tied to a single vendor.
+I work with Databricks, and I also run a Kubernetes homelab with Airflow, MLflow and object storage. QuantLab is where those two worlds meet. It is a way to practise MLOps end to end on a realistic subject, to learn what is genuinely platform-specific and what is not, and to keep my own work from being tied to a single vendor.
 
-## Status
+## Where it stands
 
-Early and in progress: the repository was started in September 2026. It sets out the architecture and the portability rules; it does not yet claim production results.
+Early and in progress. The architecture and the portability rules are set out. The ingestion pipelines are being designed and the storage schema defined; experiment tracking, the feature store, the API and the dashboards are still to be wired up. It does not claim production results yet.
+
+<Table
+  data={{
+    headers: [
+      { content: "Next step", key: "next" },
+      { content: "Planned", key: "plan" }
+    ],
+    rows: [
+      ["Pipelines", "Stabilise daily ingestion, then compute the first features and run the first backtests"],
+      ["Tracking and serving", "Plug in MLflow for model promotion, then expose the API and the monitoring"],
+      ["Deployment", "Run it on the Kubernetes homelab (Helm, secrets, access control)"],
+      ["Documentation", "A complete guide and reproducible use cases"]
+    ]
+  }}
+/>

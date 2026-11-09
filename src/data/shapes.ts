@@ -1,6 +1,5 @@
 // Forme de points associée à chaque projet (accueil et page projet).
 export const shapes: Record<string, { layout: string; note: string; fr: string }> = {
-  "quant-mlops": { layout: "series", note: "A financial time series: each dot is an observation, green dots are detected signals.", fr: "Une série temporelle financière : chaque point est une observation, les points verts sont des signaux détectés." },
   quantlab: { layout: "clusters", note: "Many strategies, one portable engine that runs on either platform.", fr: "Plusieurs stratégies, un moteur portable qui tourne sur l'une ou l'autre plateforme." },
   "databricks-data-platform": { layout: "grid", note: "Data laid out layer by layer, from raw to ready to use.", fr: "Des données rangées couche par couche, du brut au prêt à l'emploi." },
   "finance-tracker": { layout: "bars", note: "Spending grouped by category — the dashboard’s main chart.", fr: "Des dépenses regroupées par catégorie — le graphique principal du tableau de bord." },

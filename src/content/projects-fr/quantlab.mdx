@@ -1,26 +1,38 @@
 ---
-title: "QuantLab — une plateforme de recherche, sur Databricks ou auto-hébergée"
-seoTitle: "QuantLab : une plateforme sur Databricks ou auto-hébergée"
+title: "QuantLab — une plateforme de recherche quantitative, sur Databricks ou auto-hébergée"
+seoTitle: "QuantLab : plateforme de recherche quantitative, MLOps"
+seoDescription: "QuantLab, ex-Quant-MLOps : recherche en finance quantitative reproductible avec Airflow, MLflow et Spark, sur Databricks ou auto-hébergée."
 publishedAt: "2026-09-22"
 name: "quantlab"
 room: "data"
-impact: "Une plateforme de recherche en finance quantitative conçue pour que la même logique métier tourne sur Databricks ou sur une infrastructure que l'on héberge soi-même — sans dépendance à un fournisseur."
+impact: "Une plateforme personnelle pour rendre la recherche en finance quantitative reproductible et traçable, conçue pour que la même logique métier tourne sur Databricks ou sur une infrastructure que j'héberge moi-même. En construction."
 status: "in_progress"
 kind: "personal"
-stack: ["Python","Databricks","Spark","Delta Lake","MLflow","Airflow","Docker"]
-summary: "Une plateforme de recherche quantitative portable : un même code métier et Spark, avec Databricks (Lakeflow Jobs, Unity Catalog, MLflow managé) ou une pile auto-hébergée (Airflow, Spark, Delta Lake, MLflow, MinIO) branchée via des adaptateurs."
-draft: false
+stack: ["Python","Databricks","Spark","Delta Lake","MLflow","Airflow","Feast","FastAPI","Docker"]
+summary: "QuantLab, la nouvelle version de mon projet Quant-MLOps : une plateforme de finance quantitative qui garde la trace de chaque backtest et de chaque modèle, avec le même code métier et Spark sur Databricks ou sur une pile auto-hébergée."
+images:
+  - "/images/projects/quant-mlops/cover.jpeg"
+team:
+  - name: "Aemane Mouteirou"
+    role: "Étudiant en M2 MIAGE, Université Paris Dauphine – PSL"
+    avatar: "/images/avatar.jpg"
 ---
 
-## Le problème traité
+<Callout tone="neutral">QuantLab est la nouvelle version d'un projet que j'avais d'abord appelé **Quant-MLOps**. Il garde l'objectif de départ et reconstruit la plateforme autour d'un second : la portabilité.</Callout>
 
-Les plateformes de données ont tendance à grandir autour de l'outil sur lequel elles ont été construites. Changez de plateforme et la logique métier — la partie qui compte vraiment — doit être réécrite. QuantLab pose une autre question : **et si la logique ne savait jamais sur quelle plateforme elle tourne ?**
+## Deux problèmes, un seul projet
+
+**Une recherche impossible à reproduire.** En finance quantitative, la recherche vit souvent dans des scripts isolés : on lance un backtest, on note un chiffre, et un mois plus tard personne ne sait dire quelles données et quels paramètres l'ont produit. Les modèles qui brillent en recherche arrivent rarement en production, et une fois en place, peu d'outils permettent de voir s'ils dérivent.
+
+**Des plateformes qui enferment.** Une plateforme de données grandit souvent autour de l'outil sur lequel elle a été construite. Si l'on change, la logique métier, qui est la partie importante, doit être réécrite.
+
+QuantLab répond aux deux. Chaque exécution est tracée, donc les résultats sont **comparables et fiables**, et la logique ne sait jamais sur quelle plateforme elle tourne.
 
 <Callout tone="brand">Le même code tourne sur Databricks et sur une pile auto-hébergée. Seule une fine couche d'adaptateurs change.</Callout>
 
 ## Comment c'est construit
 
-Le projet utilise une architecture hexagonale, qui garde les parties propres à une plateforme à la périphérie :
+Le projet suit une architecture hexagonale, qui garde tout ce qui dépend d'une plateforme en périphérie :
 
 ```mermaid
 flowchart TB
@@ -41,23 +53,66 @@ flowchart TB
       ["Orchestration", "Lakeflow Jobs", "Airflow"],
       ["Calcul", "Spark sur Databricks", "Apache Spark"],
       ["Tables", "Unity Catalog", "Delta Lake"],
-      ["Suivi d'expériences", "MLflow managé", "MLflow"],
+      ["Suivi des expériences", "MLflow managé", "MLflow"],
       ["Stockage objet", "Stockage cloud", "MinIO"]
     ]
   }}
 />
 
-## Les règles qui gardent la portabilité
+## Le parcours de la recherche
 
-- Aucun import spécifique à Databricks dans le code de domaine, d'application, quantitatif ou Spark.
-- Aucun import Airflow en dehors du dossier d'orchestration Airflow.
-- Tout couplage avec l'infrastructure vit dans un adaptateur dédié.
-- Les transformations Spark restent portables, et le dépôt prévoit un emplacement pour des tests de compatibilité entre environnements.
+De la donnée de marché brute au modèle surveillé, en six étapes :
+
+```mermaid
+flowchart LR
+  I["1 Ingérer<br/>données de marché"] --> P["2 Préparer<br/>nettoyer + stocker"] --> F["3 Variables<br/>réutilisables, versionnées"] --> T["4 Backtester<br/>Sharpe, drawdown"]:::accent --> M["5 Promouvoir<br/>modèle validé"] --> O["6 Surveiller<br/>latence, dérive"]
+  classDef accent fill:#2fbf86,color:#0a1f15,stroke:none
+```
+
+<Table
+  data={{
+    headers: [
+      { content: "Étape", key: "step" },
+      { content: "Ce qui se passe", key: "what" },
+      { content: "Outils", key: "tool" }
+    ],
+    rows: [
+      ["Ingérer", "Collecter les données de marché et déclencher les pipelines à heure fixe", "Airflow (ou Lakeflow Jobs)"],
+      ["Préparer", "Nettoyer les données et les stocker en séries temporelles, dans des formats ouverts", "Parquet, Delta Lake, TimescaleDB"],
+      ["Variables", "Calculer les variables une fois, et les réutiliser pour l'entraînement comme pour le service", "Feast"],
+      ["Backtester", "Lancer des stratégies Markowitz, Black-Litterman et Risk Parity ; enregistrer le ratio de Sharpe, le drawdown maximal et le turnover", "scikit-learn, PyPortfolioOpt, statsmodels, MLflow"],
+      ["Promouvoir", "Faire passer un modèle validé de la préproduction à la production et l'exposer", "Registre MLflow, FastAPI"],
+      ["Surveiller", "Suivre la latence, la dérive des données et la performance en conditions réelles", "Prometheus, Grafana"]
+    ]
+  }}
+/>
+
+## Les règles qui gardent le code portable
+
+- Aucun import spécifique à Databricks dans le code du domaine, de l'application, des méthodes quantitatives ou de Spark.
+- Aucun import d'Airflow en dehors du dossier d'orchestration Airflow.
+- Chaque dépendance à l'infrastructure vit dans un adaptateur dédié.
+- Les transformations Spark restent portables, et le dépôt prévoit un espace pour des tests de compatibilité entre environnements d'exécution.
 
 ## Pourquoi je l'ai construit
 
-Je travaille avec Databricks, et je fais aussi tourner un homelab Kubernetes avec Airflow, MLflow et du stockage objet. QuantLab est l'endroit où ces deux mondes se rencontrent : c'est une façon d'apprendre ce qui est réellement propre à une plateforme et ce qui ne l'est pas, et de ne pas lier mon propre travail à un seul fournisseur.
+Je travaille avec Databricks, et je fais aussi tourner un homelab Kubernetes avec Airflow, MLflow et du stockage objet. QuantLab est le point de rencontre de ces deux mondes. C'est un moyen de pratiquer le MLOps de bout en bout sur un sujet réaliste, d'apprendre ce qui dépend vraiment d'une plateforme et ce qui n'en dépend pas, et d'éviter que mon travail soit lié à un seul fournisseur.
 
-## État d'avancement
+## Où il en est
 
-Début de projet, en cours : le dépôt a été créé en septembre 2026. Il pose l'architecture et les règles de portabilité ; il ne prétend pas encore à des résultats en production.
+Il est encore au début. L'architecture et les règles de portabilité sont posées. Les pipelines d'ingestion sont en cours de conception et le schéma de stockage est en cours de définition ; le suivi des expériences, le magasin de variables, l'API et les tableaux de bord restent à brancher. Il ne revendique pas encore de résultats en production.
+
+<Table
+  data={{
+    headers: [
+      { content: "Prochaine étape", key: "next" },
+      { content: "Prévu", key: "plan" }
+    ],
+    rows: [
+      ["Pipelines", "Stabiliser l'ingestion quotidienne, puis calculer les premières variables et lancer les premiers backtests"],
+      ["Suivi et service", "Brancher MLflow pour la promotion des modèles, puis exposer l'API et la surveillance"],
+      ["Déploiement", "Le faire tourner sur le homelab Kubernetes (Helm, secrets, contrôle d'accès)"],
+      ["Documentation", "Un guide complet et des cas d'usage reproductibles"]
+    ]
+  }}
+/>
