@@ -20,7 +20,7 @@ draft: false
 
 I run a small Kubernetes cluster at home, next to the rest of my homelab. It is where I try the tools I meet in data engineering — an orchestrator, a message broker, a database operator, object storage — on infrastructure I fully control. This article is a tour of how it is put together, and, more usefully, of what went wrong while I built it.
 
-<Callout tone="brand">At work I use Databricks and I do not manage any infrastructure. Kubernetes is the platform I keep meeting in data engineering, and online it often comes with a certain fear. I wanted to see for myself why, and add it to my toolbox, since it is part of the modern stack. The fastest way to understand it is to run one, break it and fix it. The skill I am after is not "use Kubernetes everywhere": it is knowing **when it is worth it, and when it is not**. Docker on a single machine, or even a plain virtual machine, is often simpler and perfectly enough. Everything below comes from my own deployment notes: the failures are real, and so are the fixes.</Callout>
+<Callout tone="brand">Kubernetes is the platform I keep meeting in data engineering, and online it often comes with a certain fear. I wanted to see for myself why, and add it to my toolbox, since it is part of the modern stack. The fastest way to understand it is to run one, break it and fix it. The skill I am after is not "use Kubernetes everywhere": it is knowing **when it is worth it, and when it is not**. Docker on a single machine, or even a plain virtual machine, is often simpler and perfectly enough. Everything below comes from my own deployment notes: the failures are real, and so are the fixes.</Callout>
 
 ## Why Talos
 

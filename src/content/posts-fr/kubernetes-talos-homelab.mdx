@@ -20,7 +20,7 @@ draft: false
 
 Je fais tourner un petit cluster Kubernetes à la maison, à côté du reste de mon homelab. C'est là que j'essaie les outils que je rencontre en data engineering — un orchestrateur, un bus de messages, un opérateur de base de données, du stockage objet — sur une infrastructure que je contrôle entièrement. Cet article est un tour de la façon dont elle est construite, et, plus utilement, de ce qui a mal tourné pendant que je la construisais.
 
-<Callout tone="brand">Au travail, j'utilise Databricks et je ne gère aucune infrastructure. Kubernetes est la plateforme que je rencontre en data engineering, et en ligne elle s'accompagne souvent d'une certaine crainte. Je voulais voir par moi-même pourquoi, et l'ajouter à ma palette, puisqu'elle fait partie de la stack moderne. La façon la plus rapide de la comprendre est d'en exploiter une, de la casser et de la réparer. La compétence que je veux n'est pas « utiliser Kubernetes partout » : c'est savoir **quand cela en vaut la peine, et quand non**. Docker sur une seule machine, voire une simple machine virtuelle, est souvent plus simple et largement suffisant. Tout ce qui suit vient de mes propres notes de déploiement : les échecs sont réels, et les corrections aussi.</Callout>
+<Callout tone="brand">Kubernetes est la plateforme que je rencontre en data engineering, et en ligne elle s'accompagne souvent d'une certaine crainte. Je voulais voir par moi-même pourquoi, et l'ajouter à ma palette, puisqu'elle fait partie de la stack moderne. La façon la plus rapide de la comprendre est d'en exploiter une, de la casser et de la réparer. La compétence que je veux n'est pas « utiliser Kubernetes partout » : c'est savoir **quand cela en vaut la peine, et quand non**. Docker sur une seule machine, voire une simple machine virtuelle, est souvent plus simple et largement suffisant. Tout ce qui suit vient de mes propres notes de déploiement : les échecs sont réels, et les corrections aussi.</Callout>
 
 ## Pourquoi Talos
 
@@ -111,7 +111,7 @@ La capacité brute est d'environ 450 Go, et le budget des volumes déclarés res
   }}
 />
 
-La dernière est ma préférée, parce que ce n'est pas un bug d'un outil. Un rôle de base de données lit son mot de passe **une seule fois**, à sa création. Modifier le secret plus tard ne change pas le rôle. Le seul ordre sûr est : générer le mot de passe, le stocker dans Vault, laisser l'opérateur créer le secret Kubernetes, *puis* créer la base. Quand je me suis trompé, corriger cela a voulu dire aligner le rôle à la main et redémarrer le pooler pour vider ses identifiants en cache.
+La dernière est ma préférée, parce que ce n'est pas un bug d'un outil. Un rôle de base de données lit son mot de passe **une seule fois**, à sa création. Modifier le secret plus tard ne change pas le rôle. Le seul ordre sûr est : générer le mot de passe, le stocker dans Vault, laisser l'opérateur créer le secret Kubernetes, *puis* créer la base. Quand je me suis trompé dans l'ordre, j'ai dû réaligner le mot de passe du rôle à la main, puis redémarrer le pooler de connexions pour qu'il oublie les anciens identifiants gardés en mémoire.
 
 ## Ce que ça coûte à faire tourner
 
