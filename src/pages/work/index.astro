@@ -19,7 +19,7 @@ const year = (d: Date) => d.toLocaleDateString("en-US", { month: "short", year: 
     <p class="eyebrow"><b>Projects</b> · {projects.length} and counting</p>
     <h1 class="big">What I’ve built, <em>explained simply.</em></h1>
 
-    <div class="filters" role="group" aria-label="Filter projects by room">
+    <div class="filters" role="group" aria-label="Filter projects by room" data-blurbs={JSON.stringify(Object.fromEntries(rooms.map((r) => [r.key, r.blurb])))}>
       <button type="button" data-room="all" aria-pressed="true">All <small>{projects.length}</small></button>
       {rooms.map((r) => count(r.key) > 0 && <button type="button" data-room={r.key} aria-pressed="false">{r.title} <small>{count(r.key)}</small></button>)}
     </div>
@@ -50,17 +50,19 @@ const year = (d: Date) => d.toLocaleDateString("en-US", { month: "short", year: 
   </div>
 </Base>
 
-<script define:vars={{ blurbs: Object.fromEntries(rooms.map((r) => [r.key, r.blurb])) }}>
-  const btns = [...document.querySelectorAll(".filters button")];
-  const rows = [...document.querySelectorAll(".plist li")];
-  const blurb = document.getElementById("blurb");
-  const apply = (room) => {
+<script>
+  const filters = document.querySelector<HTMLElement>(".filters")!;
+  const blurbs: Record<string, string> = JSON.parse(filters.dataset.blurbs ?? "{}");
+  const btns = [...document.querySelectorAll<HTMLButtonElement>(".filters button")];
+  const rows = [...document.querySelectorAll<HTMLElement>(".plist li")];
+  const blurb = document.getElementById("blurb")!;
+  const apply = (room: string) => {
     btns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.room === room)));
     rows.forEach((li) => { li.hidden = room !== "all" && li.dataset.room !== room; });
     blurb.textContent = room === "all" ? "Everything, newest first." : blurbs[room];
     history.replaceState(null, "", room === "all" ? location.pathname : `#${room}`);
   };
-  btns.forEach((b) => b.addEventListener("click", () => apply(b.dataset.room)));
+  btns.forEach((b) => b.addEventListener("click", () => apply(b.dataset.room!)));
   const start = location.hash.slice(1);
   if (btns.some((b) => b.dataset.room === start)) apply(start);
 </script>
