@@ -11,7 +11,7 @@ draft: false
 
 - **What:** a second-hand HP MicroServer Gen8 turned into a backup NAS running TrueNAS, woken every night at 1:50 a.m.
 - **Key ideas:** iLO lets me power it on remotely, and the script leaves the NAS on if anything goes wrong.
-- **Missing:** an off-site copy.
+- **Missing:** an off-site copy, and a full restore test.
 
 </Tldr>
 
@@ -84,7 +84,7 @@ Inside the pool I created two datasets, one for each kind of backup:
     ],
     rows: [
       ["proxmox-backups", "The Proxmox nodes, over NFS", "The backups of all my virtual machines (about 0.6 TiB)"],
-      ["TimeMachine", "My Macs, over SMB", "Their Time Machine backups (about 0.65 TiB), with a space limit of roughly 2.5 TiB"]
+      ["TimeMachine", "My Mac and the Mac mini, over SMB", "Their Time Machine backups, one sub-dataset per machine (about 0.65 TiB so far), with a space limit of roughly 2.5 TiB"]
     ]
   }}
 />
@@ -168,7 +168,15 @@ The script does not log in to iLO as an administrator. I created a dedicated acc
 
 This is a backup in the same house as the originals. It protects against a failed disk, a deleted VM or a bad change; it does **not** protect against fire, theft or a power surge that kills both machines. An off-site copy is the missing piece, and it is on my list.
 
-I also test restores. A backup that has never been restored is only a hope.
+## The test I still owe myself
+
+A backup that has never been restored is only a hope, and I have not yet done a full restore test. That is the next thing I will do, with a precise question: **starting only from the backups, can I recover everything?** That means:
+
+- the **Mac mini** (a 256 GB machine, whose Time Machine backup lives on the NAS);
+- the **three Proxmox nodes**;
+- and **all the virtual machines** that run on them.
+
+I will write up the result here, including whatever fails: a restore test that goes perfectly the first time would be suspicious.
 
 ## Credits
 
