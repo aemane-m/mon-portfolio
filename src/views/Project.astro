@@ -149,7 +149,7 @@ const related = relatedIds.length ? (await postsFor(lang)).map((x) => x.entry).f
   .ph-facts .chips { display: flex; flex-wrap: wrap; gap: .35rem; }
 
   .body-grid { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 4rem; margin-top: 4rem; align-items: start; }
-  .side { position: sticky; top: 90px; }
+  .side { position: sticky; top: calc(var(--hh) + 26px); }
   .toc ol { list-style: none; margin: .8rem 0 0; padding: 0; border-left: 1px solid var(--line); }
   .toc a { display: block; padding: .35rem 0 .35rem 1rem; margin-left: -1px; border-left: 2px solid transparent; font-size: .88rem; line-height: 1.35; color: var(--dim); text-decoration: none; }
   .toc a:hover { color: var(--text); }
@@ -158,7 +158,7 @@ const related = relatedIds.length ? (await postsFor(lang)).map((x) => x.entry).f
   .cover { width: auto; max-width: 100%; height: auto; max-height: 300px; border-radius: 8px; margin: 0 0 2.5rem; background: var(--panel); display: block; border: 1px solid var(--line); }
 
   .story-body { counter-reset: sec; }
-  .story-body h2 { counter-increment: sec; scroll-margin-top: 90px; font-size: clamp(1.7rem, 3vw, 2.2rem); margin: 3.6rem 0 1rem; display: flex; align-items: baseline; gap: .9rem; }
+  .story-body h2 { counter-increment: sec; scroll-margin-top: calc(var(--hh) + 26px); font-size: clamp(1.7rem, 3vw, 2.2rem); margin: 3.6rem 0 1rem; display: flex; align-items: baseline; gap: .9rem; }
   .story-body h2::before { content: counter(sec, decimal-leading-zero); font-family: var(--mono); font-size: .75rem; color: var(--accent-text); letter-spacing: .06em; font-weight: 500; transform: translateY(-.35em); }
   .story-body h2:first-child { margin-top: 0; }
 

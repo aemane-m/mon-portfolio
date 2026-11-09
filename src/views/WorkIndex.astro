@@ -67,7 +67,7 @@ const allText = tr("Everything, newest first.", "Tout, du plus récent au plus a
 </script>
 
 <style is:global>
-  .filters { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 .8rem; position: sticky; top: 64px; z-index: 10; padding: .8rem 0; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); }
+  .filters { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 .8rem; position: sticky; top: var(--hh); z-index: 10; padding: .8rem 0; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); }
   .filters button { font: inherit; font-size: .88rem; font-weight: 600; padding: .45rem .95rem; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--text); cursor: pointer; }
   .filters button small { font-family: var(--mono); font-weight: 400; color: var(--dim); margin-left: .25rem; }
   .filters button:hover { border-color: var(--text); }
@@ -90,6 +90,5 @@ const allText = tr("Everything, newest first.", "Tout, du plus récent au plus a
   @media (max-width: 720px) {
     .plist a { grid-template-columns: minmax(0, 1fr); gap: .6rem; }
     .pl-date { grid-row: 1; padding-top: 0; }
-    .filters { top: 56px; }
   }
 </style>

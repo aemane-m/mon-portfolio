@@ -187,6 +187,7 @@ const rssHref = lang === "fr" ? "/fr/rss.xml" : "/rss.xml";
       .theme .i-sun { display: none; }
       :root[data-theme="dark"] .theme .i-sun { display: block; } :root[data-theme="dark"] .theme .i-moon { display: none; }
       @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .theme .i-sun { display: block; } :root:not([data-theme="light"]) .theme .i-moon { display: none; } }
+      :root { --hh: 64px; }
       .top { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(10px); }
       .top-in { display: flex; align-items: center; justify-content: space-between; height: 64px; }
       .brand { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: .6rem; }
@@ -202,13 +203,18 @@ const rssHref = lang === "fr" ? "/fr/rss.xml" : "/rss.xml";
       .foot-big { font-family: var(--serif); font-size: clamp(2.2rem, 6vw, 4.5rem); margin: 0; line-height: 1; letter-spacing: -0.03em; }
       .foot-nav { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; margin-top: 1rem; font-size: .9rem; }
       @media (max-width: 720px) {
-        .top-in { flex-wrap: wrap; height: auto; padding-top: .6rem; padding-bottom: .5rem; row-gap: .4rem; }
+        :root { --hh: 94px; }
+        .top-in { flex-wrap: wrap; height: auto; padding-top: .55rem; padding-bottom: .45rem; row-gap: .15rem; column-gap: .5rem; }
         .top nav { display: contents; }
-        .top nav a:not(.cta) { order: 5; font-size: .92rem; padding: .35rem .2rem; }
+        .brand { order: 1; margin-right: auto; font-size: 1.05rem; }
+        .top nav .lang { order: 2; } .top nav .theme { order: 3; }
         .top-in::after { content: ""; order: 4; flex-basis: 100%; height: 0; }
-        .brand { margin-right: auto; }
-        .top nav .cta { padding: .35rem .8rem; font-size: .85rem; }
+        .top nav a:not(.cta):not(.lang) { order: 5; font-size: .92rem; padding: .4rem .1rem; }
+        .top nav .cta { order: 6; margin-left: auto; padding: .32rem .8rem; font-size: .82rem; }
+        .top-in { column-gap: 1rem; } .top-in .lang, .top-in .theme { column-gap: 0; }
       }
+      @media (max-width: 400px) { .brand { font-size: .98rem; } .top-in { column-gap: .7rem; } .top nav .cta { padding: .3rem .65rem; font-size: .78rem; } }
+      @media (max-width: 360px) { :root { --hh: 92px; } .top-in { column-gap: .55rem; } .top nav a:not(.cta):not(.lang) { font-size: .84rem; } .top nav .cta { padding: .28rem .55rem; font-size: .74rem; } }
     </style>
     <script is:inline define:vars={{ t: person.contactToken }}>
       // Adresse e-mail reconstituée dans le navigateur : absente du HTML, donc invisible pour les robots qui collectent les adresses.
