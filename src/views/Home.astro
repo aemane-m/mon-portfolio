@@ -157,7 +157,7 @@ const strengths = [
     <div class="roles">
       {strengths.map((r, i) => <div><span class="mono n">0{i + 1}</span><h3>{r.t}</h3><p>{r.d}</p></div>)}
     </div>
-    <p class="actions" style="display:flex;gap:.8rem;margin-top:2.5rem"><a class="btn solid" href={linkedin} data-mail>{tr("Get in touch", "Me contacter")}</a><a class="btn" href={l("/about")}>{tr("My background", "Mon parcours")}</a></p>
+    <p class="actions" style="display:flex;gap:.8rem;margin-top:2.5rem"><a class="btn solid" href={linkedin} target="_blank" rel="noopener noreferrer">{tr("Get in touch", "Me contacter")}</a><a class="btn" href={l("/about")}>{tr("My background", "Mon parcours")}</a></p>
   </section>
   <Newsletter />
 </Base>
