@@ -3,7 +3,8 @@ export const person = {
   handle: "aemane",
   role: "Data engineer · MLOps",
   school: "MSc 2 MIAGE · Paris Dauphine – PSL",
-  email: "aemane.mouteirou@dauphine.eu",
+  // L'adresse n'est jamais écrite en clair : jeton = adresse inversée puis base64 (décodé dans le navigateur).
+  contactToken: "dWUuZW5paHB1YWRAdW9yaWV0dW9tLmVuYW1lYQ==",
   location: "Paris, FR",
   seeking: ["Data Engineering"],
   contract: "Permanent role (CDI) from 2027",
@@ -14,7 +15,6 @@ export const person = {
 export const social = [
   { name: "github", href: "https://github.com/aemane-m" },
   { name: "linkedin", href: "https://www.linkedin.com/in/aemane-mouteirou/" },
-  { name: "email", href: `mailto:${person.email}` },
 ];
 
 import type { Lang } from "../i18n";

@@ -17,7 +17,7 @@ const links = social.filter((s) => s.href.startsWith("http"));
         <Fragment>
           <h2>Éditeur du site</h2>
           <p>Ce site est un portfolio personnel, édité à titre non professionnel par <strong>{person.name}</strong>, qui en est aussi le directeur de la publication.</p>
-          <p>Contact : <a href={`mailto:${person.email}`}>{person.email}</a>{links.map((l) => <Fragment> · <a href={l.href} rel="noopener">{l.name === "github" ? "GitHub" : "LinkedIn"}</a></Fragment>)}</p>
+          <p>Contact : <button type="button" class="reveal" data-reveal>Afficher l'adresse e-mail</button><noscript> (JavaScript requis — ou écrivez-moi via LinkedIn)</noscript>{links.map((l) => <Fragment> · <a href={l.href} rel="noopener">{l.name === "github" ? "GitHub" : "LinkedIn"}</a></Fragment>)}</p>
 
           <h2>Hébergement et nom de domaine</h2>
           <p>Le site est hébergé par <strong>Cloudflare, Inc.</strong>, 101 Townsend Street, San Francisco, CA 94107, États-Unis (Cloudflare Pages). Le nom de domaine est enregistré auprès d'<strong>OVH SAS</strong>, 2 rue Kellermann, 59100 Roubaix, France.</p>
@@ -39,7 +39,7 @@ const links = social.filter((s) => s.href.startsWith("http"));
         <Fragment>
           <h2>Publisher</h2>
           <p>This site is a personal portfolio, published on a non-professional basis by <strong>{person.name}</strong>, who is also the publication director.</p>
-          <p>Contact: <a href={`mailto:${person.email}`}>{person.email}</a>{links.map((l) => <Fragment> · <a href={l.href} rel="noopener">{l.name === "github" ? "GitHub" : "LinkedIn"}</a></Fragment>)}</p>
+          <p>Contact: <button type="button" class="reveal" data-reveal>Show email address</button><noscript> (JavaScript required — or message me on LinkedIn)</noscript>{links.map((l) => <Fragment> · <a href={l.href} rel="noopener">{l.name === "github" ? "GitHub" : "LinkedIn"}</a></Fragment>)}</p>
 
           <h2>Hosting and domain name</h2>
           <p>The site is hosted by <strong>Cloudflare, Inc.</strong>, 101 Townsend Street, San Francisco, CA 94107, USA (Cloudflare Pages). The domain name is registered with <strong>OVH SAS</strong>, 2 rue Kellermann, 59100 Roubaix, France.</p>
@@ -61,3 +61,7 @@ const links = social.filter((s) => s.href.startsWith("http"));
     </div>
   </div>
 </Base>
+<style is:global>
+  .reveal { font: inherit; color: var(--text); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .reveal:hover { color: var(--accent); }
+</style>
