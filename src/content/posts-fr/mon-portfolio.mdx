@@ -1,0 +1,68 @@
+---
+title: "Comment j'ai construit ce portfolio — deux fois"
+publishedAt: "2026-11-09"
+type: "article"
+summary: "L'histoire de mon portfolio : une première version sur Next.js avec un template, les problèmes de SEO et de performance qu'elle m'a appris à repérer, et la reconstruction avec Astro comme lieu pour publier projets, articles et photos."
+tags: ["Astro", "Cloudflare", "Portfolio", "SEO", "Deployment"]
+image: "/images/blog/Mon_Portfolio.jpeg"
+draft: false
+---
+
+<Tldr>
+
+- **Version 1 :** un template Next.js (Magic Portfolio), déployé sur Cloudflare Pages depuis GitHub.
+- **Ce qu'elle m'a appris :** Google Search Console et Lighthouse ont montré de vrais problèmes — des liens d'images cassés, un sitemap mal formé, des images lourdes et du JavaScript inutile.
+- **Version 2 :** reconstruite avec Astro, comme un lieu pour publier projets, articles et photos plutôt qu'un CV figé.
+
+</Tldr>
+
+Un portfolio est un petit produit, et comme tout produit il s'améliore quand on regarde comment il se comporte vraiment. Le mien a eu deux vies.
+
+## Version 1 : un template, vite en ligne
+
+J'ai commencé par réserver mon nom de domaine chez [OVH](https://www.ovh.com), puis j'ai choisi un template open source, **[Magic Portfolio](https://github.com/once-ui-system/magic-portfolio)**, construit sur **Next.js** et **Once UI**. Il m'a donné une structure propre et un contenu écrit en **MDX**, qui convient bien à des articles.
+
+Je l'ai déployé sur **[Cloudflare Pages](https://pages.cloudflare.com/)**, relié à GitHub : chaque push sur la branche principale reconstruit le site et le publie en une ou deux minutes. Pour une première version, c'était le bon compromis : en ligne vite, sans coût, rien à maintenir à la main.
+
+## Ce que les outils m'ont dit
+
+Une fois le site en ligne, j'ai commencé à regarder ce que Google et Lighthouse en disaient. Quatre choses ressortaient :
+
+<Table
+  data={{
+    headers: [
+      { content: "Symptôme", key: "sym" },
+      { content: "Cause", key: "cause" },
+      { content: "Correction", key: "fix" }
+    ],
+    rows: [
+      ["Search Console signalait des erreurs 404 sur des liens d'images", "Le site était exporté en fichiers statiques, mais les pages pointaient vers une route de génération d'images qui n'existe que sur un serveur en marche", "Utiliser de vraies images statiques"],
+      ["Le sitemap était signalé comme invalide", "Un slash final dans l'adresse du site produisait des doubles slashs dans chaque URL, y compris le lien du sitemap dans le fichier robots", "Normaliser l'adresse dans le code du sitemap et de robots"],
+      ["Une page très lourde", "Des photos de projet de plusieurs mégaoctets chacune, 18 Mo au total pour une page", "Les redimensionner et les recompresser : 51 Mo d'images sont devenus 21 Mo"],
+      ["Un score de performance modeste", "Du JavaScript inutilisé envoyé par la bibliothèque d'interface, et du CSS bloquant le rendu", "Une pile plus légère"]
+    ]
+  }}
+/>
+
+Rien de tout cela n'était visible en regardant le site. Ce n'était visible qu'en le **mesurant**.
+
+## Version 2 : un endroit pour partager
+
+J'ai aussi réalisé que je voulais que le site fasse plus que présenter un CV. Je voulais un endroit où **partager des projets, écrire des articles et publier des photos**, et qui me ressemble. Je l'ai donc reconstruit avec **Astro** :
+
+- **Statique d'abord.** Les pages sont générées à la construction et presque aucun JavaScript n'est envoyé au navigateur. Les rares parties interactives (les points animés de l'accueil) sont petites et ne se chargent qu'où elles servent. Les schémas des articles sont pré-générés en SVG, donc sans JavaScript non plus.
+- **Le contenu en fichiers.** Projets, articles et photos sont de simples fichiers Markdown/MDX dans le dépôt, organisés en collections. Publier tient en une commande : `npm run new` crée un brouillon, je le modifie, je désactive le drapeau de brouillon et je pousse.
+- **Des schémas en texte.** Les schémas d'architecture de mes articles sont écrits en Mermaid, donc ils vivent dans le même fichier que le texte et suivent les thèmes clair et sombre.
+- **Deux langues, sans JavaScript.** Le site existe en anglais et en français sous forme de pages statiques séparées : le sélecteur de langue n'est qu'un lien.
+- **En-têtes de sécurité dans un fichier.** Un seul fichier `_headers` fixe les en-têtes de sécurité et les règles de cache que Lighthouse avait signalés.
+
+## Ce que j'ai appris
+
+- **Mesurer avant de décider.** Search Console et Lighthouse ont trouvé des problèmes que je n'aurais jamais repérés à l'œil.
+- **Un site statique ne peut pas appeler une route serveur.** Tout ce qui demande un serveur au moment de la requête doit être généré à la construction.
+- **Choisir l'outil adapté au contenu.** Un portfolio, c'est surtout du texte et des images : un framework orienté statique convient mieux qu'un framework d'application complet.
+- **Écrire le pourquoi.** L'intérêt de cet article, c'est le raisonnement, pas l'outil.
+
+<Callout tone="brand">
+Ce site n'est pas seulement une vitrine. C'est aussi un laboratoire où j'essaie mes projets et mes idées, et l'endroit où j'écris à leur sujet.
+</Callout>

@@ -1,0 +1,53 @@
+---
+title: "Lab Photo Dauphine — un site que les bénévoles peuvent modifier sans coder"
+publishedAt: "2026-11-06"
+name: "lab-photo"
+room: "darkroom"
+impact: "Reconstruire le site de l'association de photographie argentique de Dauphine pour que n'importe quel bénévole puisse le mettre à jour depuis un éditeur simple — et pour qu'il reste rapide, sûr et peu coûteux à exploiter."
+status: "in_progress"
+kind: "personal"
+stack: ["Astro","Sanity","Cloudflare Pages","Turnstile","Resend"]
+summary: "Migration du site du Lab Photo Dauphine de WordPress vers un site statique Astro, avec Sanity comme studio d'édition, un formulaire de contact protégé et un redéploiement automatique après chaque publication."
+images:
+  - "/images/projects/labphoto/cover.jpg"
+link: "https://www.labphotodauphine.fr"
+draft: false
+---
+
+## Contexte
+
+Le Lab Photo Dauphine est l'association de photographie argentique de l'université : un labo argentique et numérique, des ateliers, des sorties et un concours photo annuel. J'en suis toujours membre et je m'occupe toujours de son site.
+
+Le site avait grandi sur WordPress. Je le reconstruis autour d'une contrainte : **les personnes qui le maintiennent sont des bénévoles, pas des développeurs, et elles changent chaque année.**
+
+<Callout tone="brand">La question de conception n'est pas « quelle est la meilleure pile ? » mais « qu'est-ce qui restera simple pour quelqu'un qui rejoindra le bureau en septembre prochain ? »</Callout>
+
+## Ce qui change
+
+<Table
+  data={{
+    headers: [
+      { content: "Besoin", key: "need" },
+      { content: "Solution", key: "solution" }
+    ],
+    rows: [
+      ["Un site public rapide et sûr", "Des pages Astro statiques, servies depuis Cloudflare Pages avec des en-têtes de sécurité et des redirections pour les anciennes adresses"],
+      ["Modifier le contenu sans coder", "Un Studio Sanity : concours, galeries de photographes, bureau, prestations et réglages du site sont des formulaires"],
+      ["Les mises à jour apparaissent seules", "Un webhook déclenche une reconstruction après chaque publication ; le changement est en ligne en une ou deux minutes"],
+      ["Un formulaire de contact sans spam", "Cloudflare Turnstile et Resend, avec une fonction serveur testée"],
+      ["Pas de dépendance", "Le site est statique, et un script de sauvegarde exporte tout le contenu et les images ; le plan de sortie est écrit"]
+    ]
+  }}
+/>
+
+## Migrer le contenu
+
+Le contenu WordPress existant a été importé une seule fois par un script relançable qui ne crée pas de doublons : **38 documents et 87 images**. L'ancienne sauvegarde WordPress est conservée, non publiée, jusqu'à la validation du nouveau site.
+
+## Le rendre utilisable par des non-développeurs
+
+J'ai écrit un guide des éditeurs en langage simple, avec des recettes toutes prêtes : ajouter un nouveau concours (l'édition précédente passe seule aux archives), changer le bureau en septembre, ajouter des photos par glisser-déposer, afficher une annonce sur l'accueil, fixer un tarif. Le guide rappelle aussi de ne publier que des photos dont on a l'accord des auteurs.
+
+## État d'avancement
+
+Le nouveau site est construit et la liste de mise en ligne (projet CMS, déclencheur de déploiement, formulaire de contact, bascule du domaine) est documentée. Il est en cours plutôt que terminé, et je mettrai cette page à jour quand la bascule sera faite.

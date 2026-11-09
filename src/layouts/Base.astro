@@ -16,7 +16,7 @@ const path = lang === "fr" ? rawPath.replace(/^\/fr/, "") || "/" : rawPath; // c
 const canonical = new URL(rawPath === "/" ? "/" : rawPath, Astro.site).href;
 const enUrl = new URL(lang === "en" ? rawPath : altPath(rawPath), Astro.site).href;
 const frUrl = new URL(lang === "fr" ? rawPath : altPath(rawPath), Astro.site).href;
-const switchHref = altPath(rawPath);
+const switchHref = rawPath === "/404" ? (lang === "fr" ? "/" : "/fr") : altPath(rawPath);
 const og = new URL(image, Astro.site).href;
 const hasPhotos = (await getCollection("photos", (p) => !p.data.draft)).length > 0;
 const nav = [{ href: "/about", label: tr("About", "À propos") }, { href: "/work", label: tr("Projects", "Projets") }, { href: "/blog", label: tr("Journal", "Journal") }, ...(hasPhotos ? [{ href: "/photos", label: "Photos" }] : [])];

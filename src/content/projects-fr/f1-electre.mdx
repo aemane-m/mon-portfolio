@@ -1,0 +1,108 @@
+---
+title: "Calendrier F1 2025 — une décision multicritère avec ELECTRE IS"
+publishedAt: "2026-01-08"
+name: "f1-decision"
+room: "foundations"
+impact: "Choisir le prochain Grand Prix, une étape à la fois, quand les objectifs s'opposent : moins de trajet et de CO₂, plus de revenus et d'audience, une bonne météo. Une méthode qui montre les compromis au lieu de les cacher."
+status: "completed"
+kind: "academic"
+stack: ["Python","Pandas","NumPy","ELECTRE IS"]
+summary: "Un projet d'aide à la décision (M1 MIAGE) qui construit pas à pas le calendrier 2025 de Formule 1 avec la méthode de surclassement ELECTRE IS, sur 24 Grands Prix et 8 critères, avec un jeu de données ouvert et une implémentation Python."
+images: []
+team:
+  - name: "Aemane Mouteirou"
+    avatar: "/images/avatar.jpg"
+  - name: "Sara Lopez De Varo"
+link: "https://github.com/aemane-m/f1-2025-electre-dataset"
+draft: false
+---
+
+## La question
+
+Construire un calendrier de Formule 1 est une décision où chacun veut quelque chose de différent. L'instance de régulation tient à la sécurité et à la faisabilité, le détenteur des droits commerciaux aux revenus et à l'audience, les écuries aux déplacements et à la fatigue, les promoteurs locaux à la fréquentation et à la météo. Leurs objectifs tirent dans des directions opposées, et on ne peut pas les additionner en un seul score.
+
+La question que nous nous sommes posée : **comment construire un calendrier, une course à la fois, pour que chaque choix soit un compromis raisonné, et non la sortie d'une boîte noire ?**
+
+<Callout tone="brand">La méthode ne dit pas « voici le meilleur calendrier ». Elle rend les compromis visibles, ce dont un décideur a réellement besoin.</Callout>
+
+## La méthode, en mots simples
+
+Nous avons utilisé **ELECTRE IS**, une méthode multicritère fondée sur le *surclassement* : l'option A surclasse l'option B si elle est au moins aussi bonne sur assez de critères, **et** si elle n'est gravement moins bonne sur aucun. Ce dernier point compte. Une course excellente commercialement mais très mauvaise logistiquement ne peut pas simplement « racheter » sa faiblesse : un défaut assez fort joue le rôle de **veto**.
+
+La décision est construite **de façon incrémentale**. À partir d'une première course imposée, à chaque étape nous comparons toutes les courses restantes à la dernière choisie, et nous retenons la suivante.
+
+```mermaid
+flowchart LR
+  A["Première course imposée"]:::accent --> B["Recalculer les critères<br/>par rapport à la dernière course"]
+  B --> C["Comparer les courses restantes<br/>(ELECTRE IS)"]
+  C --> D["Ensemble recommandé"]
+  D --> E["Règle de départage<br/>marge logistique, puis audience"]
+  E --> F["Course suivante choisie"]
+  F -->|"courses restantes"| B
+  classDef accent fill:#ff4a1c,color:#fff,stroke:none
+```
+
+## Ce que nous avons comparé
+
+Il y a **24 Grands Prix** à placer, jugés sur **8 critères** regroupés en trois domaines :
+
+<Table
+  data={{
+    headers: [
+      { content: "Domaine", key: "area" },
+      { content: "Critères", key: "criteria" },
+      { content: "Objectif", key: "goal" }
+    ],
+    rows: [
+      ["Logistique et environnement", "Distance depuis la course précédente, CO₂ estimé, changement de région, marge de temps disponible", "Garder bas les déplacements, les émissions et les perturbations"],
+      ["Économie et audience", "Frais d'accueil, audience", "Maximiser les revenus et la visibilité"],
+      ["Sportif et climat", "Score météo, délai entre les courses", "Des courses sûres et de qualité, avec assez de repos"]
+    ]
+  }}
+/>
+
+Certains critères appartiennent à une course seule (frais d'accueil, audience, météo). D'autres dépendent de **la course qui vient juste avant**, comme la distance et le délai. Ceux-là sont recalculés à chaque étape.
+
+## Des données brutes aux critères
+
+Le jeu de données est ouvert. Pour chaque course, il contient le circuit, le pays et la région, la date, les coordonnées, une estimation des frais d'accueil et de l'audience, ainsi que la température et les précipitations moyennes mensuelles.
+
+Construire les critères a demandé de faire des choix de modélisation, chacun consigné :
+
+- **La distance** est la distance orthodromique entre circuits (formule de Haversine), parce que la question est globale et macro-logistique, pas un itinéraire routier.
+- **Le CO₂** est un *proxy* : proportionnel à la distance, parce qu'il n'existe pas de données d'émissions homogènes pour les transitions de calendrier.
+- **La météo** est un score composite de température et de précipitations pour le mois de la course.
+- Les frais d'accueil et les audiences sont des **estimations publiques**, utilisées comme proxys comparables et signalées comme telles.
+
+Nous avons gardé une ligne claire entre ce qui est **observé**, ce qui est **dérivé** par un calcul fixe, et ce qui est **modélisé** parce que le chiffre exact n'est pas disponible. C'est cette ligne qui rend le modèle traçable et défendable.
+
+## Ce que ça produit
+
+À chaque étape la méthode renvoie un **ensemble recommandé** de courses que rien d'autre ne surclasse, avec des indicateurs explicites, au lieu d'un seul gagnant. Quand plusieurs courses sont recommandées, c'est un vrai résultat : cela veut dire que les critères sont réellement en conflit, et qu'aucune course ne domine.
+
+Pour aboutir malgré tout à une décision opérationnelle, nous avons ajouté une **règle de départage** explicite : d'abord la marge logistique, puis l'audience. Le raisonnement reste transparent parce que la règle est énoncée, pas cachée dans le code.
+
+## Ce que j'ai appris, et les limites
+
+Le rapport est franc sur les limites, et je veux le garder ici :
+
+- Les critères sont des **proxys** : suffisants pour comparer, mais une image partielle des vraies contraintes.
+- Les **poids et les seuils** sont raisonnables mais subjectifs. Avec de vrais experts, ils seraient discutés et ajustés.
+- Comme la construction est incrémentale et sans contrainte de temps explicite, la méthode peut favoriser des courses éloignées dans le temps, produisant un chemin qui n'est pas strictement chronologique.
+- Des contraintes réelles majeures — contrats avec les circuits, politique, diffusion — **ne sont pas dans le modèle**.
+
+Pour la suite, nous avons proposé une **règle d'éligibilité temporelle** (uniquement les courses postérieures à la course courante), et une **analyse de sensibilité** sur les poids et les seuils pour voir quels critères pilotent vraiment le résultat.
+
+La leçon principale pour moi : une méthode comme celle-ci vaut moins par la réponse que par la façon dont elle structure la discussion et montre le coût de chaque choix. C'est un outil pour appuyer une décision, pas pour la prendre automatiquement.
+
+## Ressources
+
+Le jeu de données et l'implémentation Python sont publics, et le rapport complet (en français) est disponible.
+
+<Button
+  variant="primary"
+  label="Lire le rapport (PDF, en français)"
+  href="/docs/f1-electre-decision-report.pdf"
+  target="_blank"
+  rel="noopener"
+/>
