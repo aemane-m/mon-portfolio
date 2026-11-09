@@ -172,7 +172,7 @@ export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatt
       ctx.beginPath(); ctx.arc(px(p.x), py(p.y), r, 0, Math.PI * 2);
       ctx.globalAlpha = Math.min(1, p.a * p.c * 1.2); ctx.fillStyle = acc; if (ctx.globalAlpha > 0.01) ctx.fill();
     }
-    ctx.font = `500 ${Math.max(10, S / 48)}px "JetBrains Mono Variable", monospace`; ctx.textAlign = "center"; ctx.fillStyle = dim;
+    ctx.font = `500 ${Math.max(10, S / 48)}px ui-monospace, Menlo, Consolas, monospace`; ctx.textAlign = "center"; ctx.fillStyle = dim;
     const lab = (L: Layout, al: number) => { if (!L.labels || al < 0.05) return; ctx.globalAlpha = al; L.labels.forEach((l) => ctx.fillText(l.t, px(l.x), py(l.y))); };
     lab(A, 1 - e); lab(B, e);
     ctx.globalAlpha = 1;

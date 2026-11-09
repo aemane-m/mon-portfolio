@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import frauncesUrl from "@fontsource-variable/fraunces/files/fraunces-latin-standard-normal.woff2?url";
 import { getCollection } from "astro:content";
 import { person, social } from "../data/profile";
 import { langOf, mk, lp, altPath, cleanPath } from "../i18n";
@@ -38,6 +39,7 @@ const ld = {
     <link rel="alternate" hreflang="x-default" href={enUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#f4efe5" />
+    <link rel="preload" as="font" type="font/woff2" href={frauncesUrl} crossorigin />
     <script is:inline>
       try { var t = localStorage.getItem("theme"); if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; } catch (e) {}
     </script>

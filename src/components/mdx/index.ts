@@ -10,5 +10,6 @@ import SmartLink from "./SmartLink.astro";
 import CodeBlock from "./CodeBlock.astro";
 import Table from "./Table.astro";
 import Tldr from "./Tldr.astro";
+import Diagram from "./Diagram.astro";
 
-export const mdxComponents = { Text, Callout, Media, Button, Card, Column, Row, InlineCode, SmartLink, CodeBlock, Table, Tldr };
+export const mdxComponents = { Text, Callout, Media, Button, Card, Column, Row, InlineCode, SmartLink, CodeBlock, Table, Tldr, Diagram };
