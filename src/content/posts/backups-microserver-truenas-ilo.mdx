@@ -69,7 +69,7 @@ The Xeon "L" processors are the low-power versions, which suits a machine that i
 
 ## TrueNAS and the storage pool
 
-With the OS disk sorted, I installed **TrueNAS SCALE** and set up the storage pool. The four bays hold **four disks, two of 4 TB and two of 3 TB, which give about 7 TB of usable space**, with redundancy so that losing a single disk does not lose the data. The part I care about most is *how the backups are exposed*:
+With the OS disk sorted, I installed **TrueNAS SCALE** and set up the storage pool. The four bays hold **four disks, two of 4 TB and two of 3 TB, which give about 7 TB of usable space** in total. I split them into **two pools**: one only for the **Time Machine** backups of my Macs, and one for **all the other backups**, including the Proxmox virtual machines. Keeping them apart has a practical benefit: Time Machine grows to fill whatever space it is given, so it cannot starve the other backups. The part I care about most is *how the backups are exposed*:
 
 - a **dedicated dataset** for Proxmox backups, never the root of the pool, so the share can only touch what it should;
 - a **dedicated user and group** that own that dataset;
