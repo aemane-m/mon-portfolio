@@ -1,0 +1,25 @@
+Copyright (c) 2026 Aemane Mouteirou. All rights reserved.
+
+This repository contains the source code and the content of the website
+aemanemouteirou.com (texts, articles, project write-ups, diagrams, photographs,
+images and design) and is published so that it can be read and viewed.
+
+Unless Aemane Mouteirou has given written permission, you may NOT copy,
+reproduce, modify, translate, redistribute, sell, sublicense or use this code
+or this content, in whole or in part, in any other project or publication.
+
+You are welcome to:
+- read and browse the repository;
+- link to the website and to this repository;
+- quote short extracts with a clear credit and a link to the source.
+
+Third-party material is not covered by this notice and stays under its own
+licences: open-source dependencies (Astro, Mermaid, Fraunces and others, see
+package.json), the trademarks and logos of the tools and companies that are
+mentioned, and any image or document whose source is credited on the page that
+uses it.
+
+The software is provided "as is", without warranty of any kind.
+
+For any other use, contact the author through the links on
+https://www.aemanemouteirou.com.

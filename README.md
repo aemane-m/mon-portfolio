@@ -111,3 +111,7 @@ Before publishing: run `npm run build`, and regenerate diagrams and share images
 
 - No secrets in the repository. The newsletter form posts to Substack (allowed by `form-action` in the CSP).
 - The CSP allows inline scripts and styles (`'unsafe-inline'`) because of the small theme and email scripts; everything else is restricted to the site itself.
+
+## License
+
+Copyright © 2026 Aemane Mouteirou. All rights reserved. The code and the content are published to be read, not to be reused: see [LICENSE](LICENSE). Third-party dependencies and credited material keep their own licences.
