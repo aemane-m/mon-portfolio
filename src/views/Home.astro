@@ -192,7 +192,8 @@ const strengths = [
   const vit = document.getElementById("vitrine");
   const pc = document.getElementById("proj-canvas") as HTMLCanvasElement;
   const note = document.getElementById("proj-note");
-  if (vit && pc) {
+  const startShowcase = () => {
+    if (!vit || !pc) return;
     const dots = createDots(pc, "scatter", { mesh: true });
     const cards = [...vit.querySelectorAll<HTMLElement>(".pv")];
     const tabs = [...vit.querySelectorAll<HTMLButtonElement>(".vit-tab")];
@@ -230,6 +231,15 @@ const strengths = [
     // ne tourne que lorsque la section est visible
     new IntersectionObserver((e) => { hover = !e[0].isIntersecting; arm(); }).observe(vit);
     go(0);
+  };
+  if (vit) {
+    // état initial immédiat (un seul projet affiché, pas de saut de hauteur) ; canvas et minuterie démarrent à l'approche
+    vit.classList.add("on");
+    vit.querySelector(".pv")?.classList.add("cur");
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) { io.disconnect(); startShowcase(); } }, { rootMargin: "300px" });
+      io.observe(vit);
+    } else startShowcase();
   }
 </script>
 
@@ -254,7 +264,7 @@ const strengths = [
   .act { margin: 0 0 2.5rem; overflow-x: auto; }
   .act svg { width: 100%; min-width: 620px; height: auto; display: block; }
   .a-dot { fill: var(--text); } .a-dot.project { fill: var(--accent); } .a-dot.photo { fill: none; stroke: var(--text); stroke-width: 2; }
-  .a-dot.live { animation: pulse 1.8s ease-in-out infinite; }
+  .a-dot.live { stroke: var(--accent); stroke-opacity: .45; stroke-width: 5; }
   .a-lab { font: 500 9px var(--mono); fill: var(--dim); } .a-yr { font: 600 9px var(--mono); fill: var(--text); }
   .act figcaption { font-size: .7rem; color: var(--dim); margin-top: .6rem; display: flex; align-items: center; flex-wrap: wrap; gap: .3rem .6rem; }
   .act .k { display: inline-block; width: .7rem; height: .7rem; border-radius: 50%; background: var(--text); }
@@ -286,9 +296,9 @@ const strengths = [
   .vit-b { width: 2.4rem; height: 2.4rem; border: 1px solid var(--text); background: none; color: var(--text); border-radius: 50%; font: 600 .85rem var(--mono); cursor: pointer; }
   .vit-b:hover { background: var(--text); color: var(--bg); }
   .vit-bar { flex: 1; height: 3px; background: var(--line); margin: 0 .8rem; overflow: hidden; }
-  .vit-bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+  .vit-bar i { display: block; height: 100%; width: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; will-change: transform; }
   .vit.run .vit-bar i { animation: vitFill 7s linear forwards; }
-  @keyframes vitFill { to { width: 100%; } }
+  @keyframes vitFill { to { transform: scaleX(1); } }
   .vit-count { font-size: .72rem; color: var(--dim); }
   .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); border-top: 1px solid var(--text); }
   .roles > div { padding: 1.6rem 1.6rem 2rem 0; border-bottom: 1px solid var(--line); }

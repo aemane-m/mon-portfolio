@@ -17,7 +17,8 @@ for (const [dir, route, prefix] of [["projects", "work", ""], ["projects-fr", "w
 export default defineConfig({
   site: "https://www.aemanemouteirou.com",
   trailingSlash: "never",
-  build: { format: "file" },
+  // CSS intégré dans le HTML (≈ 9 Ko au total) : plus de feuilles de style qui bloquent le rendu.
+  build: { format: "file", inlineStylesheets: "always" },
   integrations: [mdx(), sitemap({
     i18n: { defaultLocale: "en", locales: { en: "en-US", fr: "fr-FR" } },
     serialize(item) { const path = new URL(item.url).pathname.replace(/\/$/, ""); if (lastmod.has(path)) item.lastmod = lastmod.get(path); return item; },
