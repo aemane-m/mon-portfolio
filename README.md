@@ -114,6 +114,7 @@ Before publishing: run `npm run build`, and regenerate diagrams and share images
 - `require-trusted-types-for 'script'` is enabled: the site code never writes HTML strings into the page.
 - Styles still allow `'unsafe-inline'` because of `style=""` attributes; everything else is restricted to the site itself.
 - Stylesheets are inlined into the HTML (`inlineStylesheets: "always"`), so no CSS file blocks the first render.
+- Small scripts (< 8 KB) are inlined too, and `scripts/preload.mjs` adds `modulepreload` links for the modules a page script imports, so the browser fetches them in parallel instead of in a chain. `npm run build` runs: `astro check`, `astro build`, `preload.mjs`, `csp.mjs`.
 
 ## License
 

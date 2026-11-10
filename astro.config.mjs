@@ -24,7 +24,8 @@ export default defineConfig({
     serialize(item) { const path = new URL(item.url).pathname.replace(/\/$/, ""); if (lastmod.has(path)) item.lastmod = lastmod.get(path); return item; },
   })],
   // Pas de polices ni d'images intégrées en data: URI (bloquées par la CSP font-src 'self').
-  vite: { build: { assetsInlineLimit: 0 } },
+  // Les petits scripts (< 8 Ko) sont intégrés au HTML, ce qui évite une chaîne de requêtes ; les polices restent des fichiers.
+  vite: { build: { assetsInlineLimit: (file, content) => (/\.(woff2?|ttf|otf|eot)$/.test(file) ? false : (content?.length ?? 0) < 8192) } },
   markdown: {
     // Le processeur par défaut d'Astro 7 n'exécute pas les plugins remark : on utilise unified pour le remplacement statique des diagrammes.
     processor: unified({ remarkPlugins: [remarkMermaidStatic] }),
