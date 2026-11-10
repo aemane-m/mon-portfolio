@@ -39,7 +39,7 @@ flowchart TB
   B["Logique métier<br/>domaine + méthodes quantitatives"]:::accent --> AP["Application<br/>cas d'usage"] --> PO["Ports<br/>interfaces"] --> AD["Adaptateurs<br/>infrastructure"]
   AD --> DB["Databricks<br/>Lakeflow Jobs · Unity Catalog · MLflow"]
   AD --> SH["Auto-hébergé<br/>Airflow · Spark · Delta Lake · MinIO"]
-  classDef accent fill:#ff5500,color:#0b0b0b,stroke:none
+  classDef accent fill:#13c184,color:#0b0b0b,stroke:none
 ```
 
 <Table
@@ -66,7 +66,7 @@ De la donnée de marché brute au modèle surveillé, en six étapes :
 ```mermaid
 flowchart LR
   I["1 Ingérer<br/>données de marché"] --> P["2 Préparer<br/>nettoyer + stocker"] --> F["3 Variables<br/>réutilisables, versionnées"] --> T["4 Backtester<br/>Sharpe, drawdown"]:::accent --> M["5 Promouvoir<br/>modèle validé"] --> O["6 Surveiller<br/>latence, dérive"]
-  classDef accent fill:#ff5500,color:#0b0b0b,stroke:none
+  classDef accent fill:#13c184,color:#0b0b0b,stroke:none
 ```
 
 <Table

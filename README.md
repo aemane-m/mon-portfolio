@@ -63,8 +63,8 @@ English is the default, French lives under `/fr`. Content is bilingual through p
 
 ## Design
 
-- **Default theme: full black with an orange accent.** The cream + orange light theme is available through the toggle in the header; the choice is stored in the browser.
-- All colours are tokens in `src/styles/global.css` (`--bg`, `--text`, `--accent`, `--accent-text`, …). The light theme uses a darker orange for small text to keep contrast above 4.5:1.
+- **Default theme: full black with a green accent (`#13c184`).** The cream + green light theme is available through the toggle in the header; the choice is stored in the browser.
+- All colours are tokens in `src/styles/global.css` (`--bg`, `--text`, `--accent`, `--accent-text`, …). The light theme uses a darker green (`#0d794c`) for small text to keep contrast above 4.5:1.
 - Fraunces (variable) is the only web font, preloaded. Everything else uses system fonts.
 - The header height is a CSS variable (`--hh`) so sticky elements stay below it on every screen size.
 

@@ -97,7 +97,7 @@ function build(name: LayoutName): Layout {
       break;
     }
     case "film": {
-      // Six photogrammes (2 x 3) dessinés par leur contour ; un balayage de scan en orange.
+      // Six photogrammes (2 x 3) dessinés par leur contour ; un balayage de scan en couleur d'accent.
       const fw = 0.25, fh = 0.17; let k = 0;
       for (let row = 0; row < 3; row++) for (let col = 0; col < 2; col++) {
         const x0 = 0.15 + col * 0.37, y0 = 0.1 + row * 0.28, per = 44;
@@ -136,7 +136,7 @@ export function createDots(canvas: HTMLCanvasElement, start: LayoutName = "scatt
   let W = 0, H = 0, A: Layout = get(start), B: Layout = A, f = 0, raf = 0, mx = -1, my = -1, praf = 0;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-  let ink = "#f2f2f2", acc = "#ff5500", dim = "#9c9c9c";
+  let ink = "#f2f2f2", acc = "#13c184", dim = "#9c9c9c";
   const readColors = () => { ink = css("--text") || ink; acc = css("--accent") || acc; dim = css("--dim") || dim; };
 
   const resize = () => {

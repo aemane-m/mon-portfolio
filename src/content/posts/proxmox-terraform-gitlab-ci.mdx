@@ -33,7 +33,7 @@ flowchart TB
   T --> P["Proxmox"] --> V["Talos, Home Assistant OS<br/>and Debian VMs"]
   A --> D["Docker host<br/>Immich, Portainer, ..."]
   TC --> K["Kubernetes"] --> AC["Argo CD"] --> R["Everything<br/>inside the cluster"]
-  classDef accent fill:#ff5500,color:#0b0b0b,stroke:none
+  classDef accent fill:#13c184,color:#0b0b0b,stroke:none
 ```
 
 Each tool owns one layer. Terraform owns the **virtual machines**: their disks, their network and their sizing. It does not manage what runs inside them — Ansible configures the Docker host, Talos is configured through its own API, and Argo CD takes over inside Kubernetes. Keeping those boundaries clear is what stops the tools from fighting each other.
@@ -92,7 +92,7 @@ flowchart LR
     IN["infrastructure"] --> PV["provisioning"] --> TA["talos"] --> BO["bootstrap"] --> VE["verify"]
   end
   PL --> IN
-  classDef accent fill:#ff5500,color:#0b0b0b,stroke:none
+  classDef accent fill:#13c184,color:#0b0b0b,stroke:none
   class PL,IN accent
 ```
 
