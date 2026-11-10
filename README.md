@@ -112,6 +112,7 @@ Before publishing: run `npm run build`, and regenerate diagrams and share images
 - No secrets in the repository. The newsletter form posts to Substack (allowed by `form-action` in the CSP).
 - **Content-Security-Policy without `'unsafe-inline'` for scripts.** The two small inline scripts (theme, email) are allowed by SHA-256 hash: `npm run build` ends with `scripts/csp.mjs`, which hashes every inline script found in `dist/` and writes the hashes into `dist/_headers` (placeholder `__SCRIPT_HASHES__` in `public/_headers`). If you add or edit an inline script, just rebuild.
 - `require-trusted-types-for 'script'` is enabled: the site code never writes HTML strings into the page.
+- **Cloudflare Web Analytics** is kept: Cloudflare Pages injects its beacon at the edge, so the CSP allows `https://static.cloudflareinsights.com` (scripts) and `https://cloudflareinsights.com` (connections). The legal notice describes it. To turn it off, disable Web Analytics in the Cloudflare dashboard and remove those two entries from `public/_headers`.
 - Styles still allow `'unsafe-inline'` because of `style=""` attributes; everything else is restricted to the site itself.
 - Stylesheets are inlined into the HTML (`inlineStylesheets: "always"`), so no CSS file blocks the first render.
 - Small scripts (< 8 KB) are inlined too, and `scripts/preload.mjs` adds `modulepreload` links for the modules a page script imports, so the browser fetches them in parallel instead of in a chain. `npm run build` runs: `astro check`, `astro build`, `preload.mjs`, `csp.mjs`.
