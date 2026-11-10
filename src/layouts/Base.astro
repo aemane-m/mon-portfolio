@@ -138,44 +138,6 @@ const rssHref = lang === "fr" ? "/fr/rss.xml" : "/rss.xml";
       });
       sync();
     </script>
-    <script>
-      // Diagrammes Mermaid : la bibliothèque n'est chargée que sur les pages qui en contiennent.
-      const pres = [...document.querySelectorAll<HTMLElement>("pre > code.language-mermaid")].map((c) => c.parentElement as HTMLElement);
-      if (pres.length) {
-        const figs = pres.map((pre) => {
-          const fig = document.createElement("figure");
-          fig.className = "mdiagram";
-          fig.dataset.src = pre.textContent ?? "";
-          fig.setAttribute("role", "img");
-          fig.setAttribute("aria-label", document.documentElement.lang === "fr" ? "Schéma" : "Diagram");
-          pre.after(fig);
-          return { pre, fig };
-        });
-        const { default: mermaid } = await import("mermaid");
-        const v = (n: string) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-        let n = 0;
-        const render = async () => {
-          mermaid.initialize({
-            startOnLoad: false, securityLevel: "strict", theme: "base", fontFamily: v("--sans"),
-            flowchart: { curve: "basis", htmlLabels: true, padding: 14 },
-            themeVariables: {
-              background: v("--bg"), primaryColor: v("--panel"), primaryTextColor: v("--text"), primaryBorderColor: v("--dim"),
-              secondaryColor: v("--panel"), tertiaryColor: v("--bg"), lineColor: v("--dim"), textColor: v("--text"),
-              clusterBkg: v("--bg"), clusterBorder: v("--line"), edgeLabelBackground: v("--bg"),
-              actorBkg: v("--panel"), actorBorder: v("--dim"), actorTextColor: v("--text"), actorLineColor: v("--line"),
-              signalColor: v("--text"), signalTextColor: v("--text"), noteBkgColor: v("--panel"), noteTextColor: v("--text"), noteBorderColor: v("--line"),
-              labelBoxBkgColor: v("--panel"), labelBoxBorderColor: v("--line"), labelTextColor: v("--text"), loopTextColor: v("--text"),
-            },
-          });
-          for (const { fig } of figs) {
-            try { const { svg } = await mermaid.render(`mmd-${n++}`, fig.dataset.src!); fig.innerHTML = svg; } catch { /* le bloc source reste visible */ }
-          }
-          figs.forEach(({ pre, fig }) => { if (fig.querySelector("svg")) pre.style.display = "none"; });
-        };
-        await render();
-        addEventListener("themechange", render);
-      }
-    </script>
     <style is:global>
       .mdiagram { margin: 2rem 0; padding: 1.2rem; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); overflow-x: auto; display: flex; justify-content: center; }
       .mdiagram svg { max-width: 100%; height: auto; }

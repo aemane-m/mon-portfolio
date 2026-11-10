@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/csp.mjs",
     "preview": "astro preview",
     "new": "node scripts/new.mjs",
     "diagrams": "node scripts/diagrams.mjs",

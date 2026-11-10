@@ -78,7 +78,7 @@ Write diagrams as fenced ` ```mermaid ` blocks in any MDX file. To keep pages li
 npm run diagrams
 ```
 
-Commit the generated `src/diagrams/*.svg`. If a diagram has not been generated, the build prints a warning and falls back to client-side rendering (about 2 MB of JavaScript), so run the command before you publish.
+Commit the generated `src/diagrams/*.svg`. If a diagram has not been generated, the build prints a warning and the block stays visible as plain code (there is no client-side fallback), so run the command before you publish.
 
 ## Share images
 
@@ -110,7 +110,10 @@ Before publishing: run `npm run build`, and regenerate diagrams and share images
 ## Security notes
 
 - No secrets in the repository. The newsletter form posts to Substack (allowed by `form-action` in the CSP).
-- The CSP allows inline scripts and styles (`'unsafe-inline'`) because of the small theme and email scripts; everything else is restricted to the site itself.
+- **Content-Security-Policy without `'unsafe-inline'` for scripts.** The two small inline scripts (theme, email) are allowed by SHA-256 hash: `npm run build` ends with `scripts/csp.mjs`, which hashes every inline script found in `dist/` and writes the hashes into `dist/_headers` (placeholder `__SCRIPT_HASHES__` in `public/_headers`). If you add or edit an inline script, just rebuild.
+- `require-trusted-types-for 'script'` is enabled: the site code never writes HTML strings into the page.
+- Styles still allow `'unsafe-inline'` because of `style=""` attributes; everything else is restricted to the site itself.
+- Stylesheets are inlined into the HTML (`inlineStylesheets: "always"`), so no CSS file blocks the first render.
 
 ## License
 

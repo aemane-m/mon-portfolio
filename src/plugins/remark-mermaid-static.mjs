@@ -21,7 +21,7 @@ export default function remarkMermaidStatic() {
       if (node.type !== "code" || node.lang !== "mermaid") return;
       const h = hashOf(node.value);
       if (!existsSync(join(DIR, `${h}.light.svg`)) || !existsSync(join(DIR, `${h}.dark.svg`))) {
-        console.warn(`[mermaid] diagramme ${h} non pré-généré : il sera rendu côté navigateur (≈2 Mo de JS). Lancez « npm run diagrams ».`);
+        console.warn(`[mermaid] diagramme ${h} non pré-généré : il restera affiché comme un bloc de code. Lancez « npm run diagrams » avant de publier.`);
         return;
       }
       return { type: "mdxJsxFlowElement", name: "Diagram", attributes: [{ type: "mdxJsxAttribute", name: "hash", value: h }], children: [] };
