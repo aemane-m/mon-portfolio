@@ -6,6 +6,7 @@ import { mdxComponents } from "../components/mdx";
 import { mk, lp, dateLocale, type Lang } from "../i18n";
 import { postsFor, projectsFor } from "../lib/content";
 import { articleProject } from "../data/related";
+import { readingStats } from "../lib/reading";
 
 interface Props { lang: Lang; entry: CollectionEntry<"posts">; fallback?: boolean }
 const { lang, entry, fallback = false } = Astro.props;
@@ -14,6 +15,8 @@ const l = (path: string) => lp(lang, path);
 const { Content, headings } = await render(entry);
 const d = entry.data;
 const toc = headings.filter((h) => h.depth === 2);
+const { words, minutes } = readingStats(entry.body);
+const nf = (n: number) => n.toLocaleString(dateLocale(lang));
 const fmt = (x: Date) => x.toLocaleDateString(dateLocale(lang), { month: "long", day: "numeric", year: "numeric" });
 
 // Article suggéré : le plus de tags en commun, à défaut le plus proche dans le temps.
@@ -27,7 +30,7 @@ const next = [...others].sort((a, b) => score(b) - score(a) || gap(a) - gap(b))[
 <Base title={d.seoTitle ?? d.title} description={d.seoDescription ?? d.summary} image={d.image} type="article" kind="article" published={d.publishedAt} keywords={d.tags} crumbs={[{ name: "Journal", href: l("/blog") }, { name: d.title, href: l(`/blog/${entry.id}`) }]}>
   <div class="progress" aria-hidden="true"><i id="bar"></i></div>
   <div class="wrap page">
-    <p class="eyebrow"><a href={l("/blog")} style="text-decoration:none">← Journal</a> · {fmt(d.publishedAt)}</p>
+    <p class="eyebrow"><a href={l("/blog")} style="text-decoration:none">← Journal</a> · {fmt(d.publishedAt)} · <span style="white-space:nowrap">{minutes}&nbsp;{tr("min read", "min de lecture").replace(/ /g, "\u00a0")}</span> · <span style="white-space:nowrap">{nf(words)}&nbsp;{tr("words", "mots")}</span></p>
     <h1 class="big" style="font-size:clamp(2rem,4.6vw,3.6rem)">{d.title}</h1>
     <p class="tags" style="margin:0 0 2.5rem">{d.tags.map((t) => <span class="chip">{t}</span>)}</p>
     {d.image && <img class="cover" src={d.image} alt="" fetchpriority="high" decoding="async" />}

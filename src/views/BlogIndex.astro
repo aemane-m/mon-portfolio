@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import Newsletter from "../components/Newsletter.astro";
 import { mk, lp, dateLocale, type Lang } from "../i18n";
 import { postsFor } from "../lib/content";
+import { readingStats } from "../lib/reading";
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -17,7 +18,7 @@ const posts = (await postsFor(lang)).map((x) => x.entry);
     <ul class="posts">
       {posts.map((p) => (
         <li><a href={l(`/blog/${p.id}`)}>
-          <span class="mono dim">{p.data.publishedAt.toLocaleDateString(dateLocale(lang), { day: "numeric", month: "short", year: "numeric" })} · {p.data.type}</span>
+          <span class="mono dim">{p.data.publishedAt.toLocaleDateString(dateLocale(lang), { day: "numeric", month: "short", year: "numeric" })} · {p.data.type} · <span style="white-space:nowrap">{readingStats(p.body).minutes}&nbsp;{tr("min read", "min de lecture").replace(/ /g, "\u00a0")}</span></span>
           <h2>{p.data.title}</h2>
           <p class="dim">{p.data.summary}</p>
           <span class="tags" style="display:flex;flex-wrap:wrap;gap:.35rem">{p.data.tags.map((t) => <span class="chip">{t}</span>)}</span>
